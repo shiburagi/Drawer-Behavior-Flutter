@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 class ZoomScaffold extends StatefulWidget {
   final Widget menuScreen;
@@ -36,6 +37,11 @@ class _ZoomScaffoldState extends State<ZoomScaffold>
     super.dispose();
   }
 
+  double startDx = 0.0;
+  double percentage = 0.0;
+
+  double maxSlideAmount = 275.0;
+
   createContentDisplay() {
     return zoomAndSlideContent(new Container(
       decoration: new BoxDecoration(
@@ -57,16 +63,50 @@ class _ZoomScaffoldState extends State<ZoomScaffold>
                 }),
             title: new Text(
               widget.contentScreen.title,
-              style: new TextStyle(
-                fontFamily: 'bebas-neue',
-                fontSize: 25.0,
-              ),
             ),
           ),
           body: widget.contentScreen.contentBuilder(context),
         ),
         onTap: () {
           if (menuController.isOpen()) menuController.close();
+        },
+        onHorizontalDragStart: (details) {
+          if (menuController.isOpen() &&
+              details.globalPosition.dx < maxSlideAmount + 60) {
+            startDx = details.globalPosition.dx;
+          } else if (details.globalPosition.dx < 60)
+            startDx = details.globalPosition.dx;
+          else {
+            startDx = -1;
+          }
+        },
+        onHorizontalDragUpdate: (details) {
+          if (startDx == -1) return;
+          double dx = (details.globalPosition.dx - startDx);
+
+          if (dx > 0 && dx <= maxSlideAmount) {
+            percentage = dx / maxSlideAmount;
+
+            menuController._animationController
+                .animateTo(percentage, duration: Duration(microseconds: 0));
+            menuController._animationController
+                .notifyStatusListeners(AnimationStatus.forward);
+          } else if (dx < 0 && dx >= -maxSlideAmount) {
+            percentage = 1.0 + dx / maxSlideAmount;
+
+            menuController._animationController
+                .animateTo(percentage, duration: Duration(microseconds: 0));
+            menuController._animationController
+                .notifyStatusListeners(AnimationStatus.reverse);
+          }
+        },
+        onHorizontalDragEnd: (details) {
+          if (startDx == -1) return;
+          if (percentage < 0.5) {
+            menuController.close();
+          } else {
+            menuController.open();
+          }
         },
       ),
     ));
@@ -93,7 +133,7 @@ class _ZoomScaffoldState extends State<ZoomScaffold>
         break;
     }
 
-    final slideAmount = 275.0 * slidePercent;
+    final slideAmount = maxSlideAmount * slidePercent;
     final contentScale = 1.0 - (0.2 * scalePercent);
     final cornerRadius = 10.0 * menuController.percentOpen;
 
