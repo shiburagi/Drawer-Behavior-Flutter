@@ -27,8 +27,7 @@ class _ZoomScaffoldState extends State<ZoomScaffold>
 
     menuController = new MenuController(
       vsync: this,
-    )
-      ..addListener(() => setState(() {}));
+    )..addListener(() => setState(() {}));
   }
 
   @override
@@ -43,33 +42,32 @@ class _ZoomScaffoldState extends State<ZoomScaffold>
         image: widget.contentScreen.background,
         color: widget.contentScreen.color,
       ),
-      child: new Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: new AppBar(
-          backgroundColor: widget.contentScreen.appBarColor == null
-              ? Colors.transparent
-              : widget.contentScreen.appBarColor,
-          elevation: 0.0,
-          leading: new IconButton(
-              icon: new Icon(Icons.menu),
-              onPressed: () {
-                menuController.toggle();
-              }),
-          title: new Text(
-            widget.contentScreen.title,
-            style: new TextStyle(
-              fontFamily: 'bebas-neue',
-              fontSize: 25.0,
+      child: GestureDetector(
+        child: new Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: new AppBar(
+            backgroundColor: widget.contentScreen.appBarColor == null
+                ? Colors.transparent
+                : widget.contentScreen.appBarColor,
+            elevation: 0.0,
+            leading: new IconButton(
+                icon: new Icon(Icons.menu),
+                onPressed: () {
+                  menuController.toggle();
+                }),
+            title: new Text(
+              widget.contentScreen.title,
+              style: new TextStyle(
+                fontFamily: 'bebas-neue',
+                fontSize: 25.0,
+              ),
             ),
           ),
+          body: widget.contentScreen.contentBuilder(context),
         ),
-        body: GestureDetector(
-          child: widget.contentScreen.contentBuilder(context),
-          onTap: () {
-            if (menuController.isOpen())
-              menuController.close();
-          },
-        ),
+        onTap: () {
+          if (menuController.isOpen()) menuController.close();
+        },
       ),
     ));
   }
@@ -162,8 +160,8 @@ class ZoomScaffoldMenuControllerState
 
   getMenuController(BuildContext context) {
     final scaffoldState =
-    context.ancestorStateOfType(new TypeMatcher<_ZoomScaffoldState>())
-    as _ZoomScaffoldState;
+        context.ancestorStateOfType(new TypeMatcher<_ZoomScaffoldState>())
+            as _ZoomScaffoldState;
     return scaffoldState.menuController;
   }
 
@@ -177,8 +175,8 @@ class ZoomScaffoldMenuControllerState
   }
 }
 
-typedef Widget ZoomScaffoldBuilder(BuildContext context,
-    MenuController menuController);
+typedef Widget ZoomScaffoldBuilder(
+    BuildContext context, MenuController menuController);
 
 class Screen {
   final String title;
@@ -189,11 +187,12 @@ class Screen {
 
   final Color appBarColor;
 
-  Screen({this.title,
-    this.background,
-    this.contentBuilder,
-    this.color,
-    this.appBarColor});
+  Screen(
+      {this.title,
+      this.background,
+      this.contentBuilder,
+      this.color,
+      this.appBarColor});
 }
 
 class MenuController extends ChangeNotifier {
