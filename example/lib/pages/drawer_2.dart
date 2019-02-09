@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:drawerbehavior/drawerbehavior.dart';
 
-class Drawer1 extends StatefulWidget {
+class Drawer2 extends StatefulWidget {
   @override
-  _Drawer1State createState() => _Drawer1State();
+  _Drawer2State createState() => _Drawer2State();
 }
 
-class _Drawer1State extends State<Drawer1> {
+class _Drawer2State extends State<Drawer2> {
   final menu = new Menu(
     items: [
       new MenuItem(
@@ -36,8 +36,8 @@ class _Drawer1State extends State<Drawer1> {
     return new ZoomScaffold(
       menuScreen: new MenuScreen(
         menu: menu,
-        animation: true,
-        selectorColor: Theme.of(context).accentColor,
+        selectorColor:Theme.of(context).accentColor,
+        animation: false,
         color: Theme.of(context).primaryColor,
         selectedItemId: selectedMenuItemId,
         onMenuItemSelected: (String itemId) {

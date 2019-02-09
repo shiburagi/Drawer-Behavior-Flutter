@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
 
 class ZoomScaffold extends StatefulWidget {
   final Widget menuScreen;
   final Screen contentScreen;
+
+  bool animation;
 
   ZoomScaffold({
     this.menuScreen,
