@@ -8,6 +8,11 @@
 **Code Base :**
 https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
 
+### Todo
+- [ ] Right Menu View 
+- [ ] 3D effect
+- [ ] Material design drawer's behavior
+
 ## Usage
 
 1. **Depend on it**
