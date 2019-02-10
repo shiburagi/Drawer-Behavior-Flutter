@@ -21,7 +21,7 @@ Add this to your package's pubspec.yaml file:
 
 ```yaml
 dependencies:
-  drawerbehavior: ^0.0.3
+  drawerbehavior: ^0.0.4
 ```
 
 2. **Install it**
@@ -205,3 +205,25 @@ new DrawerScaffold(
 );
 ```
 ---
+
+## Customize
+
+```dart
+AppBarProps(
+    {this.leadingIcon = const Icon(Icons.menu),
+    this.title,
+    this.backgroundColor,
+    this.automaticallyImplyLeading = true,
+    this.actions,
+    this.flexibleSpace,
+    this.bottom,
+    this.elevation = 0.0,
+    this.brightness,
+    this.iconTheme,
+    this.textTheme,
+    this.primary = true,
+    this.centerTitle,
+    this.titleSpacing = NavigationToolbar.kMiddleSpacing,
+    this.toolbarOpacity = 1.0,
+    this.bottomOpacity = 1.0});
+```
