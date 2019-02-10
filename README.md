@@ -230,7 +230,7 @@ Color selectorColor;
 TextStyle textStyle;
 final MainAxisAlignment mainAxisAlignment;
 final EdgeInsets padding;
-``
+```
 
 AppBarProps
 ```dart
