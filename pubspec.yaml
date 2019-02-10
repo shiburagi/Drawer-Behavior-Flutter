@@ -1,8 +1,8 @@
 name: drawerbehavior
-description: A new Flutter plugin.
+description: Drawer behavior is a library that provide an extra behavior on drawer, such as, move view or scaling view's height while drawer on slide..
 version: 0.0.1
-author:
-homepage:
+author: Shiburagi <tr32010@gmail.com>
+homepage: https://github.com/shiburagi/Drawer-Behavior-Flutter
 
 environment:
   sdk: ">=2.0.0-dev.68.0 <3.0.0"
@@ -24,8 +24,9 @@ flutter:
     androidPackage: com.infideap.drawerbehavior
     pluginClass: DrawerbehaviorPlugin
 
+
   # To add assets to your plugin package, add an assets section, like this:
-  # assets:
+#  assets:
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
   #

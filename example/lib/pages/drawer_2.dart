@@ -33,10 +33,10 @@ class _Drawer2State extends State<Drawer2> {
 
   @override
   Widget build(BuildContext context) {
-    return new ZoomScaffold(
-      menuScreen: new MenuScreen(
+    return new DrawerScaffold(
+      percentage: 0.6,
+      menuView: new MenuView(
         menu: menu,
-        selectorColor:Theme.of(context).accentColor,
         animation: false,
         color: Theme.of(context).primaryColor,
         selectedItemId: selectedMenuItemId,
@@ -49,8 +49,8 @@ class _Drawer2State extends State<Drawer2> {
           }
         },
       ),
-      contentScreen: Screen(
-          title: "Drawer 1",
+      contentView: Screen(
+          title: "Drawer 2",
           contentBuilder: (context) => Center(child: _widget),
           color: Colors.white,
           appBarColor: Theme.of(context).primaryColor),

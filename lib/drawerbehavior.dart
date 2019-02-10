@@ -1,2 +1,2 @@
 export 'package:drawerbehavior/menu_screen.dart';
-export 'package:drawerbehavior/zoom_scaffold.dart';
+export 'package:drawerbehavior/drawer_scaffold.dart';

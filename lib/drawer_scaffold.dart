@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
+import 'utils.dart';
 
-class ZoomScaffold extends StatefulWidget {
-  final Widget menuScreen;
-  final Screen contentScreen;
+class DrawerScaffold extends StatefulWidget {
+  final Widget menuView;
+  final Screen contentView;
 
   bool animation;
 
-  ZoomScaffold({
-    this.menuScreen,
-    this.contentScreen,
+  final double percentage;
+
+  DrawerScaffold({
+    this.menuView,
+    this.contentView,
+    this.percentage = 0.8,
+
   });
 
   @override
-  _ZoomScaffoldState createState() => new _ZoomScaffoldState();
+  _DrawerScaffoldState createState() => new _DrawerScaffoldState();
 }
 
-class _ZoomScaffoldState extends State<ZoomScaffold>
+class _DrawerScaffoldState extends State<DrawerScaffold>
     with TickerProviderStateMixin {
   MenuController menuController;
   Curve scaleDownCurve = new Interval(0.0, 0.3, curve: Curves.easeOut);
@@ -40,22 +45,23 @@ class _ZoomScaffoldState extends State<ZoomScaffold>
 
   double startDx = 0.0;
   double percentage = 0.0;
+  bool isOpening = false;
 
   double maxSlideAmount = 275.0;
 
   createContentDisplay() {
     return zoomAndSlideContent(new Container(
       decoration: new BoxDecoration(
-        image: widget.contentScreen.background,
-        color: widget.contentScreen.color,
+        image: widget.contentView.background,
+        color: widget.contentView.color,
       ),
       child: GestureDetector(
         child: new Scaffold(
           backgroundColor: Colors.transparent,
           appBar: new AppBar(
-            backgroundColor: widget.contentScreen.appBarColor == null
+            backgroundColor: widget.contentView.appBarColor == null
                 ? Colors.transparent
-                : widget.contentScreen.appBarColor,
+                : widget.contentView.appBarColor,
             elevation: 0.0,
             leading: new IconButton(
                 icon: new Icon(Icons.menu),
@@ -63,15 +69,16 @@ class _ZoomScaffoldState extends State<ZoomScaffold>
                   menuController.toggle();
                 }),
             title: new Text(
-              widget.contentScreen.title,
+              widget.contentView.title,
             ),
           ),
-          body: widget.contentScreen.contentBuilder(context),
+          body: widget.contentView.contentBuilder(context),
         ),
         onTap: () {
           if (menuController.isOpen()) menuController.close();
         },
         onHorizontalDragStart: (details) {
+          isOpening = !menuController.isOpen();
           if (menuController.isOpen() &&
               details.globalPosition.dx < maxSlideAmount + 60) {
             startDx = details.globalPosition.dx;
@@ -84,16 +91,15 @@ class _ZoomScaffoldState extends State<ZoomScaffold>
         onHorizontalDragUpdate: (details) {
           if (startDx == -1) return;
           double dx = (details.globalPosition.dx - startDx);
-
-          if (dx > 0 && dx <= maxSlideAmount) {
-            percentage = dx / maxSlideAmount;
+          if (isOpening && dx > 0 && dx <= maxSlideAmount) {
+            percentage = Utils.fixed(dx / maxSlideAmount, 3);
 
             menuController._animationController
                 .animateTo(percentage, duration: Duration(microseconds: 0));
             menuController._animationController
                 .notifyStatusListeners(AnimationStatus.forward);
-          } else if (dx < 0 && dx >= -maxSlideAmount) {
-            percentage = 1.0 + dx / maxSlideAmount;
+          } else if (!isOpening && dx <= 0 && dx >= -maxSlideAmount) {
+            percentage = Utils.fixed(1.0 + dx / maxSlideAmount, 3);
 
             menuController._animationController
                 .animateTo(percentage, duration: Duration(microseconds: 0));
@@ -135,7 +141,8 @@ class _ZoomScaffoldState extends State<ZoomScaffold>
     }
 
     final slideAmount = maxSlideAmount * slidePercent;
-    final contentScale = 1.0 - (0.2 * scalePercent);
+    final contentScale =
+        1.0 - ((1.0 - widget.percentage) * scalePercent);
     final cornerRadius = 10.0 * menuController.percentOpen;
 
     return new Transform(
@@ -163,26 +170,26 @@ class _ZoomScaffoldState extends State<ZoomScaffold>
   @override
   Widget build(BuildContext context) {
     return Stack(
-      children: [widget.menuScreen, createContentDisplay()],
+      children: [widget.menuView, createContentDisplay()],
     );
   }
 }
 
-class ZoomScaffoldMenuController extends StatefulWidget {
-  final ZoomScaffoldBuilder builder;
+class DrawerScaffoldMenuController extends StatefulWidget {
+  final DrawerScaffoldBuilder builder;
 
-  ZoomScaffoldMenuController({
+  DrawerScaffoldMenuController({
     this.builder,
   });
 
   @override
-  ZoomScaffoldMenuControllerState createState() {
-    return new ZoomScaffoldMenuControllerState();
+  DrawerScaffoldMenuControllerState createState() {
+    return new DrawerScaffoldMenuControllerState();
   }
 }
 
-class ZoomScaffoldMenuControllerState
-    extends State<ZoomScaffoldMenuController> {
+class DrawerScaffoldMenuControllerState
+    extends State<DrawerScaffoldMenuController> {
   MenuController menuController;
 
   @override
@@ -201,8 +208,8 @@ class ZoomScaffoldMenuControllerState
 
   getMenuController(BuildContext context) {
     final scaffoldState =
-        context.ancestorStateOfType(new TypeMatcher<_ZoomScaffoldState>())
-            as _ZoomScaffoldState;
+        context.ancestorStateOfType(new TypeMatcher<_DrawerScaffoldState>())
+            as _DrawerScaffoldState;
     return scaffoldState.menuController;
   }
 
@@ -216,7 +223,7 @@ class ZoomScaffoldMenuControllerState
   }
 }
 
-typedef Widget ZoomScaffoldBuilder(
+typedef Widget DrawerScaffoldBuilder(
     BuildContext context, MenuController menuController);
 
 class Screen {
@@ -227,6 +234,7 @@ class Screen {
   final Color color;
 
   final Color appBarColor;
+
 
   Screen(
       {this.title,

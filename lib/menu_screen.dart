@@ -1,46 +1,57 @@
 import 'package:flutter/material.dart';
-import 'package:drawerbehavior/zoom_scaffold.dart';
+import 'package:drawerbehavior/drawer_scaffold.dart';
 
 final menuScreenKey = new GlobalKey(debugLabel: 'MenuScreen');
 
-class MenuScreen extends StatefulWidget {
+class MenuView extends StatefulWidget {
   final Menu menu;
   final String selectedItemId;
   final bool animation;
   final Function(String) onMenuItemSelected;
 
+  final Widget headerView;
   DecorationImage background;
   Color color;
 
   Color selectorColor;
 
-  MenuScreen({
+  TextStyle textStyle;
+
+  final MainAxisAlignment mainAxisAlignment;
+
+  final EdgeInsets padding;
+
+  MenuView({
     this.menu,
+    this.headerView,
     this.selectedItemId,
     this.onMenuItemSelected,
-    this.color,
+    this.color = Colors.white,
     this.background,
     this.animation = false,
-    this.selectorColor = Colors.red,
+    this.textStyle,
+    this.padding = const EdgeInsets.only(left: 40.0, top: 15.0, bottom: 15.0),
+    this.mainAxisAlignment = MainAxisAlignment.center,
+    this.selectorColor,
   }) : super(key: menuScreenKey);
 
   @override
-  _MenuScreenState createState() => new _MenuScreenState();
+  _MenuViewState createState() => new _MenuViewState();
 }
 
-class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
+class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
   AnimationController titleAnimationController;
   double selectorYTop;
   double selectorYBottom;
 
-  setSelectedRenderBox(RenderBox newRenderBox) async {
+  setSelectedRenderBox(RenderBox newRenderBox, bool useState) async {
     final newYTop = newRenderBox.localToGlobal(const Offset(0.0, 0.0)).dy;
     final newYBottom = newYTop + newRenderBox.size.height;
     if (newYTop != selectorYTop) {
-      setState(() {
-        selectorYTop = newYTop;
-        selectorYBottom = newYBottom;
-      });
+//      setState(() {
+      selectorYTop = newYTop;
+      selectorYBottom = newYBottom;
+//      });
     }
   }
 
@@ -78,16 +89,16 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
           alignment: Alignment.topLeft,
           child: new Padding(
             padding: const EdgeInsets.all(30.0),
-//            child: new Text(
-//              'Menu',
-//              style: new TextStyle(
-//                color: const Color(0x88444444),
-//                fontSize: 240.0,
-//                fontFamily: 'mermaid',
-//              ),
-//              textAlign: TextAlign.left,
-//              softWrap: false,
-//            ),
+            child: new Text(
+              'Menu',
+              style: new TextStyle(
+                color: const Color(0x88444444),
+                fontSize: 240.0,
+                fontFamily: 'mermaid',
+              ),
+              textAlign: TextAlign.left,
+              softWrap: false,
+            ),
           ),
         ),
         builder: (BuildContext context, Widget child) {
@@ -104,9 +115,20 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
 
   createMenuItems(MenuController menuController) {
     final List<Widget> listItems = [];
+
+    if (widget.headerView != null) {
+      listItems
+          .add(Container(width: double.infinity, child: widget.headerView));
+    }
     final animationIntervalDuration = 0.5;
     final perListItemDelay =
         menuController.state != MenuState.closing ? 0.15 : 0.0;
+
+    final millis = menuController.state != MenuState.closing
+        ? 150 * widget.menu.items.length
+        : 600;
+    final maxDuration = (widget.menu.items.length - 1) * perListItemDelay +
+        animationIntervalDuration;
     for (var i = 0; i < widget.menu.items.length; ++i) {
       final animationIntervalStart = i * perListItemDelay;
       final animationIntervalEnd =
@@ -116,18 +138,22 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
       var listItem = new _MenuListItem(
         title: widget.menu.items[i].title,
         isSelected: isSelected,
-        selectorColor: widget.selectorColor,
+        menuView: widget,
         onTap: () {
           widget.onMenuItemSelected(widget.menu.items[i].id);
           menuController.close();
         },
       );
+
+//      print("$maxDuration, $animationIntervalEnd");
+
       if (widget.animation)
         listItems.add(new AnimatedMenuListItem(
           menuState: menuController.state,
           isSelected: isSelected,
-          duration: const Duration(milliseconds: 600),
-          curve: new Interval(animationIntervalStart, animationIntervalEnd,
+          duration: Duration(milliseconds: millis),
+          curve: new Interval(animationIntervalStart / maxDuration,
+              animationIntervalEnd / maxDuration,
               curve: Curves.easeOut),
           menuListItem: listItem,
         ));
@@ -139,18 +165,35 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
     return new Transform(
       transform: new Matrix4.translationValues(
         0.0,
-        225.0,
+        MediaQuery.of(context).padding.top,
         0.0,
       ),
-      child: Column(
-        children: listItems,
+      child: SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+              minHeight: MediaQuery.of(context).size.height - 100.0),
+          child: Column(
+            mainAxisAlignment: widget.mainAxisAlignment,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: listItems,
+          ),
+        ),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return new ZoomScaffoldMenuController(
+    if (widget.selectorColor == null) {
+      widget.selectorColor = Theme.of(context).indicatorColor;
+    }
+    if (widget.textStyle == null) {
+      widget.textStyle = Theme.of(context).textTheme.subtitle.copyWith(
+          color: widget.color.computeLuminance() < 0.5
+              ? Colors.white
+              : Colors.black);
+    }
+    return new DrawerScaffoldMenuController(
         builder: (BuildContext context, MenuController menuController) {
       var shouldRenderSelector = true;
       var actualSelectorYTop = selectorYTop;
@@ -184,7 +227,8 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
           color: Colors.transparent,
           child: new Stack(
             children: [
-              createMenuTitle(menuController),
+//              createMenuTitle(menuController),
+
               createMenuItems(menuController),
               widget.animation && shouldRenderSelector
                   ? new ItemSelector(
@@ -245,7 +289,6 @@ class _ItemSelectorState extends AnimatedWidgetBaseState<ItemSelector> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.duration);
     return new Positioned(
       top: _topY.evaluate(animation),
       child: new Opacity(
@@ -286,11 +329,11 @@ class _AnimatedMenuListItemState
   Tween<double> _translation;
   Tween<double> _opacity;
 
-  updateSelectedRenderBox() {
+  updateSelectedRenderBox(bool useState) {
     final renderBox = context.findRenderObject() as RenderBox;
     if (renderBox != null && widget.isSelected) {
-      (menuScreenKey.currentState as _MenuScreenState)
-          .setSelectedRenderBox(renderBox);
+      (menuScreenKey.currentState as _MenuViewState)
+          .setSelectedRenderBox(renderBox, useState);
     }
   }
 
@@ -326,7 +369,7 @@ class _AnimatedMenuListItemState
 
   @override
   Widget build(BuildContext context) {
-    updateSelectedRenderBox();
+    updateSelectedRenderBox(false);
 
     return new Opacity(
       opacity: _opacity.evaluate(animation),
@@ -347,13 +390,9 @@ class _MenuListItem extends StatelessWidget {
   bool isSelected;
   final Function() onTap;
 
-  final Color selectorColor;
+  MenuView menuView;
 
-  _MenuListItem(
-      {this.title,
-      this.isSelected,
-      this.onTap,
-      this.selectorColor = Colors.red});
+  _MenuListItem({this.title, this.isSelected, this.onTap, this.menuView});
 
   setSelected(bool isSelected) {
     this.isSelected = isSelected;
@@ -361,27 +400,26 @@ class _MenuListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextStyle textStyle = menuView.textStyle.copyWith(
+        color:
+            isSelected ? menuView.selectorColor : menuView.textStyle.color);
     return new InkWell(
       splashColor: const Color(0x44000000),
       onTap: isSelected ? null : onTap,
       child: Container(
         width: double.infinity,
-        decoration: isSelected
-            ? ShapeDecoration(
-                shape:
-                    Border(left: BorderSide(color: selectorColor, width: 5.0)))
-            : null,
+        decoration: ShapeDecoration(
+            shape: Border(
+                left: BorderSide(
+                    color: isSelected
+                        ? menuView.selectorColor
+                        : Colors.transparent,
+                    width: 5.0))),
         child: new Padding(
-          padding: EdgeInsets.only(
-              left: isSelected ? 45.0 : 50.0, top: 15.0, bottom: 15.0),
+          padding: menuView.padding,
           child: new Text(
             title,
-            style: new TextStyle(
-              color: isSelected ? selectorColor : Colors.white,
-              fontSize: 25.0,
-              fontFamily: 'bebas-neue',
-              letterSpacing: 2.0,
-            ),
+            style: textStyle,
           ),
         ),
       ),
