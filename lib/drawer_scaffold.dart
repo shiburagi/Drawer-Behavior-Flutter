@@ -5,15 +5,15 @@ class DrawerScaffold extends StatefulWidget {
   final Widget menuView;
   final Screen contentView;
 
-  bool animation;
+  final AppBarProps appBar;
 
   final double percentage;
 
   DrawerScaffold({
+    this.appBar,
     this.menuView,
     this.contentView,
     this.percentage = 0.8,
-
   });
 
   @override
@@ -31,7 +31,6 @@ class _DrawerScaffoldState extends State<DrawerScaffold>
   @override
   void initState() {
     super.initState();
-
     menuController = new MenuController(
       vsync: this,
     )..addListener(() => setState(() {}));
@@ -41,6 +40,51 @@ class _DrawerScaffoldState extends State<DrawerScaffold>
   void dispose() {
     menuController.dispose();
     super.dispose();
+  }
+
+  Widget createAppBar() {
+    if (widget.appBar == null)
+      return new AppBar(
+        backgroundColor: widget.contentView.appBarColor == null
+            ? Colors.transparent
+            : widget.contentView.appBarColor,
+        elevation: 0.0,
+        leading: new IconButton(
+            icon: new Icon(Icons.menu),
+            onPressed: () {
+              menuController.toggle();
+            }),
+        title: new Text(
+          widget.contentView.title,
+        ),
+      );
+    else
+      return new AppBar(
+          backgroundColor: widget.contentView.appBarColor == null
+              ? Colors.transparent
+              : widget.contentView.appBarColor,
+//        elevation: 0.0,
+          leading: new IconButton(
+              icon: new Icon(Icons.menu),
+              onPressed: () {
+                menuController.toggle();
+              }),
+          title: new Text(
+            widget.contentView.title,
+          ),
+          automaticallyImplyLeading: widget.appBar.automaticallyImplyLeading,
+          actions: widget.appBar.actions,
+          flexibleSpace: widget.appBar.flexibleSpace,
+          bottom: widget.appBar.bottom,
+          elevation: widget.appBar.elevation,
+          brightness: widget.appBar.brightness,
+          iconTheme: widget.appBar.iconTheme,
+          textTheme: widget.appBar.textTheme,
+          primary: widget.appBar.primary,
+          centerTitle: widget.appBar.centerTitle,
+          titleSpacing: widget.appBar.titleSpacing,
+          toolbarOpacity: widget.appBar.toolbarOpacity,
+          bottomOpacity: widget.appBar.bottomOpacity);
   }
 
   double startDx = 0.0;
@@ -58,20 +102,7 @@ class _DrawerScaffoldState extends State<DrawerScaffold>
       child: GestureDetector(
         child: new Scaffold(
           backgroundColor: Colors.transparent,
-          appBar: new AppBar(
-            backgroundColor: widget.contentView.appBarColor == null
-                ? Colors.transparent
-                : widget.contentView.appBarColor,
-            elevation: 0.0,
-            leading: new IconButton(
-                icon: new Icon(Icons.menu),
-                onPressed: () {
-                  menuController.toggle();
-                }),
-            title: new Text(
-              widget.contentView.title,
-            ),
-          ),
+          appBar: createAppBar(),
           body: widget.contentView.contentBuilder(context),
         ),
         onTap: () {
@@ -141,8 +172,7 @@ class _DrawerScaffoldState extends State<DrawerScaffold>
     }
 
     final slideAmount = maxSlideAmount * slidePercent;
-    final contentScale =
-        1.0 - ((1.0 - widget.percentage) * scalePercent);
+    final contentScale = 1.0 - ((1.0 - widget.percentage) * scalePercent);
     final cornerRadius = 10.0 * menuController.percentOpen;
 
     return new Transform(
@@ -235,7 +265,6 @@ class Screen {
 
   final Color appBarColor;
 
-
   Screen(
       {this.title,
       this.background,
@@ -305,6 +334,52 @@ class MenuController extends ChangeNotifier {
       open();
     }
   }
+}
+
+class AppBarProps {
+  final Widget leading;
+
+  final bool automaticallyImplyLeading;
+
+  final List<Widget> actions;
+
+  final Widget flexibleSpace;
+
+  final PreferredSizeWidget bottom;
+
+  final double elevation;
+
+  final Brightness brightness;
+
+  final IconThemeData iconTheme;
+
+  final TextTheme textTheme;
+
+  final bool primary;
+
+  final bool centerTitle;
+
+  final double titleSpacing;
+
+  final double toolbarOpacity;
+
+  final double bottomOpacity;
+
+  AppBarProps(
+      {this.leading,
+      this.automaticallyImplyLeading = true,
+      this.actions,
+      this.flexibleSpace,
+      this.bottom,
+      this.elevation = 0.0,
+      this.brightness,
+      this.iconTheme,
+      this.textTheme,
+      this.primary = true,
+      this.centerTitle,
+      this.titleSpacing = NavigationToolbar.kMiddleSpacing,
+      this.toolbarOpacity = 1.0,
+      this.bottomOpacity = 1.0});
 }
 
 enum MenuState {

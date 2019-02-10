@@ -10,8 +10,8 @@ class MenuView extends StatefulWidget {
   final Function(String) onMenuItemSelected;
 
   final Widget headerView;
-  DecorationImage background;
-  Color color;
+  final DecorationImage background;
+  final Color color;
 
   Color selectorColor;
 
@@ -29,11 +29,13 @@ class MenuView extends StatefulWidget {
     this.color = Colors.white,
     this.background,
     this.animation = false,
-    this.textStyle,
+    TextStyle textStyle,
     this.padding = const EdgeInsets.only(left: 40.0, top: 15.0, bottom: 15.0),
     this.mainAxisAlignment = MainAxisAlignment.center,
-    this.selectorColor,
-  }) : super(key: menuScreenKey);
+    Color selectorColor,
+  })  : this.textStyle = textStyle,
+        this.selectorColor = selectorColor,
+        super(key: menuScreenKey);
 
   @override
   _MenuViewState createState() => new _MenuViewState();
@@ -401,8 +403,7 @@ class _MenuListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = menuView.textStyle.copyWith(
-        color:
-            isSelected ? menuView.selectorColor : menuView.textStyle.color);
+        color: isSelected ? menuView.selectorColor : menuView.textStyle.color);
     return new InkWell(
       splashColor: const Color(0x44000000),
       onTap: isSelected ? null : onTap,

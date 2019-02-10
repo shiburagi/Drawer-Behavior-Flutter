@@ -35,6 +35,8 @@ class _Drawer2State extends State<Drawer2> {
   Widget build(BuildContext context) {
     return new DrawerScaffold(
       percentage: 0.6,
+      appBar: AppBarProps(
+          actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       menuView: new MenuView(
         menu: menu,
         animation: false,
