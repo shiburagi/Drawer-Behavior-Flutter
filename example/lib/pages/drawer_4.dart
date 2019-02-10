@@ -82,7 +82,7 @@ class _Drawer4State extends State<Drawer4> {
   @override
   Widget build(BuildContext context) {
     return new DrawerScaffold(
-      percentage: 0.6,
+      percentage: 1,
       menuView: new MenuView(
         menu: menu,
         headerView: headerView(context),
