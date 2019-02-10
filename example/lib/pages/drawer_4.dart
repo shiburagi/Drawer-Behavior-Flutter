@@ -84,6 +84,7 @@ class _Drawer4State extends State<Drawer4> {
     return new DrawerScaffold(
       percentage: 1,
       appBar: AppBarProps(
+          title: Text("Drawer 4"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       menuView: new MenuView(
         menu: menu,
@@ -102,10 +103,9 @@ class _Drawer4State extends State<Drawer4> {
         },
       ),
       contentView: Screen(
-          title: "Drawer 4",
-          contentBuilder: (context) => Center(child: _widget),
-          color: Colors.white,
-          appBarColor: Theme.of(context).primaryColor),
+        contentBuilder: (context) => Center(child: _widget),
+        color: Colors.white,
+      ),
     );
   }
 }

@@ -61,18 +61,13 @@ class _DrawerScaffoldState extends State<DrawerScaffold>
       );
     else
       return new AppBar(
-          backgroundColor: widget.contentView.appBarColor == null
-              ? Colors.transparent
-              : widget.contentView.appBarColor,
-//        elevation: 0.0,
+          backgroundColor: widget.appBar.backgroundColor,
           leading: new IconButton(
-              icon: new Icon(Icons.menu),
+              icon: widget.appBar.leadingIcon,
               onPressed: () {
                 menuController.toggle();
               }),
-          title: new Text(
-            widget.contentView.title,
-          ),
+          title: widget.appBar.title,
           automaticallyImplyLeading: widget.appBar.automaticallyImplyLeading,
           actions: widget.appBar.actions,
           flexibleSpace: widget.appBar.flexibleSpace,
@@ -345,36 +340,27 @@ class MenuController extends ChangeNotifier {
 }
 
 class AppBarProps {
-  final Widget leading;
-
-  final bool automaticallyImplyLeading;
-
-  final List<Widget> actions;
-
-  final Widget flexibleSpace;
-
-  final PreferredSizeWidget bottom;
-
-  final double elevation;
-
-  final Brightness brightness;
-
-  final IconThemeData iconTheme;
-
-  final TextTheme textTheme;
-
-  final bool primary;
-
-  final bool centerTitle;
-
-  final double titleSpacing;
-
-  final double toolbarOpacity;
-
-  final double bottomOpacity;
+final Icon leadingIcon;
+final bool automaticallyImplyLeading;
+final List<Widget> actions;
+final Widget flexibleSpace;
+final PreferredSizeWidget bottom;
+final double elevation;
+final Brightness brightness;
+final IconThemeData iconTheme;
+final TextTheme textTheme;
+final bool primary;
+final bool centerTitle;
+final double titleSpacing;
+final double toolbarOpacity;
+final double bottomOpacity;
+final Color backgroundColor;
+final Widget title;
 
   AppBarProps(
-      {this.leading,
+      {this.leadingIcon = const Icon(Icons.menu),
+      this.title,
+      this.backgroundColor,
       this.automaticallyImplyLeading = true,
       this.actions,
       this.flexibleSpace,

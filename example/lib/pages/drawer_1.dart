@@ -34,28 +34,27 @@ class _Drawer1State extends State<Drawer1> {
   @override
   Widget build(BuildContext context) {
     return new DrawerScaffold(
-      percentage: 0.6,
-      appBar: AppBarProps(
-          actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
-      menuView: new MenuView(
-        menu: menu,
-        animation: true,
-        color: Theme.of(context).primaryColor,
-        selectedItemId: selectedMenuItemId,
-        onMenuItemSelected: (String itemId) {
-          selectedMenuItemId = itemId;
-          if (itemId == 'restaurant') {
-            setState(() => _widget = Text("1"));
-          } else {
-            setState(() => _widget = Text("default"));
-          }
-        },
-      ),
-      contentView: Screen(
-          title: "Drawer 1",
+        percentage: 0.6,
+        appBar: AppBarProps(
+            title: Text("Drawer 1"),
+            actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
+        menuView: new MenuView(
+          menu: menu,
+          animation: true,
+          color: Theme.of(context).primaryColor,
+          selectedItemId: selectedMenuItemId,
+          onMenuItemSelected: (String itemId) {
+            selectedMenuItemId = itemId;
+            if (itemId == 'restaurant') {
+              setState(() => _widget = Text("1"));
+            } else {
+              setState(() => _widget = Text("default"));
+            }
+          },
+        ),
+        contentView: Screen(
           contentBuilder: (context) => Center(child: _widget),
           color: Colors.white,
-          appBarColor: Theme.of(context).primaryColor),
-    );
+        ));
   }
 }
