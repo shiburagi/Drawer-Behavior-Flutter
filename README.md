@@ -2,17 +2,7 @@
 
 # drawerbehavior
 
-## Preview
-
-### Android
-
-<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-android-1.png?raw=true" width="400px"/>
-<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-android-2.png?raw=true" width="400px"/>
-
-### IOS
-<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-1.png?raw=true" width="400px"/>
-<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-2.png?raw=true" width="400px"/>
-
+![Alt Text](https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-android-gif.gif)
 
 
 **Code Base :**
@@ -132,3 +122,16 @@ class _Drawer4State extends State<Drawer4> {
 }
 
 ```
+
+
+## Preview
+
+### Android
+
+<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-android-1.png?raw=true" width="400px"/>
+<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-android-2.png?raw=true" width="400px"/>
+
+### IOS
+<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-1.png?raw=true" width="400px"/>
+<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-2.png?raw=true" width="400px"/>
+
