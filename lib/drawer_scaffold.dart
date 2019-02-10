@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'menu_screen.dart';
 import 'utils.dart';
 
 class DrawerScaffold extends StatefulWidget {
-  final Widget menuView;
+  final MenuView menuView;
   final Screen contentView;
 
   final AppBarProps appBar;
@@ -93,7 +94,14 @@ class _DrawerScaffoldState extends State<DrawerScaffold>
 
   double maxSlideAmount = 275.0;
 
+  Widget body;
+
+  String selectedItemId;
+
   createContentDisplay() {
+    if (selectedItemId != widget.menuView.selectedItemId || body == null)
+      body = widget.contentView.contentBuilder(context);
+    selectedItemId = widget.menuView.selectedItemId;
     return zoomAndSlideContent(new Container(
       decoration: new BoxDecoration(
         image: widget.contentView.background,
@@ -103,7 +111,7 @@ class _DrawerScaffoldState extends State<DrawerScaffold>
         child: new Scaffold(
           backgroundColor: Colors.transparent,
           appBar: createAppBar(),
-          body: widget.contentView.contentBuilder(context),
+          body: body,
         ),
         onTap: () {
           if (menuController.isOpen()) menuController.close();
