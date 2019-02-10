@@ -7,8 +7,10 @@ Drawer behavior is a library that provide an extra behavior on drawer, such as, 
 ![Alt Text](https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-android-gif.gif)
 
 
-**Code Base :**
+---
+**Code Base & Credit :**
 https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
+---
 
 ### Todo
 - [ ] Right Menu View 
