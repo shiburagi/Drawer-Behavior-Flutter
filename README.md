@@ -159,9 +159,44 @@ class _Drawer4State extends State<Drawer4> {
 ### Android
 
 <img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-android-1.png?raw=true" width="400px"/>
+
+```dart
+new DrawerScaffold(
+  percentage: 0.6,
+  ...
+);
+```
+---
+
 <img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-android-2.png?raw=true" width="400px"/>
+
+```dart
+new DrawerScaffold(
+  percentage: 0.6,
+  headerView: headerView(context),
+  ...
+);
+```
+---
 
 ### IOS
 <img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-1.png?raw=true" width="400px"/>
+
+```dart
+new DrawerScaffold(
+  percentage: 0.6,
+  ...
+);
+```
+---
+
 <img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-2.png?raw=true" width="400px"/>
 
+```dart
+new DrawerScaffold(
+  percentage: 0.6,
+  headerView: headerView(context),
+  ...
+);
+```
+---
