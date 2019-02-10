@@ -1,8 +1,48 @@
+[![pub package](https://img.shields.io/pub/v/drawerbehavior.svg)](https://pub.dartlang.org/packages/drawerbehavior)
+
 # drawerbehavior
+
+![Alt Text](https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-android-gif.gif)
+
 
 **Code Base :**
 https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
 
+### Todo
+- [ ] Right Menu View 
+- [ ] 3D effect
+- [ ] Material design drawer's behavior
+
+## Usage
+
+1. **Depend on it**
+
+Add this to your package's pubspec.yaml file:
+
+```yaml
+dependencies:
+  drawerbehavior: ^0.0.4
+```
+
+2. **Install it**
+
+You can install packages from the command line:
+
+with Flutter:
+
+```
+$ flutter packages get
+```
+
+Alternatively, your editor might support flutter packages get. Check the docs for your editor to learn more.
+
+3. **Import it**
+
+Now in your Dart code, you can use:
+
+```dart
+import 'package:drawerbehavior/drawerbehavior.dart';
+```
 
 ## Example
 ```dart
@@ -116,4 +156,98 @@ class _Drawer4State extends State<Drawer4> {
   }
 }
 
+```
+
+
+## Preview
+
+### Android
+
+<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-android-1.png?raw=true" width="400px"/>
+
+```dart
+new DrawerScaffold(
+  percentage: 0.6,
+  ...
+);
+```
+---
+
+<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-android-2.png?raw=true" width="400px"/>
+
+```dart
+new DrawerScaffold(
+  percentage: 0.6,
+  headerView: headerView(context),
+  ...
+);
+```
+---
+
+### IOS
+<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-1.png?raw=true" width="400px"/>
+
+```dart
+new DrawerScaffold(
+  percentage: 0.6,
+  ...
+);
+```
+---
+
+<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-2.png?raw=true" width="400px"/>
+
+```dart
+new DrawerScaffold(
+  percentage: 0.6,
+  headerView: headerView(context),
+  ...
+);
+```
+---
+
+## Customize
+
+Screen
+```dart
+final String title;
+final DecorationImage background;
+final WidgetBuilder contentBuilder;
+final Color color;
+final Color appBarColor;
+```
+
+MenuView
+```dart
+final Menu menu;
+final String selectedItemId;
+final bool animation;
+final Function(String) onMenuItemSelected;
+final Widget headerView;
+final DecorationImage background;
+final Color color;
+Color selectorColor;
+TextStyle textStyle;
+final MainAxisAlignment mainAxisAlignment;
+final EdgeInsets padding;
+```
+
+AppBarProps
+```dart
+final Icon leadingIcon;
+final bool automaticallyImplyLeading;
+final List<Widget> actions;
+final Widget flexibleSpace;
+final PreferredSizeWidget bottom;
+final double elevation;
+final Brightness brightness;
+final IconThemeData iconTheme;
+final TextTheme textTheme;
+final bool primary;
+final bool centerTitle;
+final double titleSpacing;
+final double toolbarOpacity;
+final double bottomOpacity;
+final Color backgroundColor;
+final Widget title;
 ```
