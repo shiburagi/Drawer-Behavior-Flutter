@@ -46,7 +46,7 @@ Now in your Dart code, you can use:
 import 'package:drawerbehavior/drawerbehavior.dart';
 ```
 
-### For **Android** (Still in development) : [Drawer-Behavior](https://github.com/shiburagi/Drawer-Behavior)
+### For **Android** : [Drawer-Behavior](https://github.com/shiburagi/Drawer-Behavior)
 
 
 ## Example
