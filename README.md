@@ -208,22 +208,46 @@ new DrawerScaffold(
 
 ## Customize
 
+Screen
 ```dart
-AppBarProps(
-    {this.leadingIcon = const Icon(Icons.menu),
-    this.title,
-    this.backgroundColor,
-    this.automaticallyImplyLeading = true,
-    this.actions,
-    this.flexibleSpace,
-    this.bottom,
-    this.elevation = 0.0,
-    this.brightness,
-    this.iconTheme,
-    this.textTheme,
-    this.primary = true,
-    this.centerTitle,
-    this.titleSpacing = NavigationToolbar.kMiddleSpacing,
-    this.toolbarOpacity = 1.0,
-    this.bottomOpacity = 1.0});
+final String title;
+final DecorationImage background;
+final WidgetBuilder contentBuilder;
+final Color color;
+final Color appBarColor;
+```
+
+MenuView
+```dart
+final Menu menu;
+final String selectedItemId;
+final bool animation;
+final Function(String) onMenuItemSelected;
+final Widget headerView;
+final DecorationImage background;
+final Color color;
+Color selectorColor;
+TextStyle textStyle;
+final MainAxisAlignment mainAxisAlignment;
+final EdgeInsets padding;
+``
+
+AppBarProps
+```dart
+final Icon leadingIcon;
+final bool automaticallyImplyLeading;
+final List<Widget> actions;
+final Widget flexibleSpace;
+final PreferredSizeWidget bottom;
+final double elevation;
+final Brightness brightness;
+final IconThemeData iconTheme;
+final TextTheme textTheme;
+final bool primary;
+final bool centerTitle;
+final double titleSpacing;
+final double toolbarOpacity;
+final double bottomOpacity;
+final Color backgroundColor;
+final Widget title;
 ```
