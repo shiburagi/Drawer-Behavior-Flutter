@@ -1,6 +1,6 @@
 [![pub package](https://img.shields.io/pub/v/drawerbehavior.svg)](https://pub.dartlang.org/packages/drawerbehavior)
 
-# drawerbehavior
+# Drawer Behavior - Flutter
 
 Drawer behavior is a library that provide an extra behavior on drawer, such as, move view or scaling view's height while drawer on slide.
 
@@ -45,6 +45,9 @@ Now in your Dart code, you can use:
 ```dart
 import 'package:drawerbehavior/drawerbehavior.dart';
 ```
+
+### For **Android** (Still in development) : [Drawer-Behavior](https://github.com/shiburagi/Drawer-Behavior)
+
 
 ## Example
 ```dart
