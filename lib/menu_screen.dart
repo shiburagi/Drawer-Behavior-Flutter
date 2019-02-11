@@ -13,9 +13,9 @@ class MenuView extends StatefulWidget {
   final DecorationImage background;
   final Color color;
 
-  Color selectorColor;
+  final Color selectorColor;
 
-  TextStyle textStyle;
+  final TextStyle textStyle;
 
   final MainAxisAlignment mainAxisAlignment;
 
@@ -29,13 +29,11 @@ class MenuView extends StatefulWidget {
     this.color = Colors.white,
     this.background,
     this.animation = false,
-    TextStyle textStyle,
+    this.selectorColor,
+    this.textStyle,
     this.padding = const EdgeInsets.only(left: 40.0, top: 15.0, bottom: 15.0),
     this.mainAxisAlignment = MainAxisAlignment.center,
-    Color selectorColor,
-  })  : this.textStyle = textStyle,
-        this.selectorColor = selectorColor,
-        super(key: menuScreenKey);
+  }) : super(key: menuScreenKey);
 
   @override
   _MenuViewState createState() => new _MenuViewState();
@@ -45,6 +43,9 @@ class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
   AnimationController titleAnimationController;
   double selectorYTop;
   double selectorYBottom;
+
+  Color selectorColor;
+  TextStyle textStyle;
 
   setSelectedRenderBox(RenderBox newRenderBox, bool useState) async {
     final newYTop = newRenderBox.localToGlobal(const Offset(0.0, 0.0)).dy;
@@ -140,6 +141,8 @@ class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
       var listItem = new _MenuListItem(
         title: widget.menu.items[i].title,
         isSelected: isSelected,
+        selectorColor: selectorColor,
+        textStyle: textStyle,
         menuView: widget,
         onTap: () {
           widget.onMenuItemSelected(widget.menu.items[i].id);
@@ -186,15 +189,12 @@ class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.selectorColor == null) {
-      widget.selectorColor = Theme.of(context).indicatorColor;
-    }
-    if (widget.textStyle == null) {
-      widget.textStyle = Theme.of(context).textTheme.subtitle.copyWith(
-          color: widget.color.computeLuminance() < 0.5
-              ? Colors.white
-              : Colors.black);
-    }
+    selectorColor = widget?.selectorColor ?? Theme.of(context).indicatorColor;
+    textStyle = widget?.textStyle ??
+        Theme.of(context).textTheme.subtitle.copyWith(
+            color: widget.color.computeLuminance() < 0.5
+                ? Colors.white
+                : Colors.black);
     return new DrawerScaffoldMenuController(
         builder: (BuildContext context, MenuController menuController) {
       var shouldRenderSelector = true;
@@ -234,7 +234,7 @@ class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
               createMenuItems(menuController),
               widget.animation && shouldRenderSelector
                   ? new ItemSelector(
-                      selectorColor: widget.selectorColor,
+                      selectorColor: selectorColor,
                       topY: actualSelectorYTop,
                       bottomY: actualSelectorYBottom,
                       opacity: selectorOpacity)
@@ -389,21 +389,25 @@ class _AnimatedMenuListItemState
 
 class _MenuListItem extends StatelessWidget {
   final String title;
-  bool isSelected;
+  final bool isSelected;
   final Function() onTap;
+  final Color selectorColor;
+  final TextStyle textStyle;
+  final MenuView menuView;
 
-  MenuView menuView;
-
-  _MenuListItem({this.title, this.isSelected, this.onTap, this.menuView});
-
-  setSelected(bool isSelected) {
-    this.isSelected = isSelected;
-  }
+  _MenuListItem(
+      {this.title,
+      this.isSelected,
+      this.onTap,
+      this.menuView,
+      @required this.textStyle,
+      @required this.selectorColor});
 
   @override
   Widget build(BuildContext context) {
-    TextStyle textStyle = menuView.textStyle.copyWith(
-        color: isSelected ? menuView.selectorColor : menuView.textStyle.color);
+    TextStyle _textStyle =
+        textStyle.copyWith(color: isSelected ? selectorColor : textStyle.color);
+
     return new InkWell(
       splashColor: const Color(0x44000000),
       onTap: isSelected ? null : onTap,
@@ -412,15 +416,13 @@ class _MenuListItem extends StatelessWidget {
         decoration: ShapeDecoration(
             shape: Border(
                 left: BorderSide(
-                    color: isSelected
-                        ? menuView.selectorColor
-                        : Colors.transparent,
+                    color: isSelected ? selectorColor : Colors.transparent,
                     width: 5.0))),
         child: new Padding(
           padding: menuView.padding,
           child: new Text(
             title,
-            style: textStyle,
+            style: _textStyle,
           ),
         ),
       ),

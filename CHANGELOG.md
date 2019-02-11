@@ -1,3 +1,6 @@
-## 0.0.1
+## 0.0.5
 
-* TODO: Describe initial release.
+* Handle back button event for Android device
+* Add corner radius constraint
+* Add content shadow constraint
+

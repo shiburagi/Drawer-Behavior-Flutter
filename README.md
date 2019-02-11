@@ -9,6 +9,7 @@
 https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
 
 ### Todo
+- [x] Radius Parameter
 - [ ] Right Menu View 
 - [ ] 3D effect
 - [ ] Material design drawer's behavior
@@ -130,7 +131,11 @@ class _Drawer4State extends State<Drawer4> {
   @override
   Widget build(BuildContext context) {
     return new DrawerScaffold(
-      percentage: 0.6,
+      percentage: 1,
+      cornerRadius: 0,
+      appBar: AppBarProps(
+          title: Text("Drawer 4"),
+          actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       menuView: new MenuView(
         menu: menu,
         headerView: headerView(context),
@@ -148,10 +153,9 @@ class _Drawer4State extends State<Drawer4> {
         },
       ),
       contentView: Screen(
-          title: "Drawer 4",
-          contentBuilder: (context) => Center(child: _widget),
-          color: Colors.white,
-          appBarColor: Theme.of(context).primaryColor),
+        contentBuilder: (context) => Center(child: _widget),
+        color: Colors.white,
+      ),
     );
   }
 }
@@ -208,7 +212,16 @@ new DrawerScaffold(
 
 ## Customize
 
-Screen
+*DrawerScaffold*
+```dart
+final MenuView menuView;
+final Screen contentView;
+final AppBarProps appBar;
+final double percentage;
+final double cornerRadius;
+```
+
+*Screen*
 ```dart
 final String title;
 final DecorationImage background;
@@ -217,7 +230,7 @@ final Color color;
 final Color appBarColor;
 ```
 
-MenuView
+*MenuView*
 ```dart
 final Menu menu;
 final String selectedItemId;
@@ -232,7 +245,13 @@ final MainAxisAlignment mainAxisAlignment;
 final EdgeInsets padding;
 ```
 
-AppBarProps
+*MenuItem*
+```dart
+final String id;
+final String title;
+```
+
+*AppBarProps*
 ```dart
 final Icon leadingIcon;
 final bool automaticallyImplyLeading;

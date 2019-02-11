@@ -39,6 +39,7 @@ class _Drawer3State extends State<Drawer3> {
             title: Text("Drawer 3"),
             actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
         menuView: new MenuView(
+          textStyle: TextStyle(color: Colors.white, fontSize: 24.0),
           menu: menu,
           animation: false,
           mainAxisAlignment: MainAxisAlignment.start,
