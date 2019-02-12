@@ -1,12 +1,18 @@
 [![pub package](https://img.shields.io/pub/v/drawerbehavior.svg)](https://pub.dartlang.org/packages/drawerbehavior)
 
-# drawerbehavior
+# Drawer Behavior - Flutter
 
-![Alt Text](https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-android-gif.gif)
+Drawer behavior is a library that provide an extra behavior on drawer, such as, move view or scaling view's height while drawer on slide.
+
+![Alt Text](https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-gif.gif)
 
 
-**Code Base :**
+---
+
+**Code Base & Credit :**
 https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
+
+---
 
 ### Todo
 - [x] Radius Parameter
@@ -44,6 +50,11 @@ Now in your Dart code, you can use:
 ```dart
 import 'package:drawerbehavior/drawerbehavior.dart';
 ```
+
+---
+### For **Android** : [Drawer-Behavior](https://github.com/shiburagi/Drawer-Behavior)
+---
+
 
 ## Example
 ```dart
@@ -159,6 +170,7 @@ class _Drawer4State extends State<Drawer4> {
     );
   }
 }
+
 
 ```
 
