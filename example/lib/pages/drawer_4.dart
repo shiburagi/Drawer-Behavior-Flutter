@@ -104,8 +104,22 @@ class _Drawer4State extends State<Drawer4> {
         },
       ),
       contentView: Screen(
-        contentBuilder: (context) => Center(child: _widget),
-        color: Colors.white,
+        contentBuilder: (context) => LayoutBuilder(
+          builder: (context, constraint) => GestureDetector(
+            child: Container(
+              color: Colors.white,
+              width: constraint.maxWidth,
+              height: constraint.maxHeight,
+              child: Center(child: _widget),
+            ),
+            onTap: () {
+              Scaffold.of(context).showSnackBar(SnackBar(
+                content: Text("Clicked"),
+                duration: Duration(seconds: 3),
+              ));
+            },
+          ),
+        ),        color: Colors.white,
       ),
     );
   }

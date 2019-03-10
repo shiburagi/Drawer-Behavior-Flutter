@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:drawerbehavior/drawerbehavior.dart';
+import 'package:flutter/material.dart';
 
 class Drawer2 extends StatefulWidget {
   @override
@@ -53,7 +53,22 @@ class _Drawer2State extends State<Drawer2> {
           },
         ),
         contentView: Screen(
-          contentBuilder: (context) => Center(child: _widget),
+          contentBuilder: (context) => LayoutBuilder(
+                builder: (context, constraint) => GestureDetector(
+                      child: Container(
+                        color: Colors.white,
+                        width: constraint.maxWidth,
+                        height: constraint.maxHeight,
+                        child: Center(child: _widget),
+                      ),
+                      onTap: () {
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                          content: Text("Clicked"),
+                          duration: Duration(seconds: 3),
+                        ));
+                      },
+                    ),
+              ),
           color: Colors.white,
         ));
   }
