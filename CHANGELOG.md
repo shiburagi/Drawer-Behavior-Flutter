@@ -4,3 +4,6 @@
 * Add corner radius constraint
 * Add content shadow constraint
 
+# 0.0.6
+
+* Drawer absorb gesture, if open

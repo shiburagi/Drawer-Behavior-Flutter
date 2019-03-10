@@ -1,7 +1,9 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
+
 import 'menu_screen.dart';
 import 'utils.dart';
-import 'dart:io' show Platform;
 
 class DrawerScaffold extends StatefulWidget {
   final MenuView menuView;
@@ -112,10 +114,13 @@ class _DrawerScaffoldState extends State<DrawerScaffold>
     Widget content = Center(
       child: Container(
         child: GestureDetector(
-          child: new Scaffold(
-            backgroundColor: Colors.transparent,
-            appBar: createAppBar(),
-            body: body,
+          child: AbsorbPointer(
+            absorbing: menuController.isOpen(),
+            child: new Scaffold(
+              backgroundColor: Colors.transparent,
+              appBar: createAppBar(),
+              body: body,
+            ),
           ),
           onTap: () {
             if (menuController.isOpen()) menuController.close();
