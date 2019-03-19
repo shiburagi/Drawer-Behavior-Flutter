@@ -215,8 +215,41 @@ new DrawerScaffold(
 
 ```dart
 new DrawerScaffold(
-  percentage: 0.6,
   headerView: headerView(context),
+  ...
+);
+```
+---
+
+<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-4.png?raw=true" width="400px"/>
+
+```dart
+new DrawerScaffold(
+  footerView: footerView(context),
+  ...
+);
+```
+---
+
+<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-5.png?raw=true" width="400px"/>
+
+```dart
+new DrawerScaffold(
+  headerView: headerView(context),
+  itemBuilder:
+      (BuildContext context, MenuItem menuItem, bool isSelected) {
+    return Container(
+      color: isSelected
+          ? Theme.of(context).accentColor.withOpacity(0.7)
+          : Colors.transparent,
+      padding: EdgeInsets.fromLTRB(24, 16, 24, 16),
+      child: Text(
+        menuItem.title,
+        style: Theme.of(context).textTheme.subhead.copyWith(
+            color: isSelected ? Colors.black87 : Colors.white70),
+      ),
+    );
+  }
   ...
 );
 ```
