@@ -1,8 +1,12 @@
+import 'package:drawerbehavior_example/pages/drawer_custom_item.dart';
+import 'package:drawerbehavior_example/pages/drawer_scale.dart';
+import 'package:drawerbehavior_example/pages/drawer_scale_icon.dart';
+import 'package:drawerbehavior_example/pages/drawer_scale_no_animation.dart';
+import 'package:drawerbehavior_example/pages/drawer_slide.dart';
+import 'package:drawerbehavior_example/pages/drawer_slide_custom_appbar.dart';
+import 'package:drawerbehavior_example/pages/drawer_slide_with_footer.dart';
+import 'package:drawerbehavior_example/pages/drawer_slide_with_header.dart';
 import 'package:flutter/material.dart';
-import 'package:drawerbehavior_example/pages/drawer_1.dart';
-import 'package:drawerbehavior_example/pages/drawer_2.dart';
-import 'package:drawerbehavior_example/pages/drawer_3.dart';
-import 'package:drawerbehavior_example/pages/drawer_4.dart';
 
 void main() => runApp(MyApp());
 
@@ -37,6 +41,10 @@ class _MyAppState extends State<MyApp> {
                   navigate: "/drawer1",
                   color: Theme.of(context).accentColor),
               createButton(context,
+                  text: "Scale - with Icon",
+                  navigate: "/drawer6",
+                  color: Theme.of(context).accentColor),
+              createButton(context,
                   text: "Scale - no animation",
                   navigate: "/drawer2",
                   color: Theme.of(context).accentColor),
@@ -50,7 +58,22 @@ class _MyAppState extends State<MyApp> {
               createButton(context,
                   text: "Slide - with Header View",
                   navigate: "/drawer4",
-                  color: Theme.of(context).accentColor)
+                  color: Theme.of(context).accentColor),
+              createButton(context,
+                  text: "Slide - with Footer View",
+                  navigate: "/drawer8",
+                  color: Theme.of(context).accentColor),
+              Divider(height: 16, color: Theme.of(context).dividerColor),
+              Text("Customize"),
+              Divider(height: 16, color: Theme.of(context).dividerColor),
+              createButton(context,
+                  text: "Customize Item",
+                  navigate: "/drawer5",
+                  color: Theme.of(context).accentColor),
+              createButton(context,
+                  text: "Custom AppBar",
+                  navigate: "/drawer7",
+                  color: Theme.of(context).accentColor),
             ],
           )),
     );
@@ -63,10 +86,14 @@ class _MyAppState extends State<MyApp> {
           primarySwatch: Colors.teal, accentColor: Colors.amberAccent),
       routes: {
         "/": home,
-        "/drawer1": (context) => Drawer1(),
-        "/drawer2": (context) => Drawer2(),
-        "/drawer3": (context) => Drawer3(),
-        "/drawer4": (context) => Drawer4(),
+        "/drawer1": (context) => DrawerScale(),
+        "/drawer2": (context) => DrawerScaleNoAnimation(),
+        "/drawer3": (context) => DrawerSlide(),
+        "/drawer4": (context) => DrawerSlideWithHeader(),
+        "/drawer5": (context) => DrawerCustomItem(),
+        "/drawer6": (context) => DrawerScaleIcon(),
+        "/drawer7": (context) => DrawerSlideCustomAppBar(),
+        "/drawer8": (context) => DrawerSlideWithFooter(),
       },
     );
   }

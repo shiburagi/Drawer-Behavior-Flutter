@@ -1,12 +1,12 @@
 import 'package:drawerbehavior/drawerbehavior.dart';
 import 'package:flutter/material.dart';
 
-class Drawer2 extends StatefulWidget {
+class DrawerSlide extends StatefulWidget {
   @override
-  _Drawer2State createState() => _Drawer2State();
+  _DrawerSlideState createState() => _DrawerSlideState();
 }
 
-class _Drawer2State extends State<Drawer2> {
+class _DrawerSlideState extends State<DrawerSlide> {
   final menu = new Menu(
     items: [
       new MenuItem(
@@ -34,13 +34,15 @@ class _Drawer2State extends State<Drawer2> {
   @override
   Widget build(BuildContext context) {
     return new DrawerScaffold(
-        percentage: 0.6,
+        percentage: 1,
         appBar: AppBarProps(
-            title: Text("Drawer 2"),
+            title: Text("Drawer - Slide"),
             actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
         menuView: new MenuView(
+          textStyle: TextStyle(color: Colors.white, fontSize: 24.0),
           menu: menu,
           animation: false,
+          alignment: Alignment.topLeft,
           color: Theme.of(context).primaryColor,
           selectedItemId: selectedMenuItemId,
           onMenuItemSelected: (String itemId) {

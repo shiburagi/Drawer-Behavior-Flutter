@@ -1,12 +1,12 @@
 import 'package:drawerbehavior/drawerbehavior.dart';
 import 'package:flutter/material.dart';
 
-class Drawer3 extends StatefulWidget {
+class DrawerScaleNoAnimation extends StatefulWidget {
   @override
-  _Drawer3State createState() => _Drawer3State();
+  _DrawerScaleNoAnimationState createState() => _DrawerScaleNoAnimationState();
 }
 
-class _Drawer3State extends State<Drawer3> {
+class _DrawerScaleNoAnimationState extends State<DrawerScaleNoAnimation> {
   final menu = new Menu(
     items: [
       new MenuItem(
@@ -34,15 +34,13 @@ class _Drawer3State extends State<Drawer3> {
   @override
   Widget build(BuildContext context) {
     return new DrawerScaffold(
-        percentage: 1,
+        percentage: 0.6,
         appBar: AppBarProps(
-            title: Text("Drawer 3"),
+            title: Text("Drawer - Scale No Animaton"),
             actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
         menuView: new MenuView(
-          textStyle: TextStyle(color: Colors.white, fontSize: 24.0),
           menu: menu,
           animation: false,
-          mainAxisAlignment: MainAxisAlignment.start,
           color: Theme.of(context).primaryColor,
           selectedItemId: selectedMenuItemId,
           onMenuItemSelected: (String itemId) {

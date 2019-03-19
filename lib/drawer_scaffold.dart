@@ -9,6 +9,8 @@ class DrawerScaffold extends StatefulWidget {
   final MenuView menuView;
   final Screen contentView;
   final AppBarProps appBar;
+  final bool showAppBar;
+  final DrawerScaffoldController controller;
   final double percentage;
   final double cornerRadius;
 
@@ -28,6 +30,8 @@ class DrawerScaffold extends StatefulWidget {
     this.cornerRadius = 10.0,
     this.contentView,
     this.percentage = 0.8,
+    this.showAppBar = true,
+    this.controller,
   });
 
   @override
@@ -48,6 +52,8 @@ class _DrawerScaffoldState extends State<DrawerScaffold>
     menuController = new MenuController(
       vsync: this,
     )..addListener(() => setState(() {}));
+
+    updateDrawerState();
   }
 
   @override
@@ -56,9 +62,26 @@ class _DrawerScaffoldState extends State<DrawerScaffold>
     super.dispose();
   }
 
+  @override
+  void didUpdateWidget(Widget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    updateDrawerState();
+  }
+
+  void updateDrawerState() {
+    if (widget.controller != null) {
+      if (widget.controller.open)
+        menuController.open();
+      else
+        menuController.close();
+      widget.controller.menuController = menuController;
+    }
+  }
+
   Widget createAppBar() {
+    if (!widget.showAppBar) return null;
     if (widget.appBar == null)
-      return new AppBar(
+      return AppBar(
         backgroundColor: widget.contentView.appBarColor == null
             ? Colors.transparent
             : widget.contentView.appBarColor,
@@ -100,8 +123,6 @@ class _DrawerScaffoldState extends State<DrawerScaffold>
   double percentage = 0.0;
   bool isOpening = false;
 
-  double maxSlideAmount = 275.0;
-
   Widget body;
 
   String selectedItemId;
@@ -111,11 +132,12 @@ class _DrawerScaffoldState extends State<DrawerScaffold>
       body = widget.contentView.contentBuilder(context);
     selectedItemId = widget.menuView.selectedItemId;
 
+    double maxSlideAmount = widget.menuView.maxSlideAmount;
     Widget content = Center(
       child: Container(
         child: GestureDetector(
           child: AbsorbPointer(
-            absorbing: menuController.isOpen(),
+            absorbing: menuController.isOpen() && widget.showAppBar,
             child: new Scaffold(
               backgroundColor: Colors.transparent,
               appBar: createAppBar(),
@@ -190,6 +212,8 @@ class _DrawerScaffoldState extends State<DrawerScaffold>
   }
 
   zoomAndSlideContent(Widget content) {
+    double maxSlideAmount = widget.menuView.maxSlideAmount;
+
     var slidePercent, scalePercent;
     switch (menuController.state) {
       case MenuState.closed:
@@ -366,6 +390,17 @@ class MenuController extends ChangeNotifier {
       open();
     }
   }
+}
+
+class DrawerScaffoldController {
+  MenuController menuController;
+
+  DrawerScaffoldController({this.open = false});
+
+  bool open;
+  ValueChanged<bool> onToggle;
+
+  bool isOpen() => menuController.isOpen();
 }
 
 class AppBarProps {

@@ -1,12 +1,12 @@
 import 'package:drawerbehavior/drawerbehavior.dart';
 import 'package:flutter/material.dart';
 
-class Drawer1 extends StatefulWidget {
+class DrawerScale extends StatefulWidget {
   @override
-  _Drawer1State createState() => _Drawer1State();
+  _DrawerScaleState createState() => _DrawerScaleState();
 }
 
-class _Drawer1State extends State<Drawer1> {
+class _DrawerScaleState extends State<DrawerScale> {
   final menu = new Menu(
     items: [
       new MenuItem(
@@ -36,7 +36,7 @@ class _Drawer1State extends State<Drawer1> {
     return new DrawerScaffold(
         percentage: 0.6,
         appBar: AppBarProps(
-            title: Text("Drawer 1"),
+            title: Text("Drawer - Scale"),
             actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
         menuView: new MenuView(
           menu: menu,
