@@ -226,59 +226,65 @@ new DrawerScaffold(
 
 *DrawerScaffold*
 ```dart
-final MenuView menuView;
-final Screen contentView;
-final AppBarProps appBar;
-final double percentage;
-final double cornerRadius;
+DrawerScaffoldController controller;
+MenuView menuView;
+Screen contentView;
+AppBarProps appBar;
+bool showAppBar;
+double percentage;
+double cornerRadius;
 ```
 
 *Screen*
 ```dart
-final String title;
-final DecorationImage background;
-final WidgetBuilder contentBuilder;
-final Color color;
-final Color appBarColor;
+String title;
+DecorationImage background;
+WidgetBuilder contentBuilder;
+Color color;
+Color appBarColor;
 ```
 
 *MenuView*
 ```dart
-final Menu menu;
-final String selectedItemId;
-final bool animation;
-final Function(String) onMenuItemSelected;
-final Widget headerView;
-final DecorationImage background;
-final Color color;
+Menu menu;
+String selectedItemId;
+bool animation;
+Function(String) onMenuItemSelected;
+Widget headerView;
+Widget footerView;
+DecorationImage background;
+Color color;
 Color selectorColor;
 TextStyle textStyle;
-final MainAxisAlignment mainAxisAlignment;
-final EdgeInsets padding;
+Alignment alignment;
+EdgeInsets padding;
+Function(BuildContext, MenuItem, bool) itemBuilder;
+
 ```
 
 *MenuItem*
 ```dart
-final String id;
-final String title;
+String id;
+String title;
+IconData icon;
 ```
 
 *AppBarProps*
 ```dart
-final Icon leadingIcon;
-final bool automaticallyImplyLeading;
-final List<Widget> actions;
-final Widget flexibleSpace;
-final PreferredSizeWidget bottom;
-final double elevation;
-final Brightness brightness;
-final IconThemeData iconTheme;
-final TextTheme textTheme;
-final bool primary;
-final bool centerTitle;
-final double titleSpacing;
-final double toolbarOpacity;
-final double bottomOpacity;
-final Color backgroundColor;
-final Widget title;
+Icon leadingIcon;
+bool automaticallyImplyLeading;
+List<Widget> actions;
+Widget flexibleSpace;
+PreferredSizeWidget bottom;
+double elevation;
+Brightness brightness;
+IconThemeData iconTheme;
+TextTheme textTheme;
+bool primary;
+bool centerTitle;
+double titleSpacing;
+double toolbarOpacity;
+double bottomOpacity;
+Color backgroundColor;
+Widget title;
 ```

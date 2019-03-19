@@ -34,11 +34,8 @@ class MenuView extends StatefulWidget {
   final Color color;
 
   final Color selectorColor;
-
   final TextStyle textStyle;
-
   final Alignment alignment;
-
   final EdgeInsets padding;
 
   @override
