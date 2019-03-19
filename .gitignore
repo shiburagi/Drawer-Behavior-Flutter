@@ -6,3 +6,7 @@
 pubspec.lock
 
 build/
+
+\.idea/
+
+example/ios/Runner\.xcworkspace/xcshareddata/WorkspaceSettings\.xcsettings
