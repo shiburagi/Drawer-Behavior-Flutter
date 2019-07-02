@@ -1,12 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:drawerbehavior/drawerbehavior.dart';
+import 'package:flutter/material.dart';
 
-class DrawerSlideWithHeader extends StatefulWidget {
+class DrawerLeftAndRight extends StatefulWidget {
   @override
-  _DrawerSlideWithHeaderState createState() => _DrawerSlideWithHeaderState();
+  _DrawerLeftAndRightState createState() => _DrawerLeftAndRightState();
 }
 
-class _DrawerSlideWithHeaderState extends State<DrawerSlideWithHeader> {
+class _DrawerLeftAndRightState extends State<DrawerLeftAndRight> {
   final menu = new Menu(
     items: [
       new MenuItem(
@@ -79,14 +79,28 @@ class _DrawerSlideWithHeaderState extends State<DrawerSlideWithHeader> {
     );
   }
 
+  DrawerScaffoldController _controller = DrawerScaffoldController();
+
   @override
   Widget build(BuildContext context) {
     return new DrawerScaffold(
       percentage: 1,
+      controller: _controller,
       cornerRadius: 0,
       appBar: AppBarProps(
-          title: Text("Drawer - with Header"),
-          actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
+        title: Text("Drawer - with Header"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              setState(() {
+                _controller.focusDrawer = DrawerGravity.right;
+                _controller.toggle();
+              });
+            },
+          ),
+        ],
+      ),
       menuView: new MenuView(
         menu: menu,
         headerView: headerView(context),
@@ -103,23 +117,45 @@ class _DrawerSlideWithHeaderState extends State<DrawerSlideWithHeader> {
           }
         },
       ),
+      rightMenuView: MenuView(
+        contentView: Column(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.only(left: 32, top: 16, bottom: 8),
+              child: Text(
+                "Notifications",
+                style: Theme.of(context)
+                    .textTheme
+                    .headline
+                    .copyWith(color: Colors.black54),
+              ),
+            ),
+            Divider(
+              color: Colors.black54,
+              height: 12,
+            )
+          ],
+          crossAxisAlignment: CrossAxisAlignment.start,
+        ),
+      ),
       contentView: Screen(
         contentBuilder: (context) => LayoutBuilder(
-          builder: (context, constraint) => GestureDetector(
-            child: Container(
-              color: Colors.white,
-              width: constraint.maxWidth,
-              height: constraint.maxHeight,
-              child: Center(child: _widget),
+              builder: (context, constraint) => GestureDetector(
+                    child: Container(
+                      color: Colors.white,
+                      width: constraint.maxWidth,
+                      height: constraint.maxHeight,
+                      child: Center(child: _widget),
+                    ),
+                    onTap: () {
+                      Scaffold.of(context).showSnackBar(SnackBar(
+                        content: Text("Clicked"),
+                        duration: Duration(seconds: 3),
+                      ));
+                    },
+                  ),
             ),
-            onTap: () {
-              Scaffold.of(context).showSnackBar(SnackBar(
-                content: Text("Clicked"),
-                duration: Duration(seconds: 3),
-              ));
-            },
-          ),
-        ),        color: Colors.white,
+        color: Colors.white,
       ),
     );
   }

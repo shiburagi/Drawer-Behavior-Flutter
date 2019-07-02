@@ -7,10 +7,12 @@ import 'utils.dart';
 
 class DrawerScaffold extends StatefulWidget {
   final MenuView menuView;
+  final MenuView rightMenuView;
   final Screen contentView;
   final AppBarProps appBar;
   final bool showAppBar;
   final DrawerScaffoldController controller;
+  final DrawerScaffoldController _defaultController= new DrawerScaffoldController();
   final double percentage;
   final double cornerRadius;
 
@@ -31,7 +33,8 @@ class DrawerScaffold extends StatefulWidget {
     this.contentView,
     this.percentage = 0.8,
     this.showAppBar = true,
-    this.controller,
+    this.controller ,
+    this.rightMenuView,
   });
 
   @override
@@ -97,26 +100,28 @@ class _DrawerScaffoldState extends State<DrawerScaffold>
       );
     else
       return new AppBar(
-          backgroundColor: widget.appBar.backgroundColor,
-          leading: new IconButton(
-              icon: widget.appBar.leadingIcon,
-              onPressed: () {
-                menuController.toggle();
-              }),
-          title: widget.appBar.title,
-          automaticallyImplyLeading: widget.appBar.automaticallyImplyLeading,
-          actions: widget.appBar.actions,
-          flexibleSpace: widget.appBar.flexibleSpace,
-          bottom: widget.appBar.bottom,
-          elevation: widget.appBar.elevation,
-          brightness: widget.appBar.brightness,
-          iconTheme: widget.appBar.iconTheme,
-          textTheme: widget.appBar.textTheme,
-          primary: widget.appBar.primary,
-          centerTitle: widget.appBar.centerTitle,
-          titleSpacing: widget.appBar.titleSpacing,
-          toolbarOpacity: widget.appBar.toolbarOpacity,
-          bottomOpacity: widget.appBar.bottomOpacity);
+        backgroundColor: widget.appBar.backgroundColor,
+        leading: new IconButton(
+            icon: widget.appBar.leadingIcon,
+            onPressed: () {
+              (widget.controller??widget._defaultController).focusDrawer = DrawerGravity.left;
+              menuController.toggle();
+            }),
+        title: widget.appBar.title,
+        automaticallyImplyLeading: widget.appBar.automaticallyImplyLeading,
+        actions: widget.appBar.actions,
+        flexibleSpace: widget.appBar.flexibleSpace,
+        bottom: widget.appBar.bottom,
+        elevation: widget.appBar.elevation,
+        brightness: widget.appBar.brightness,
+        iconTheme: widget.appBar.iconTheme,
+        textTheme: widget.appBar.textTheme,
+        primary: widget.appBar.primary,
+        centerTitle: widget.appBar.centerTitle,
+        titleSpacing: widget.appBar.titleSpacing,
+        toolbarOpacity: widget.appBar.toolbarOpacity,
+        bottomOpacity: widget.appBar.bottomOpacity,
+      );
   }
 
   double startDx = 0.0;
@@ -149,32 +154,62 @@ class _DrawerScaffoldState extends State<DrawerScaffold>
           },
           onHorizontalDragStart: (details) {
             isOpening = !menuController.isOpen();
-            if (menuController.isOpen() &&
-                details.globalPosition.dx < maxSlideAmount + 60) {
-              startDx = details.globalPosition.dx;
-            } else if (details.globalPosition.dx < 60)
-              startDx = details.globalPosition.dx;
-            else {
-              startDx = -1;
+            if (widget.controller.focusDrawer == DrawerGravity.left) {
+              if (menuController.isOpen() &&
+                  details.globalPosition.dx < maxSlideAmount + 60) {
+                startDx = details.globalPosition.dx;
+              } else if (details.globalPosition.dx < 60)
+                startDx = details.globalPosition.dx;
+              else {
+                startDx = -1;
+              }
+            } else {
+              if (menuController.isOpen() &&
+                  details.globalPosition.dx < maxSlideAmount + 60) {
+                startDx = details.globalPosition.dx;
+              } else if (details.globalPosition.dx >
+                  MediaQuery.of(context).size.width - 60)
+                startDx = details.globalPosition.dx;
+              else {
+                startDx = -1;
+              }
             }
           },
           onHorizontalDragUpdate: (details) {
             if (startDx == -1) return;
             double dx = (details.globalPosition.dx - startDx);
-            if (isOpening && dx > 0 && dx <= maxSlideAmount) {
-              percentage = Utils.fixed(dx / maxSlideAmount, 3);
+            if (widget.controller.focusDrawer == DrawerGravity.left) {
+              if (isOpening && dx > 0 && dx <= maxSlideAmount) {
+                percentage = Utils.fixed(dx / maxSlideAmount, 3);
 
-              menuController._animationController
-                  .animateTo(percentage, duration: Duration(microseconds: 0));
-              menuController._animationController
-                  .notifyStatusListeners(AnimationStatus.forward);
-            } else if (!isOpening && dx <= 0 && dx >= -maxSlideAmount) {
-              percentage = Utils.fixed(1.0 + dx / maxSlideAmount, 3);
+                menuController._animationController
+                    .animateTo(percentage, duration: Duration(microseconds: 0));
+                menuController._animationController
+                    .notifyStatusListeners(AnimationStatus.forward);
+              } else if (!isOpening && dx <= 0 && dx >= -maxSlideAmount) {
+                percentage = Utils.fixed(1.0 + dx / maxSlideAmount, 3);
 
-              menuController._animationController
-                  .animateTo(percentage, duration: Duration(microseconds: 0));
-              menuController._animationController
-                  .notifyStatusListeners(AnimationStatus.reverse);
+                menuController._animationController
+                    .animateTo(percentage, duration: Duration(microseconds: 0));
+                menuController._animationController
+                    .notifyStatusListeners(AnimationStatus.reverse);
+              }
+            } else {
+              if (isOpening && dx > 0 && dx <= maxSlideAmount) {
+                percentage = Utils.fixed(dx / maxSlideAmount, 3);
+
+                menuController._animationController
+                    .animateTo(percentage, duration: Duration(microseconds: 0));
+                menuController._animationController
+                    .notifyStatusListeners(AnimationStatus.forward);
+              } else if (!isOpening && dx <= 0 && dx >= -maxSlideAmount) {
+                percentage = Utils.fixed(1.0 + dx / maxSlideAmount, 3);
+
+                menuController._animationController
+                    .animateTo(percentage, duration: Duration(microseconds: 0));
+                menuController._animationController
+                    .notifyStatusListeners(AnimationStatus.reverse);
+              }
             }
           },
           onHorizontalDragEnd: (details) {
@@ -234,10 +269,12 @@ class _DrawerScaffoldState extends State<DrawerScaffold>
         break;
     }
 
-    final slideAmount = maxSlideAmount * slidePercent;
+    final pixel = maxSlideAmount * slidePercent;
     final contentScale = 1.0 - ((1.0 - widget.percentage) * scalePercent);
     final cornerRadius = widget.cornerRadius * menuController.percentOpen;
 
+    final slideAmount =
+       ( widget.controller??widget._defaultController).focusDrawer == DrawerGravity.left ? pixel : -pixel;
     return new Transform(
       transform: new Matrix4.translationValues(slideAmount, 0.0, 0.0)
         ..scale(contentScale, contentScale),
@@ -256,7 +293,14 @@ class _DrawerScaffoldState extends State<DrawerScaffold>
   @override
   Widget build(BuildContext context) {
     return Stack(
-      children: [widget.menuView, createContentDisplay()],
+      children: [
+        (widget.controller == null ||
+                    widget.controller.focusDrawer == DrawerGravity.left) &&
+                widget.menuView != null
+            ? widget.menuView
+            : widget.rightMenuView,
+        createContentDisplay(),
+      ],
     );
   }
 }
@@ -393,14 +437,21 @@ class MenuController extends ChangeNotifier {
 }
 
 class DrawerScaffoldController {
+  DrawerScaffoldController({this.open = false});
+
   MenuController menuController;
 
-  DrawerScaffoldController({this.open = false});
+  DrawerGravity focusDrawer = DrawerGravity.left;
 
   bool open;
   ValueChanged<bool> onToggle;
 
   bool isOpen() => menuController.isOpen();
+
+  bool toggle() {
+    open = !isOpen();
+    return open;
+  }
 }
 
 class AppBarProps {
@@ -446,3 +497,5 @@ enum MenuState {
   open,
   closing,
 }
+
+enum DrawerGravity { left, right }

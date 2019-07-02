@@ -7,6 +7,7 @@ class MenuView extends StatefulWidget {
   MenuView({
     this.menu,
     this.headerView,
+    this.contentView,
     this.footerView,
     this.selectedItemId,
     this.onMenuItemSelected,
@@ -28,6 +29,7 @@ class MenuView extends StatefulWidget {
   final Function(String) onMenuItemSelected;
 
   final Widget headerView;
+  final Widget contentView;
   final Widget footerView;
   final Function(BuildContext, MenuItem, bool) itemBuilder;
   final DecorationImage background;
@@ -54,10 +56,8 @@ class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
     final newYTop = newRenderBox.localToGlobal(const Offset(0.0, 0.0)).dy;
     final newYBottom = newYTop + newRenderBox.size.height;
     if (newYTop != selectorYTop) {
-//      setState(() {
       selectorYTop = newYTop;
       selectorYBottom = newYBottom;
-//      });
     }
   }
 
@@ -121,22 +121,23 @@ class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
 
   createMenuItems(MenuController menuController) {
     final List<Widget> listItems = [];
+    Menu menu = widget.menu ?? Menu(items: []);
 
     final animationIntervalDuration = 0.5;
     final perListItemDelay =
         menuController.state != MenuState.closing ? 0.15 : 0.0;
 
     final millis = menuController.state != MenuState.closing
-        ? 150 * widget.menu.items.length
+        ? 150 * menu.items.length
         : 600;
-    final maxDuration = (widget.menu.items.length - 1) * perListItemDelay +
-        animationIntervalDuration;
-    for (var i = 0; i < widget.menu.items.length; ++i) {
+    final maxDuration =
+        (menu.items.length - 1) * perListItemDelay + animationIntervalDuration;
+    for (var i = 0; i < menu.items.length; ++i) {
       final animationIntervalStart = i * perListItemDelay;
       final animationIntervalEnd =
           animationIntervalStart + animationIntervalDuration;
 
-      MenuItem item = widget.menu.items[i];
+      MenuItem item = menu.items[i];
 
       final isSelected = item.id == widget.selectedItemId;
 
@@ -186,7 +187,6 @@ class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
     return Container(
       alignment: widget.alignment,
       child: SingleChildScrollView(
-
         child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -202,7 +202,15 @@ class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
       widgets.add(Container(width: double.infinity, child: widget.headerView));
     }
     widgets.add(Expanded(
-      child: createMenuItems(menuController),
+      child: widget.contentView == null
+          ? createMenuItems(menuController)
+          : Container(
+              child: Container(
+                child: widget.contentView,
+                width: widget.maxSlideAmount,
+              ),
+              alignment: Alignment.topRight,
+            ),
       flex: 1,
     ));
 

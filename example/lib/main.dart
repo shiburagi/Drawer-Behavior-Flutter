@@ -6,6 +6,7 @@ import 'package:drawerbehavior_example/pages/drawer_slide.dart';
 import 'package:drawerbehavior_example/pages/drawer_slide_custom_appbar.dart';
 import 'package:drawerbehavior_example/pages/drawer_slide_with_footer.dart';
 import 'package:drawerbehavior_example/pages/drawer_slide_with_header.dart';
+import 'package:drawerbehavior_example/pages/drawer_left_right.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -74,6 +75,14 @@ class _MyAppState extends State<MyApp> {
                   text: "Custom AppBar",
                   navigate: "/drawer7",
                   color: Theme.of(context).accentColor),
+
+              Divider(height: 16, color: Theme.of(context).dividerColor),
+              Text("Right Drawer"),
+              Divider(height: 16, color: Theme.of(context).dividerColor),
+              createButton(context,
+                  text: "Left & Right",
+                  navigate: "/drawer9",
+                  color: Theme.of(context).accentColor),
             ],
           )),
     );
@@ -94,7 +103,9 @@ class _MyAppState extends State<MyApp> {
         "/drawer6": (context) => DrawerScaleIcon(),
         "/drawer7": (context) => DrawerSlideCustomAppBar(),
         "/drawer8": (context) => DrawerSlideWithFooter(),
+        "/drawer9": (context) => DrawerLeftAndRight(),
       },
+      debugShowCheckedModeBanner: false,
     );
   }
 }
