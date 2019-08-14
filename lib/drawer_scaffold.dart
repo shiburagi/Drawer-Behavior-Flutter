@@ -31,7 +31,7 @@ class DrawerScaffold extends StatefulWidget {
     this.contentView,
     this.percentage = 0.8,
     this.showAppBar = true,
-    this.controller,
+    this.controller
   });
 
   @override
@@ -132,17 +132,19 @@ class _DrawerScaffoldState extends State<DrawerScaffold>
       body = widget.contentView.contentBuilder(context);
     selectedItemId = widget.menuView.selectedItemId;
 
+    var _scaffoldWidget = new Scaffold(
+      backgroundColor: Colors.transparent,
+      appBar: createAppBar(),
+      body: body,
+    );
+
     double maxSlideAmount = widget.menuView.maxSlideAmount;
-    Widget content = Center(
+    Widget content = !widget.contentView.enableGestures ? _scaffoldWidget : Center(
       child: Container(
         child: GestureDetector(
           child: AbsorbPointer(
             absorbing: menuController.isOpen() && widget.showAppBar,
-            child: new Scaffold(
-              backgroundColor: Colors.transparent,
-              appBar: createAppBar(),
-              body: body,
-            ),
+            child: _scaffoldWidget
           ),
           onTap: () {
             if (menuController.isOpen()) menuController.close();
@@ -321,12 +323,15 @@ class Screen {
 
   final Color appBarColor;
 
+  final bool enableGestures;
+
   Screen(
       {this.title,
       this.background,
       this.contentBuilder,
       this.color,
-      this.appBarColor});
+      this.appBarColor,
+      this.enableGestures = true});
 }
 
 class MenuController extends ChangeNotifier {
