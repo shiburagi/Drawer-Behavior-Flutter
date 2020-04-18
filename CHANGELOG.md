@@ -1,3 +1,5 @@
+# 0.0.9
+* Added support for AndroidX
 
 # 0.0.7
 * Add icon parameter on MenuItem
