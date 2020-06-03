@@ -20,6 +20,12 @@ https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
 - [ ] 3D effect
 - [ ] Material design drawer's behavior
 
+### NEW UPDATES
+* Floating action button with location and animator ([trademunch](https://github.com/trademunch)) 
+* Bottom navigation bar
+* Extended body
+* AndroidX support  ([Vladimir Vlach](https://github.com/vladaman))
+
 ## Usage
 
 1. **Depend on it**
@@ -28,7 +34,7 @@ Add this to your package's pubspec.yaml file:
 
 ```yaml
 dependencies:
-  drawerbehavior: ^0.0.4
+  drawerbehavior: latest_version
 ```
 
 2. **Install it**
