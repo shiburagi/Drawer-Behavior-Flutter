@@ -13,6 +13,11 @@ class DrawerScaffold extends StatefulWidget {
   final DrawerScaffoldController controller;
   final double percentage;
   final double cornerRadius;
+  final bool extendedBody;
+  final Widget floatingActionButton;
+  final Widget bottomNavigationBar;
+  final FloatingActionButtonLocation floatingActionButtonLocation;
+  final FloatingActionButtonAnimator floatingActionButtonAnimator;
 
   final List<BoxShadow> contentShadow;
 
@@ -31,7 +36,12 @@ class DrawerScaffold extends StatefulWidget {
     this.contentView,
     this.percentage = 0.8,
     this.showAppBar = true,
-    this.controller
+    this.controller,
+    this.extendedBody,
+    this.bottomNavigationBar,
+    this.floatingActionButtonLocation,
+    this.floatingActionButton,
+    this.floatingActionButtonAnimator,
   });
 
   @override
@@ -136,16 +146,30 @@ class _DrawerScaffoldState extends State<DrawerScaffold>
       backgroundColor: Colors.transparent,
       appBar: createAppBar(),
       body: body,
+      extendBody: widget.extendedBody != null ? widget.extendedBody : false,
+      floatingActionButton: widget.floatingActionButton != null
+          ? widget.floatingActionButton
+          : null,
+      floatingActionButtonLocation: widget.floatingActionButtonLocation != null
+          ? widget.floatingActionButtonLocation
+          : null,
+      bottomNavigationBar: widget.bottomNavigationBar != null
+          ? widget.bottomNavigationBar
+          : null,
+      floatingActionButtonAnimator: widget.floatingActionButtonAnimator != null
+          ? widget.floatingActionButtonAnimator
+          : null,
     );
 
     double maxSlideAmount = widget.menuView.maxSlideAmount;
-    Widget content = !widget.contentView.enableGestures ? _scaffoldWidget : Center(
+    Widget content = !widget.contentView.enableGestures
+        ? _scaffoldWidget
+        : Center(
       child: Container(
         child: GestureDetector(
           child: AbsorbPointer(
-            absorbing: menuController.isOpen() && widget.showAppBar,
-            child: _scaffoldWidget
-          ),
+              absorbing: menuController.isOpen() && widget.showAppBar,
+              child: _scaffoldWidget),
           onTap: () {
             if (menuController.isOpen()) menuController.close();
           },
@@ -166,15 +190,15 @@ class _DrawerScaffoldState extends State<DrawerScaffold>
             if (isOpening && dx > 0 && dx <= maxSlideAmount) {
               percentage = Utils.fixed(dx / maxSlideAmount, 3);
 
-              menuController._animationController
-                  .animateTo(percentage, duration: Duration(microseconds: 0));
+              menuController._animationController.animateTo(percentage,
+                  duration: Duration(microseconds: 0));
               menuController._animationController
                   .notifyStatusListeners(AnimationStatus.forward);
             } else if (!isOpening && dx <= 0 && dx >= -maxSlideAmount) {
               percentage = Utils.fixed(1.0 + dx / maxSlideAmount, 3);
 
-              menuController._animationController
-                  .animateTo(percentage, duration: Duration(microseconds: 0));
+              menuController._animationController.animateTo(percentage,
+                  duration: Duration(microseconds: 0));
               menuController._animationController
                   .notifyStatusListeners(AnimationStatus.reverse);
             }
