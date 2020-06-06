@@ -3,7 +3,12 @@ import 'package:flutter/material.dart';
 
 final menuScreenKey = new GlobalKey(debugLabel: 'MenuScreen');
 
-class MenuView extends StatefulWidget {
+enum Direction {
+  left,
+  right,
+}
+
+class MenuView<T> extends StatefulWidget {
   MenuView({
     this.menu,
     this.headerView,
@@ -13,6 +18,7 @@ class MenuView extends StatefulWidget {
     this.color = Colors.white,
     this.background,
     this.animation = false,
+    this.direction = Direction.left,
     this.selectorColor,
     this.textStyle,
     this.padding = const EdgeInsets.only(left: 40.0, top: 15.0, bottom: 15.0),
@@ -21,11 +27,11 @@ class MenuView extends StatefulWidget {
   }) : super(key: menuScreenKey);
 
   final double maxSlideAmount = 275.0;
-
+  final Direction direction;
   final Menu menu;
-  final String selectedItemId;
+  final T selectedItemId;
   final bool animation;
-  final Function(String) onMenuItemSelected;
+  final Function(T) onMenuItemSelected;
 
   final Widget headerView;
   final Widget footerView;
@@ -186,7 +192,6 @@ class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
     return Container(
       alignment: widget.alignment,
       child: SingleChildScrollView(
-
         child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -501,8 +506,8 @@ class Menu {
   });
 }
 
-class MenuItem {
-  final String id;
+class MenuItem<T> {
+  final T id;
   final String title;
   final IconData icon;
 
@@ -511,4 +516,16 @@ class MenuItem {
     this.title,
     this.icon,
   });
+
+  MenuItem<T> copyWith({
+    T id,
+    String title,
+    IconData icon,
+  }) {
+    return MenuItem<T>(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      icon: icon,
+    );
+  }
 }

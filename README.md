@@ -144,7 +144,7 @@ class _Drawer4State extends State<Drawer4> {
     return new DrawerScaffold(
       percentage: 1,
       cornerRadius: 0,
-      appBar: AppBarProps(
+      appBar: AppBar(
           title: Text("Drawer 4"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       menuView: new MenuView(
@@ -154,7 +154,7 @@ class _Drawer4State extends State<Drawer4> {
         mainAxisAlignment: MainAxisAlignment.start,
         color: Theme.of(context).primaryColor,
         selectedItemId: selectedMenuItemId,
-        onMenuItemSelected: (String itemId) {
+        onMenuItemSelected: (itemId) {
           selectedMenuItemId = itemId;
           if (itemId == 'restaurant') {
             setState(() => _widget = Text("1"));
@@ -262,7 +262,7 @@ new DrawerScaffold(
 DrawerScaffoldController controller;
 MenuView menuView;
 Screen contentView;
-AppBarProps appBar;
+AppBar appBar;
 bool showAppBar;
 double percentage;
 double cornerRadius;
@@ -302,7 +302,7 @@ String title;
 IconData icon;
 ```
 
-*AppBarProps*
+*AppBar*
 ```dart
 Icon leadingIcon;
 bool automaticallyImplyLeading;

@@ -5,15 +5,21 @@ import 'package:flutter/material.dart';
 import 'menu_screen.dart';
 import 'utils.dart';
 
+typedef Widget DrawerScaffoldBuilder(
+    BuildContext context, MenuController menuController);
+
 class DrawerScaffold extends StatefulWidget {
   final MenuView menuView;
+  @deprecated
   final Screen contentView;
-  final AppBarProps appBar;
-  final bool showAppBar;
+  final ScreenBuilder builder;
+
+  final AppBar appBar;
   final DrawerScaffoldController controller;
   final double percentage;
   final double cornerRadius;
   final bool extendedBody;
+  final bool enableGestures;
   final Widget floatingActionButton;
   final Widget bottomNavigationBar;
   final FloatingActionButtonLocation floatingActionButtonLocation;
@@ -35,20 +41,21 @@ class DrawerScaffold extends StatefulWidget {
     this.cornerRadius = 10.0,
     this.contentView,
     this.percentage = 0.8,
-    this.showAppBar = true,
     this.controller,
     this.extendedBody,
     this.bottomNavigationBar,
     this.floatingActionButtonLocation,
     this.floatingActionButton,
     this.floatingActionButtonAnimator,
+    this.builder,
+    this.enableGestures = true,
   });
 
   @override
   _DrawerScaffoldState createState() => new _DrawerScaffoldState();
 }
 
-class _DrawerScaffoldState extends State<DrawerScaffold>
+class _DrawerScaffoldState<T> extends State<DrawerScaffold>
     with TickerProviderStateMixin {
   MenuController menuController;
   Curve scaleDownCurve = new Interval(0.0, 0.3, curve: Curves.easeOut);
@@ -59,6 +66,7 @@ class _DrawerScaffoldState extends State<DrawerScaffold>
   @override
   void initState() {
     super.initState();
+    selectedItemId = widget.menuView.selectedItemId;
     menuController = new MenuController(
       vsync: this,
     )..addListener(() => setState(() {}));
@@ -89,30 +97,19 @@ class _DrawerScaffoldState extends State<DrawerScaffold>
   }
 
   Widget createAppBar() {
-    if (!widget.showAppBar) return null;
-    if (widget.appBar == null)
+    if (widget.appBar != null)
       return AppBar(
-        backgroundColor: widget.contentView.appBarColor == null
-            ? Colors.transparent
-            : widget.contentView.appBarColor,
-        elevation: 0.0,
-        leading: new IconButton(
-            icon: new Icon(Icons.menu),
-            onPressed: () {
-              menuController.toggle();
-            }),
-        title: new Text(
-          widget.contentView.title,
-        ),
-      );
-    else
-      return new AppBar(
+          actionsIconTheme: widget.appBar.actionsIconTheme,
+          excludeHeaderSemantics: widget.appBar.excludeHeaderSemantics,
+          shape: widget.appBar.shape,
+          key: widget.appBar.key,
           backgroundColor: widget.appBar.backgroundColor,
-          leading: new IconButton(
-              icon: widget.appBar.leadingIcon,
-              onPressed: () {
-                menuController.toggle();
-              }),
+          leading: widget.appBar.leading ??
+              new IconButton(
+                  icon: Icon(Icons.menu),
+                  onPressed: () {
+                    menuController.toggle();
+                  }),
           title: widget.appBar.title,
           automaticallyImplyLeading: widget.appBar.automaticallyImplyLeading,
           actions: widget.appBar.actions,
@@ -127,6 +124,8 @@ class _DrawerScaffoldState extends State<DrawerScaffold>
           titleSpacing: widget.appBar.titleSpacing,
           toolbarOpacity: widget.appBar.toolbarOpacity,
           bottomOpacity: widget.appBar.bottomOpacity);
+
+    return null;
   }
 
   double startDx = 0.0;
@@ -135,92 +134,85 @@ class _DrawerScaffoldState extends State<DrawerScaffold>
 
   Widget body;
 
-  String selectedItemId;
+  T selectedItemId;
 
   createContentDisplay() {
-    if (selectedItemId != widget.menuView.selectedItemId || body == null)
-      body = widget.contentView.contentBuilder(context);
-    selectedItemId = widget.menuView.selectedItemId;
-
-    var _scaffoldWidget = new Scaffold(
+    if (selectedItemId != widget.menuView.selectedItemId || body == null) {
+      selectedItemId = widget.menuView.selectedItemId;
+      body = widget.builder?.call(context, selectedItemId) ??
+          widget.contentView?.contentBuilder(context);
+    }
+    Widget _scaffoldWidget = new Scaffold(
       backgroundColor: Colors.transparent,
       appBar: createAppBar(),
       body: body,
-      extendBody: widget.extendedBody != null ? widget.extendedBody : false,
-      floatingActionButton: widget.floatingActionButton != null
-          ? widget.floatingActionButton
-          : null,
-      floatingActionButtonLocation: widget.floatingActionButtonLocation != null
-          ? widget.floatingActionButtonLocation
-          : null,
-      bottomNavigationBar: widget.bottomNavigationBar != null
-          ? widget.bottomNavigationBar
-          : null,
-      floatingActionButtonAnimator: widget.floatingActionButtonAnimator != null
-          ? widget.floatingActionButtonAnimator
-          : null,
+      extendBody: widget.extendedBody ?? false,
+      floatingActionButton: widget.floatingActionButton,
+      floatingActionButtonLocation: widget.floatingActionButtonLocation,
+      bottomNavigationBar: widget.bottomNavigationBar,
+      floatingActionButtonAnimator: widget.floatingActionButtonAnimator,
     );
 
     double maxSlideAmount = widget.menuView.maxSlideAmount;
-    Widget content = !widget.contentView.enableGestures
+    Widget content = !widget.enableGestures
         ? _scaffoldWidget
         : Center(
-      child: Container(
-        child: GestureDetector(
-          child: AbsorbPointer(
-              absorbing: menuController.isOpen() && widget.showAppBar,
-              child: _scaffoldWidget),
-          onTap: () {
-            if (menuController.isOpen()) menuController.close();
-          },
-          onHorizontalDragStart: (details) {
-            isOpening = !menuController.isOpen();
-            if (menuController.isOpen() &&
-                details.globalPosition.dx < maxSlideAmount + 60) {
-              startDx = details.globalPosition.dx;
-            } else if (details.globalPosition.dx < 60)
-              startDx = details.globalPosition.dx;
-            else {
-              startDx = -1;
-            }
-          },
-          onHorizontalDragUpdate: (details) {
-            if (startDx == -1) return;
-            double dx = (details.globalPosition.dx - startDx);
-            if (isOpening && dx > 0 && dx <= maxSlideAmount) {
-              percentage = Utils.fixed(dx / maxSlideAmount, 3);
+            child: Container(
+              child: GestureDetector(
+                child: AbsorbPointer(
+                    absorbing: menuController.isOpen() && widget.appBar != null,
+                    child: _scaffoldWidget),
+                onTap: () {
+                  if (menuController.isOpen()) menuController.close();
+                },
+                onHorizontalDragStart: (details) {
+                  isOpening = !menuController.isOpen();
+                  if (menuController.isOpen() &&
+                      details.globalPosition.dx < maxSlideAmount + 60) {
+                    startDx = details.globalPosition.dx;
+                  } else if (details.globalPosition.dx < 60)
+                    startDx = details.globalPosition.dx;
+                  else {
+                    startDx = -1;
+                  }
+                },
+                onHorizontalDragUpdate: (details) {
+                  if (startDx == -1) return;
+                  double dx = (details.globalPosition.dx - startDx);
+                  if (isOpening && dx > 0 && dx <= maxSlideAmount) {
+                    percentage = Utils.fixed(dx / maxSlideAmount, 3);
 
-              menuController._animationController.animateTo(percentage,
-                  duration: Duration(microseconds: 0));
-              menuController._animationController
-                  .notifyStatusListeners(AnimationStatus.forward);
-            } else if (!isOpening && dx <= 0 && dx >= -maxSlideAmount) {
-              percentage = Utils.fixed(1.0 + dx / maxSlideAmount, 3);
+                    menuController._animationController.animateTo(percentage,
+                        duration: Duration(microseconds: 0));
+                    menuController._animationController
+                        .notifyStatusListeners(AnimationStatus.forward);
+                  } else if (!isOpening && dx <= 0 && dx >= -maxSlideAmount) {
+                    percentage = Utils.fixed(1.0 + dx / maxSlideAmount, 3);
 
-              menuController._animationController.animateTo(percentage,
-                  duration: Duration(microseconds: 0));
-              menuController._animationController
-                  .notifyStatusListeners(AnimationStatus.reverse);
-            }
-          },
-          onHorizontalDragEnd: (details) {
-            if (startDx == -1) return;
-            if (percentage < 0.5) {
-              menuController.close();
-            } else {
-              menuController.open();
-            }
-          },
-        ),
-      ),
-    );
+                    menuController._animationController.animateTo(percentage,
+                        duration: Duration(microseconds: 0));
+                    menuController._animationController
+                        .notifyStatusListeners(AnimationStatus.reverse);
+                  }
+                },
+                onHorizontalDragEnd: (details) {
+                  if (startDx == -1) return;
+                  if (percentage < 0.5) {
+                    menuController.close();
+                  } else {
+                    menuController.open();
+                  }
+                },
+              ),
+            ),
+          );
 
     bool isIOS = Platform.isIOS;
 
     return zoomAndSlideContent(new Container(
         decoration: new BoxDecoration(
-          image: widget.contentView.background,
-          color: widget.contentView.color,
+          image: widget.contentView?.background,
+          color: widget.contentView?.color ?? Theme.of(context).canvasColor,
         ),
         child: isIOS
             ? content
@@ -282,7 +274,10 @@ class _DrawerScaffoldState extends State<DrawerScaffold>
   @override
   Widget build(BuildContext context) {
     return Stack(
-      children: [widget.menuView, createContentDisplay()],
+      children: [
+        widget.menuView,
+        createContentDisplay(),
+      ],
     );
   }
 }
@@ -335,8 +330,7 @@ class DrawerScaffoldMenuControllerState
   }
 }
 
-typedef Widget DrawerScaffoldBuilder(
-    BuildContext context, MenuController menuController);
+typedef Widget ScreenBuilder<T>(BuildContext context, T id);
 
 class Screen {
   final String title;
@@ -430,43 +424,6 @@ class DrawerScaffoldController {
   ValueChanged<bool> onToggle;
 
   bool isOpen() => menuController.isOpen();
-}
-
-class AppBarProps {
-  final Icon leadingIcon;
-  final bool automaticallyImplyLeading;
-  final List<Widget> actions;
-  final Widget flexibleSpace;
-  final PreferredSizeWidget bottom;
-  final double elevation;
-  final Brightness brightness;
-  final IconThemeData iconTheme;
-  final TextTheme textTheme;
-  final bool primary;
-  final bool centerTitle;
-  final double titleSpacing;
-  final double toolbarOpacity;
-  final double bottomOpacity;
-  final Color backgroundColor;
-  final Widget title;
-
-  AppBarProps(
-      {this.leadingIcon = const Icon(Icons.menu),
-      this.title,
-      this.backgroundColor,
-      this.automaticallyImplyLeading = true,
-      this.actions,
-      this.flexibleSpace,
-      this.bottom,
-      this.elevation = 0.0,
-      this.brightness,
-      this.iconTheme,
-      this.textTheme,
-      this.primary = true,
-      this.centerTitle,
-      this.titleSpacing = NavigationToolbar.kMiddleSpacing,
-      this.toolbarOpacity = 1.0,
-      this.bottomOpacity = 1.0});
 }
 
 enum MenuState {
