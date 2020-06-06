@@ -37,6 +37,15 @@ dependencies:
   drawerbehavior: latest_version
 ```
 
+### Version 1.0.0 (ALPHA)
+```yaml
+dependencies:
+  drawerbehavior:
+    git: https://github.com/shiburagi/Drawer-Behavior-Flutter.git
+```
+
+
+
 2. **Install it**
 
 You can install packages from the command line:
