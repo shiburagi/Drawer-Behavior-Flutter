@@ -38,6 +38,8 @@ dependencies:
 ```
 
 ### Version 1.0.0 (ALPHA)
+[Documentation](https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/Version-1.0.0/README.md)
+
 ```yaml
 dependencies:
   drawerbehavior:
