@@ -80,6 +80,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
     log("No of menuControllers : ${menuControllers.length}");
 
     updateDrawerState();
+    assignContoller();
   }
 
   @override
@@ -90,9 +91,19 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
 
   @override
   void didUpdateWidget(Widget oldWidget) {
+    assignContoller();
+
     super.didUpdateWidget(oldWidget);
-    if (widget.controller != null)
+  }
+
+  assignContoller() {
+    log("assignContoller");
+    if (widget.controller != null) {
       widget.controller._menuControllers = menuControllers;
+      widget.controller._setFocus = (index) {
+        focusDrawer = index;
+      };
+    }
   }
 
   void updateDrawerState() {
@@ -106,7 +117,6 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
         menuControllers.forEach((element) {
           element.close();
         });
-      widget.controller._menuControllers = menuControllers;
     }
   }
 
@@ -122,6 +132,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
               new IconButton(
                   icon: Icon(Icons.menu),
                   onPressed: () {
+                    focusDrawer = mainDrawer;
                     menuControllers[mainDrawer].toggle();
                   }),
           title: widget.appBar.title,
@@ -206,9 +217,8 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
                     startDx = details.globalPosition.dx;
                   } else if (details.globalPosition.dx < 60)
                     startDx = details.globalPosition.dx;
-                 
                 }
-              } 
+              }
               if (startDx < 0 &&
                   details.globalPosition.dx > width - maxSlideAmount - 60) {
                 int focusDrawer = drawerFrom(Direction.right);
@@ -224,9 +234,8 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
                     startDx = details.globalPosition.dx;
                   } else if (details.globalPosition.dx > width - 60)
                     startDx = details.globalPosition.dx;
-                 
                 }
-              } 
+              }
               log("startDx: $startDx");
             },
             onHorizontalDragUpdate: (details) {
@@ -349,9 +358,10 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
 
 class DrawerScaffoldMenuController extends StatefulWidget {
   final DrawerScaffoldBuilder builder;
-
+  final Direction direction;
   DrawerScaffoldMenuController({
     this.builder,
+    this.direction,
   });
 
   @override
@@ -368,7 +378,7 @@ class DrawerScaffoldMenuControllerState
   void initState() {
     super.initState();
 
-    menuController = getMenuController(context);
+    menuController = getMenuController(context, widget.direction);
     menuController.addListener(_onMenuControllerChange);
   }
 
@@ -378,11 +388,13 @@ class DrawerScaffoldMenuControllerState
     super.dispose();
   }
 
-  MenuController getMenuController(BuildContext context) {
+  MenuController getMenuController(BuildContext context,
+      [Direction direction = Direction.left]) {
+    log("Direction: $direction");
     final scaffoldState =
         context.findAncestorStateOfType<_DrawerScaffoldState>();
     return scaffoldState.menuControllers.firstWhere(
-      (element) => element.isOpen(),
+      (element) => element.direction == direction,
       orElse: () => scaffoldState.menuControllers[0],
     );
   }
@@ -393,7 +405,7 @@ class DrawerScaffoldMenuControllerState
 
   @override
   Widget build(BuildContext context) {
-    return widget.builder(context, getMenuController(context));
+    return widget.builder(context, getMenuController(context, widget.direction));
   }
 }
 
@@ -487,6 +499,8 @@ class MenuController extends ChangeNotifier {
 class DrawerScaffoldController {
   List<MenuController> _menuControllers;
 
+  ValueChanged<int> _setFocus;
+
   DrawerScaffoldController({Direction open}) : _open = open;
 
   Direction _open;
@@ -498,9 +512,12 @@ class DrawerScaffoldController {
   }
 
   openDrawer([Direction direction = Direction.left]) {
-    _menuControllers
-        .firstWhere((element) => element.direction == direction)
-        .open();
+    int index = _menuControllers
+        .indexWhere((element) => element.direction == direction);
+    if (index >= 0) {
+      _setFocus(index);
+      _menuControllers[index].open();
+    }
   }
 
   closeDrawer([Direction direction = Direction.left]) {

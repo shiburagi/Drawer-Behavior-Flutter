@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:drawerbehavior/drawer_scaffold.dart';
 import 'package:flutter/material.dart';
 
@@ -49,7 +51,6 @@ class SideDrawer<T> extends StatefulWidget {
 }
 
 class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
-  AnimationController titleAnimationController;
   double selectorYTop;
   double selectorYBottom;
 
@@ -70,15 +71,10 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    titleAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 250),
-      vsync: this,
-    );
   }
 
   @override
   void dispose() {
-    titleAnimationController.dispose();
     super.dispose();
   }
 
@@ -207,56 +203,58 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
                 ? Colors.white
                 : Colors.black);
     return DrawerScaffoldMenuController(
+        direction: widget.direction,
         builder: (BuildContext context, MenuController menuController) {
-      var shouldRenderSelector = true;
-      var actualSelectorYTop = selectorYTop;
-      var actualSelectorYBottom = selectorYBottom;
-      var selectorOpacity = 1.0;
+          log("menuController : ${menuController.direction} ${widget.direction}");
+          var shouldRenderSelector = true;
+          var actualSelectorYTop = selectorYTop;
+          var actualSelectorYBottom = selectorYBottom;
+          var selectorOpacity = 1.0;
 
-      if (menuController.state == MenuState.closed ||
-          menuController.state == MenuState.closing ||
-          selectorYTop == null) {
-        final RenderBox menuScreenRenderBox =
-            context.findRenderObject() as RenderBox;
+          if (menuController.state == MenuState.closed ||
+              menuController.state == MenuState.closing ||
+              selectorYTop == null) {
+            final RenderBox menuScreenRenderBox =
+                context.findRenderObject() as RenderBox;
 
-        if (menuScreenRenderBox != null) {
-          final menuScreenHeight = menuScreenRenderBox.size.height;
-          actualSelectorYTop = menuScreenHeight - 50.0;
-          actualSelectorYBottom = menuScreenHeight;
-          selectorOpacity = 0.0;
-        } else {
-          shouldRenderSelector = false;
-        }
-      }
+            if (menuScreenRenderBox != null) {
+              final menuScreenHeight = menuScreenRenderBox.size.height;
+              actualSelectorYTop = menuScreenHeight - 50.0;
+              actualSelectorYBottom = menuScreenHeight;
+              selectorOpacity = 0.0;
+            } else {
+              shouldRenderSelector = false;
+            }
+          }
 
-      return Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          image: widget.background,
-          color: widget.color,
-        ),
-        child: Material(
-          color: Colors.transparent,
-          child: Stack(
-            children: [
-              createDrawer(menuController),
-              widget.animation && shouldRenderSelector
-                  ? ItemSelector(
-                      left: widget.direction == Direction.right
-                          ? MediaQuery.of(context).size.width -
-                              widget.maxSlideAmount
-                          : 0,
-                      selectorColor: selectorColor,
-                      top: actualSelectorYTop,
-                      bottom: actualSelectorYBottom,
-                      opacity: selectorOpacity)
-                  : Container(),
-            ],
-          ),
-        ),
-      );
-    });
+          return Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              image: widget.background,
+              color: widget.color,
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: Stack(
+                children: [
+                  createDrawer(menuController),
+                  widget.animation && shouldRenderSelector
+                      ? ItemSelector(
+                          left: widget.direction == Direction.right
+                              ? MediaQuery.of(context).size.width -
+                                  widget.maxSlideAmount
+                              : 0,
+                          selectorColor: selectorColor,
+                          top: actualSelectorYTop,
+                          bottom: actualSelectorYBottom,
+                          opacity: selectorOpacity)
+                      : Container(),
+                ],
+              ),
+            ),
+          );
+        });
   }
 }
 
