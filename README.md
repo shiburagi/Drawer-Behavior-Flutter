@@ -28,7 +28,8 @@ Add this to your package's pubspec.yaml file:
 
 ```yaml
 dependencies:
-  drawerbehavior: ^0.0.4
+  drawerbehavior:
+    git: https://github.com/shiburagi/Drawer-Behavior-Flutter.git
 ```
 
 2. **Install it**
