@@ -1,5 +1,6 @@
-import 'dart:developer';
+import 'dart:developer' as Dev;
 import 'dart:io' show Platform;
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -16,6 +17,7 @@ class DrawerScaffold extends StatefulWidget {
   final ScreenBuilder builder;
 
   final AppBar appBar;
+  final Direction mainDrawer;
   final DrawerScaffoldController controller;
   final double percentage;
   final double cornerRadius;
@@ -50,6 +52,7 @@ class DrawerScaffold extends StatefulWidget {
     this.floatingActionButtonAnimator,
     this.builder,
     this.enableGestures = true,
+    this.mainDrawer = Direction.left,
   });
 
   @override
@@ -63,21 +66,22 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
   Curve scaleUpCurve = new Interval(0.0, 1.0, curve: Curves.easeOut);
   Curve slideOutCurve = new Interval(0.0, 1.0, curve: Curves.easeOut);
   Curve slideInCurve = new Interval(0.0, 1.0, curve: Curves.easeOut);
-  int listenDrawer = 0;
-  int focusDrawer = 0;
-  int mainDrawer = 0;
+  int listenDrawerIndex = 0;
+  int focusDrawerIndex = 0;
+  int get mainDrawerIndex => max(
+      0,
+      widget.drawers
+          .indexWhere((element) => element.direction == widget.mainDrawer));
   @override
   void initState() {
     super.initState();
-    log("No of drawers : ${widget.drawers.length}");
-    selectedItemId = widget.drawers[listenDrawer].selectedItemId;
+    selectedItemId = widget.drawers[listenDrawerIndex].selectedItemId;
     menuControllers = widget.drawers
         .map((d) => MenuController(
               d.direction,
               vsync: this,
             )..addListener(() => setState(() {})))
         .toList();
-    log("No of menuControllers : ${menuControllers.length}");
 
     updateDrawerState();
     assignContoller();
@@ -97,11 +101,11 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
   }
 
   assignContoller() {
-    log("assignContoller");
+    Dev.log("assignContoller");
     if (widget.controller != null) {
       widget.controller._menuControllers = menuControllers;
       widget.controller._setFocus = (index) {
-        focusDrawer = index;
+        focusDrawerIndex = index;
       };
     }
   }
@@ -132,8 +136,8 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
               new IconButton(
                   icon: Icon(Icons.menu),
                   onPressed: () {
-                    focusDrawer = mainDrawer;
-                    menuControllers[mainDrawer].toggle();
+                    focusDrawerIndex = mainDrawerIndex;
+                    menuControllers[mainDrawerIndex].toggle();
                   }),
           title: widget.appBar.title,
           automaticallyImplyLeading: widget.appBar.automaticallyImplyLeading,
@@ -166,15 +170,15 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
 
   int drawerFrom(Direction direction) {
     return menuControllers.indexWhere((element) {
-      log("Drawer From : $direction ${element.direction == direction}");
+      Dev.log("Drawer From : $direction ${element.direction == direction}");
       return element.direction == direction;
     });
   }
 
   createContentDisplay() {
-    if (selectedItemId != widget.drawers[listenDrawer].selectedItemId ||
+    if (selectedItemId != widget.drawers[listenDrawerIndex].selectedItemId ||
         body == null) {
-      selectedItemId = widget.drawers[listenDrawer].selectedItemId;
+      selectedItemId = widget.drawers[listenDrawerIndex].selectedItemId;
       body = widget.builder?.call(context, selectedItemId) ??
           widget.contentView?.contentBuilder(context);
     }
@@ -189,7 +193,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
       floatingActionButtonAnimator: widget.floatingActionButtonAnimator,
     );
 
-    double maxSlideAmount = widget.drawers[focusDrawer].maxSlideAmount;
+    double maxSlideAmount = widget.drawers[focusDrawerIndex].maxSlideAmount;
     Widget content = !widget.enableGestures
         ? _scaffoldWidget
         : GestureDetector(
@@ -209,10 +213,10 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
               if (details.globalPosition.dx < maxSlideAmount + 60) {
                 int focusDrawer = drawerFrom(Direction.left);
 
-                log("$focusDrawer ${details.globalPosition.dx}");
+                Dev.log("$focusDrawer ${details.globalPosition.dx}");
                 if (focusDrawer < 0) {
                 } else {
-                  this.focusDrawer = focusDrawer;
+                  this.focusDrawerIndex = focusDrawer;
                   if (isDrawerOpen()) {
                     startDx = details.globalPosition.dx;
                   } else if (details.globalPosition.dx < 60)
@@ -223,12 +227,12 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
                   details.globalPosition.dx > width - maxSlideAmount - 60) {
                 int focusDrawer = drawerFrom(Direction.right);
 
-                log("pass");
+                Dev.log("pass");
 
                 if (focusDrawer < 0) {
                   return;
                 } else {
-                  this.focusDrawer = focusDrawer;
+                  this.focusDrawerIndex = focusDrawer;
 
                   if (isDrawerOpen()) {
                     startDx = details.globalPosition.dx;
@@ -236,14 +240,14 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
                     startDx = details.globalPosition.dx;
                 }
               }
-              log("startDx: $startDx");
+              Dev.log("startDx: $startDx");
             },
             onHorizontalDragUpdate: (details) {
               if (startDx == -1) return;
-              log("startDx: $startDx");
+              Dev.log("startDx: $startDx");
 
               double dx = (details.globalPosition.dx - startDx);
-              MenuController menuController = menuControllers[focusDrawer];
+              MenuController menuController = menuControllers[focusDrawerIndex];
 
               if (menuController.direction == Direction.right) {
                 dx = -dx;
@@ -301,8 +305,8 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
   }
 
   zoomAndSlideContent(Widget content) {
-    double maxSlideAmount = widget.drawers[focusDrawer].maxSlideAmount;
-    MenuController menuController = this.menuControllers[focusDrawer];
+    double maxSlideAmount = widget.drawers[focusDrawerIndex].maxSlideAmount;
+    MenuController menuController = this.menuControllers[focusDrawerIndex];
     var slidePercent, scalePercent;
     switch (menuController.state) {
       case MenuState.closed:
@@ -326,9 +330,9 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
     double slideAmount = maxSlideAmount * slidePercent;
     final contentScale = 1.0 - ((1.0 - widget.percentage) * scalePercent);
     final cornerRadius = widget.cornerRadius * menuController.percentOpen;
-    log("slideAmount: $slideAmount $maxSlideAmount $contentScale");
+    Dev.log("slideAmount: $slideAmount $maxSlideAmount $contentScale");
 
-    if (widget.drawers[focusDrawer].direction == Direction.right)
+    if (widget.drawers[focusDrawerIndex].direction == Direction.right)
       slideAmount = -slideAmount + (maxSlideAmount * (1 - contentScale));
     return new Transform(
       transform: new Matrix4.translationValues(slideAmount, 0.0, 0.0)
@@ -349,7 +353,9 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        focusDrawer != null ? widget.drawers[focusDrawer] : Container(),
+        focusDrawerIndex != null
+            ? widget.drawers[focusDrawerIndex]
+            : Container(),
         createContentDisplay(),
       ],
     );
@@ -390,7 +396,7 @@ class DrawerScaffoldMenuControllerState
 
   MenuController getMenuController(BuildContext context,
       [Direction direction = Direction.left]) {
-    log("Direction: $direction");
+    Dev.log("Direction: $direction");
     final scaffoldState =
         context.findAncestorStateOfType<_DrawerScaffoldState>();
     return scaffoldState.menuControllers.firstWhere(
@@ -405,7 +411,8 @@ class DrawerScaffoldMenuControllerState
 
   @override
   Widget build(BuildContext context) {
-    return widget.builder(context, getMenuController(context, widget.direction));
+    return widget.builder(
+        context, getMenuController(context, widget.direction));
   }
 }
 
