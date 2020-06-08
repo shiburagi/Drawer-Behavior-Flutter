@@ -8,7 +8,6 @@ class DrawerSlideWithHeader extends StatefulWidget {
 }
 
 class _DrawerSlideWithHeaderState extends State<DrawerSlideWithHeader> {
-  
   int selectedMenuItemId;
 
   @override
@@ -16,6 +15,7 @@ class _DrawerSlideWithHeaderState extends State<DrawerSlideWithHeader> {
     selectedMenuItemId = menu.items[0].id;
     super.initState();
   }
+
   Widget headerView(BuildContext context) {
     return Column(
       children: <Widget>[
@@ -72,19 +72,21 @@ class _DrawerSlideWithHeaderState extends State<DrawerSlideWithHeader> {
       appBar: AppBar(
           title: Text("Drawer - with Header"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
-      menuView: new MenuView(
-        menu: menu,
-        headerView: headerView(context),
-        animation: false,
-        alignment: Alignment.topLeft,
-        color: Theme.of(context).primaryColor,
-        selectedItemId: selectedMenuItemId,
-        onMenuItemSelected: (itemId) {
-          setState(() {
-            selectedMenuItemId = itemId;
-          });
-        },
-      ),
+      drawers: [
+        MenuView(
+          menu: menu,
+          headerView: headerView(context),
+          animation: false,
+          alignment: Alignment.topLeft,
+          color: Theme.of(context).primaryColor,
+          selectedItemId: selectedMenuItemId,
+          onMenuItemSelected: (itemId) {
+            setState(() {
+              selectedMenuItemId = itemId;
+            });
+          },
+        )
+      ],
       builder: (context, id) => IndexedStack(
         index: id,
         children: menu.items

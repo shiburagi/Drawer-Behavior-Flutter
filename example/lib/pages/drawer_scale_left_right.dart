@@ -2,12 +2,12 @@ import 'package:drawerbehavior/drawerbehavior.dart';
 import 'package:drawerbehavior_example/menus/main.dart';
 import 'package:flutter/material.dart';
 
-class DrawerSlide extends StatefulWidget {
+class DrawerLeftAndRight extends StatefulWidget {
   @override
-  _DrawerSlideState createState() => _DrawerSlideState();
+  _DrawerLeftAndRightState createState() => _DrawerLeftAndRightState();
 }
 
-class _DrawerSlideState extends State<DrawerSlide> {
+class _DrawerLeftAndRightState extends State<DrawerLeftAndRight> {
   int selectedMenuItemId;
 
   @override
@@ -19,16 +19,15 @@ class _DrawerSlideState extends State<DrawerSlide> {
   @override
   Widget build(BuildContext context) {
     return DrawerScaffold(
-      percentage: 1,
+      percentage: 0.6,
       appBar: AppBar(
-          title: Text("Drawer - Slide"),
+          title: Text("Drawer - Left & Right"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       drawers: [
         MenuView(
-          textStyle: TextStyle(color: Colors.white, fontSize: 24.0),
           menu: menu,
-          animation: false,
-          alignment: Alignment.topLeft,
+          direction: Direction.left,
+          animation: true,
           color: Theme.of(context).primaryColor,
           selectedItemId: selectedMenuItemId,
           onMenuItemSelected: (itemId) {
@@ -36,7 +35,20 @@ class _DrawerSlideState extends State<DrawerSlide> {
               selectedMenuItemId = itemId;
             });
           },
-        )
+        ),
+        MenuView(
+          menu: menu,
+          direction: Direction.right,
+          animation: true,
+          selectorColor: Colors.white,
+          color: Theme.of(context).accentColor,
+          selectedItemId: selectedMenuItemId,
+          onMenuItemSelected: (itemId) {
+            setState(() {
+              selectedMenuItemId = itemId;
+            });
+          },
+        ),
       ],
       builder: (context, id) => IndexedStack(
         index: id,

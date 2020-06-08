@@ -8,8 +8,6 @@ class DrawerCustomItem extends StatefulWidget {
 }
 
 class _DrawerCustomItemState extends State<DrawerCustomItem> {
-  
-
   int selectedMenuItemId;
 
   @override
@@ -68,40 +66,41 @@ class _DrawerCustomItemState extends State<DrawerCustomItem> {
 
   @override
   Widget build(BuildContext context) {
-    return new DrawerScaffold(
+    return DrawerScaffold(
       percentage: 1,
       cornerRadius: 0,
       appBar: AppBar(
           title: Text("Drawer - Custom  Item"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
-      menuView: new MenuView(
-        menu: menu,
-        headerView: headerView(context),
-        animation: false,
-        alignment: Alignment.topLeft,
-        color: Theme.of(context).primaryColor,
-        selectedItemId: selectedMenuItemId,
-        itemBuilder:
-            (BuildContext context, MenuItem menuItem, bool isSelected) {
-          return Container(
-            color: isSelected
-                ? Theme.of(context).accentColor.withOpacity(0.7)
-                : Colors.transparent,
-            padding: EdgeInsets.fromLTRB(24, 16, 24, 16),
-            child: Text(
-              menuItem.title,
-              style: Theme.of(context).textTheme.subhead.copyWith(
-                  color: isSelected ? Colors.black87 : Colors.white70),
-            ),
-          );
-        },
-     
-        onMenuItemSelected: (itemId) {
-          setState(() {
-            selectedMenuItemId = itemId;
-          });
-        },
-      ),
+      drawers: [
+        MenuView(
+          menu: menu,
+          headerView: headerView(context),
+          animation: false,
+          alignment: Alignment.topLeft,
+          color: Theme.of(context).primaryColor,
+          selectedItemId: selectedMenuItemId,
+          itemBuilder:
+              (BuildContext context, MenuItem menuItem, bool isSelected) {
+            return Container(
+              color: isSelected
+                  ? Theme.of(context).accentColor.withOpacity(0.7)
+                  : Colors.transparent,
+              padding: EdgeInsets.fromLTRB(24, 16, 24, 16),
+              child: Text(
+                menuItem.title,
+                style: Theme.of(context).textTheme.subhead.copyWith(
+                    color: isSelected ? Colors.black87 : Colors.white70),
+              ),
+            );
+          },
+          onMenuItemSelected: (itemId) {
+            setState(() {
+              selectedMenuItemId = itemId;
+            });
+          },
+        )
+      ],
       builder: (context, id) => IndexedStack(
         index: id,
         children: menu.items

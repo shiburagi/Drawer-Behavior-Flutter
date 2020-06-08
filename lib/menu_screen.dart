@@ -1,7 +1,7 @@
 import 'package:drawerbehavior/drawer_scaffold.dart';
 import 'package:flutter/material.dart';
 
-final menuScreenKey = new GlobalKey(debugLabel: 'MenuScreen');
+final menuScreenKey = GlobalKey(debugLabel: 'MenuScreen');
 
 enum Direction {
   left,
@@ -22,7 +22,7 @@ class MenuView<T> extends StatefulWidget {
     this.selectorColor,
     this.textStyle,
     this.padding = const EdgeInsets.only(left: 40.0, top: 15.0, bottom: 15.0),
-    this.alignment = Alignment.center,
+    this.alignment = Alignment.centerLeft,
     this.itemBuilder,
   }) : super(key: menuScreenKey);
 
@@ -45,7 +45,7 @@ class MenuView<T> extends StatefulWidget {
   final EdgeInsets padding;
 
   @override
-  _MenuViewState createState() => new _MenuViewState();
+  _MenuViewState createState() => _MenuViewState();
 }
 
 class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
@@ -70,7 +70,7 @@ class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    titleAnimationController = new AnimationController(
+    titleAnimationController = AnimationController(
       duration: const Duration(milliseconds: 250),
       vsync: this,
     );
@@ -82,50 +82,7 @@ class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  createMenuTitle(MenuController menuController) {
-    switch (menuController.state) {
-      case MenuState.open:
-      case MenuState.opening:
-        titleAnimationController.forward();
-        break;
-      case MenuState.closed:
-      case MenuState.closing:
-        titleAnimationController.reverse();
-        break;
-    }
-
-    return new AnimatedBuilder(
-        animation: titleAnimationController,
-        child: new OverflowBox(
-          maxWidth: double.infinity,
-          alignment: Alignment.topLeft,
-          child: new Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: new Text(
-              'Menu',
-              style: new TextStyle(
-                color: const Color(0x88444444),
-                fontSize: 240.0,
-                fontFamily: 'mermaid',
-              ),
-              textAlign: TextAlign.left,
-              softWrap: false,
-            ),
-          ),
-        ),
-        builder: (BuildContext context, Widget child) {
-          return new Transform(
-            transform: new Matrix4.translationValues(
-              250.0 * (1.0 - titleAnimationController.value) - 100.0,
-              0.0,
-              0.0,
-            ),
-            child: child,
-          );
-        });
-  }
-
-  createMenuItems(MenuController menuController) {
+  Widget createMenuItems(MenuController menuController) {
     final List<Widget> listItems = [];
 
     final animationIntervalDuration = 0.5;
@@ -152,11 +109,14 @@ class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
       };
       Widget listItem = widget.itemBuilder == null
           ? _MenuListItem(
+              padding: const EdgeInsets.only(left: 32.0),
+              direction: widget.direction,
               title: item.title,
               isSelected: isSelected,
               selectorColor: selectorColor,
               textStyle: textStyle,
               menuView: widget,
+              width: widget.maxSlideAmount,
               icon: item.icon == null ? null : Icon(item.icon),
               onTap: onTap,
               drawBorder: !widget.animation,
@@ -172,14 +132,12 @@ class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
               onTap: onTap,
             );
 
-//      print("$maxDuration, $animationIntervalEnd");
-
       if (widget.animation)
-        listItems.add(new AnimatedMenuListItem(
+        listItems.add(AnimatedMenuListItem(
           menuState: menuController.state,
           isSelected: isSelected,
           duration: Duration(milliseconds: millis),
-          curve: new Interval(animationIntervalStart / maxDuration,
+          curve: Interval(animationIntervalStart / maxDuration,
               animationIntervalEnd / maxDuration,
               curve: Curves.easeOut),
           menuListItem: listItem,
@@ -191,11 +149,17 @@ class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
 
     return Container(
       alignment: widget.alignment,
+      margin: EdgeInsets.only(
+          left: widget.direction == Direction.left
+              ? 0
+              : MediaQuery.of(context).size.width - widget.maxSlideAmount),
       child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: listItems,
+        child: Container(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: listItems,
+          ),
         ),
       ),
     );
@@ -219,7 +183,7 @@ class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
       ));
     }
     return Transform(
-      transform: new Matrix4.translationValues(
+      transform: Matrix4.translationValues(
         0.0,
         MediaQuery.of(context).padding.top,
         0.0,
@@ -238,11 +202,11 @@ class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     selectorColor = widget?.selectorColor ?? Theme.of(context).indicatorColor;
     textStyle = widget?.textStyle ??
-        Theme.of(context).textTheme.subtitle.copyWith(
+        Theme.of(context).textTheme.subtitle1.copyWith(
             color: widget.color.computeLuminance() < 0.5
                 ? Colors.white
                 : Colors.black);
-    return new DrawerScaffoldMenuController(
+    return DrawerScaffoldMenuController(
         builder: (BuildContext context, MenuController menuController) {
       var shouldRenderSelector = true;
       var actualSelectorYTop = selectorYTop;
@@ -265,25 +229,29 @@ class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
         }
       }
 
-      return new Container(
+      return Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: new BoxDecoration(
+        decoration: BoxDecoration(
           image: widget.background,
           color: widget.color,
         ),
-        child: new Material(
+        child: Material(
           color: Colors.transparent,
-          child: new Stack(
+          child: Stack(
             children: [
               createDrawer(menuController),
               widget.animation && shouldRenderSelector
-                  ? new ItemSelector(
+                  ? ItemSelector(
+                      left: widget.direction == Direction.right
+                          ? MediaQuery.of(context).size.width -
+                              widget.maxSlideAmount
+                          : 0,
                       selectorColor: selectorColor,
-                      topY: actualSelectorYTop,
-                      bottomY: actualSelectorYBottom,
+                      top: actualSelectorYTop,
+                      bottom: actualSelectorYBottom,
                       opacity: selectorOpacity)
-                  : new Container(),
+                  : Container(),
             ],
           ),
         ),
@@ -293,21 +261,23 @@ class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
 }
 
 class ItemSelector extends ImplicitlyAnimatedWidget {
-  final double topY;
-  final double bottomY;
+  final double top;
+  final double bottom;
+  final double left;
   final double opacity;
 
   final Color selectorColor;
 
   ItemSelector({
-    this.topY,
-    this.bottomY,
+    this.left,
+    this.top,
+    this.bottom,
     this.opacity,
     this.selectorColor,
   }) : super(duration: const Duration(milliseconds: 250));
 
   @override
-  _ItemSelectorState createState() => new _ItemSelectorState();
+  _ItemSelectorState createState() => _ItemSelectorState();
 }
 
 class _ItemSelectorState extends AnimatedWidgetBaseState<ItemSelector> {
@@ -319,28 +289,29 @@ class _ItemSelectorState extends AnimatedWidgetBaseState<ItemSelector> {
   void forEachTween(TweenVisitor visitor) {
     _topY = visitor(
       _topY,
-      widget.topY,
-      (dynamic value) => new Tween<double>(begin: value),
+      widget.top,
+      (dynamic value) => Tween<double>(begin: value),
     );
     _bottomY = visitor(
       _bottomY,
-      widget.bottomY,
-      (dynamic value) => new Tween<double>(begin: value),
+      widget.bottom,
+      (dynamic value) => Tween<double>(begin: value),
     );
     _opacity = visitor(
       _opacity,
       widget.opacity,
-      (dynamic value) => new Tween<double>(begin: value),
+      (dynamic value) => Tween<double>(begin: value),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return new Positioned(
+    return Positioned(
       top: _topY.evaluate(animation),
-      child: new Opacity(
+      left: widget.left,
+      child: Opacity(
         opacity: _opacity.evaluate(animation),
-        child: new Container(
+        child: Container(
           width: 5.0,
           height: _bottomY.evaluate(animation) - _topY.evaluate(animation),
           color: widget.selectorColor,
@@ -365,7 +336,7 @@ class AnimatedMenuListItem extends ImplicitlyAnimatedWidget {
   }) : super(duration: duration, curve: curve);
 
   @override
-  _AnimatedMenuListItemState createState() => new _AnimatedMenuListItemState();
+  _AnimatedMenuListItemState createState() => _AnimatedMenuListItemState();
 }
 
 class _AnimatedMenuListItemState
@@ -404,13 +375,13 @@ class _AnimatedMenuListItemState
     _translation = visitor(
       _translation,
       slide,
-      (dynamic value) => new Tween<double>(begin: value),
+      (dynamic value) => Tween<double>(begin: value),
     );
 
     _opacity = visitor(
       _opacity,
       opacity,
-      (dynamic value) => new Tween<double>(begin: value),
+      (dynamic value) => Tween<double>(begin: value),
     );
   }
 
@@ -418,10 +389,10 @@ class _AnimatedMenuListItemState
   Widget build(BuildContext context) {
     updateSelectedRenderBox(false);
 
-    return new Opacity(
+    return Opacity(
       opacity: _opacity.evaluate(animation),
-      child: new Transform(
-        transform: new Matrix4.translationValues(
+      child: Transform(
+        transform: Matrix4.translationValues(
           0.0,
           _translation.evaluate(animation),
           0.0,
@@ -441,16 +412,23 @@ class _MenuListItem extends StatelessWidget {
   final TextStyle textStyle;
   final MenuView menuView;
   final Widget icon;
+  final Direction direction;
+  final double width;
+  final EdgeInsets padding;
 
-  _MenuListItem(
-      {this.title,
-      this.isSelected,
-      this.onTap,
-      this.menuView,
-      @required this.textStyle,
-      @required this.selectorColor,
-      this.icon,
-      this.drawBorder});
+  _MenuListItem({
+    this.title,
+    this.isSelected,
+    this.onTap,
+    this.menuView,
+    @required this.textStyle,
+    @required this.selectorColor,
+    this.icon,
+    this.drawBorder,
+    this.direction = Direction.right,
+    this.width,
+    this.padding,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -466,18 +444,22 @@ class _MenuListItem extends StatelessWidget {
       ));
     children.add(
       Expanded(
-        child: new Text(
-          title,
-          style: _textStyle,
+        child: Container(
+          child: Text(
+            title,
+            style: _textStyle,
+          ),
         ),
         flex: 1,
       ),
     );
-    return new InkWell(
+    return InkWell(
       splashColor: const Color(0x44000000),
       onTap: isSelected ? null : onTap,
       child: Container(
-        width: double.infinity,
+        width: width,
+        alignment: Alignment.centerLeft,
+        // padding: padding,
         decoration: drawBorder
             ? ShapeDecoration(
                 shape: Border(
@@ -487,9 +469,10 @@ class _MenuListItem extends StatelessWidget {
                 ),
               )
             : null,
-        child: new Padding(
+        child: Padding(
           padding: menuView.padding,
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: children,
           ),
         ),

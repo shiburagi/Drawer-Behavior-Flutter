@@ -75,27 +75,27 @@ class _DrawerSlideCustomAppBarState extends State<DrawerSlideCustomAppBar> {
       appBar: AppBar(
           title: Text("Drawer - Slide with Custom AppBar"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
-      menuView: new MenuView(
-        menu: menu,
-        headerView: headerView(context),
-        animation: false,
-        alignment: Alignment.topLeft,
-        color: Theme.of(context).primaryColor,
-        selectedItemId: selectedMenuItemId,
-        onMenuItemSelected: (itemId) {
-          setState(() {
-            selectedMenuItemId = itemId;
-          });
-        },
-      ),
+      drawers: [
+        MenuView(
+          menu: menu,
+          headerView: headerView(context),
+          animation: false,
+          alignment: Alignment.topLeft,
+          color: Theme.of(context).primaryColor,
+          selectedItemId: selectedMenuItemId,
+          onMenuItemSelected: (itemId) {
+            setState(() {
+              selectedMenuItemId = itemId;
+            });
+          },
+        )
+      ],
       builder: (context, id) => Scaffold(
         appBar: AppBar(
           leading: new IconButton(
               icon: new Icon(Icons.menu),
               onPressed: () {
-                setState(() {
-                  controller.open = !controller.isOpen();
-                });
+                controller.toggle();
               }),
         ),
         body: IndexedStack(

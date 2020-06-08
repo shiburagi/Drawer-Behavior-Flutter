@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
@@ -9,7 +10,7 @@ typedef Widget DrawerScaffoldBuilder(
     BuildContext context, MenuController menuController);
 
 class DrawerScaffold extends StatefulWidget {
-  final MenuView menuView;
+  final List<MenuView> drawers;
   @deprecated
   final Screen contentView;
   final ScreenBuilder builder;
@@ -37,7 +38,7 @@ class DrawerScaffold extends StatefulWidget {
         spreadRadius: 10.0,
       ),
     ],
-    this.menuView,
+    this.drawers,
     this.cornerRadius = 10.0,
     this.contentView,
     this.percentage = 0.8,
@@ -57,42 +58,55 @@ class DrawerScaffold extends StatefulWidget {
 
 class _DrawerScaffoldState<T> extends State<DrawerScaffold>
     with TickerProviderStateMixin {
-  MenuController menuController;
+  List<MenuController> menuControllers;
   Curve scaleDownCurve = new Interval(0.0, 0.3, curve: Curves.easeOut);
   Curve scaleUpCurve = new Interval(0.0, 1.0, curve: Curves.easeOut);
   Curve slideOutCurve = new Interval(0.0, 1.0, curve: Curves.easeOut);
   Curve slideInCurve = new Interval(0.0, 1.0, curve: Curves.easeOut);
-
+  int listenDrawer = 0;
+  int focusDrawer = 0;
+  int mainDrawer = 0;
   @override
   void initState() {
     super.initState();
-    selectedItemId = widget.menuView.selectedItemId;
-    menuController = new MenuController(
-      vsync: this,
-    )..addListener(() => setState(() {}));
+    log("No of drawers : ${widget.drawers.length}");
+    selectedItemId = widget.drawers[listenDrawer].selectedItemId;
+    menuControllers = widget.drawers
+        .map((d) => MenuController(
+              d.direction,
+              vsync: this,
+            )..addListener(() => setState(() {})))
+        .toList();
+    log("No of menuControllers : ${menuControllers.length}");
 
     updateDrawerState();
   }
 
   @override
   void dispose() {
-    menuController.dispose();
+    menuControllers.map((e) => e.dispose());
     super.dispose();
   }
 
   @override
   void didUpdateWidget(Widget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    updateDrawerState();
+    if (widget.controller != null)
+      widget.controller._menuControllers = menuControllers;
   }
 
   void updateDrawerState() {
     if (widget.controller != null) {
-      if (widget.controller.open)
-        menuController.open();
+      if (widget.controller._open != null)
+        menuControllers
+            .firstWhere(
+                (element) => element.direction == widget.controller._open)
+            .open();
       else
-        menuController.close();
-      widget.controller.menuController = menuController;
+        menuControllers.forEach((element) {
+          element.close();
+        });
+      widget.controller._menuControllers = menuControllers;
     }
   }
 
@@ -108,7 +122,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
               new IconButton(
                   icon: Icon(Icons.menu),
                   onPressed: () {
-                    menuController.toggle();
+                    menuControllers[mainDrawer].toggle();
                   }),
           title: widget.appBar.title,
           automaticallyImplyLeading: widget.appBar.automaticallyImplyLeading,
@@ -135,10 +149,21 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
   Widget body;
 
   T selectedItemId;
+  bool isDrawerOpen() {
+    return menuControllers.where((element) => element.isOpen()).isNotEmpty;
+  }
+
+  int drawerFrom(Direction direction) {
+    return menuControllers.indexWhere((element) {
+      log("Drawer From : $direction ${element.direction == direction}");
+      return element.direction == direction;
+    });
+  }
 
   createContentDisplay() {
-    if (selectedItemId != widget.menuView.selectedItemId || body == null) {
-      selectedItemId = widget.menuView.selectedItemId;
+    if (selectedItemId != widget.drawers[listenDrawer].selectedItemId ||
+        body == null) {
+      selectedItemId = widget.drawers[listenDrawer].selectedItemId;
       body = widget.builder?.call(context, selectedItemId) ??
           widget.contentView?.contentBuilder(context);
     }
@@ -153,58 +178,93 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
       floatingActionButtonAnimator: widget.floatingActionButtonAnimator,
     );
 
-    double maxSlideAmount = widget.menuView.maxSlideAmount;
+    double maxSlideAmount = widget.drawers[focusDrawer].maxSlideAmount;
     Widget content = !widget.enableGestures
         ? _scaffoldWidget
-        : Center(
-            child: Container(
-              child: GestureDetector(
-                child: AbsorbPointer(
-                    absorbing: menuController.isOpen() && widget.appBar != null,
-                    child: _scaffoldWidget),
-                onTap: () {
-                  if (menuController.isOpen()) menuController.close();
-                },
-                onHorizontalDragStart: (details) {
-                  isOpening = !menuController.isOpen();
-                  if (menuController.isOpen() &&
-                      details.globalPosition.dx < maxSlideAmount + 60) {
+        : GestureDetector(
+            child: AbsorbPointer(
+                absorbing: isDrawerOpen() && widget.appBar != null,
+                child: _scaffoldWidget),
+            onTap: () {
+              menuControllers.forEach((element) {
+                if (element.isOpen()) element.close();
+              });
+            },
+            onHorizontalDragStart: (details) {
+              isOpening = !isDrawerOpen();
+              double width = MediaQuery.of(context).size.width;
+              startDx = -1;
+
+              if (details.globalPosition.dx < maxSlideAmount + 60) {
+                int focusDrawer = drawerFrom(Direction.left);
+
+                log("$focusDrawer ${details.globalPosition.dx}");
+                if (focusDrawer < 0) {
+                } else {
+                  this.focusDrawer = focusDrawer;
+                  if (isDrawerOpen()) {
                     startDx = details.globalPosition.dx;
                   } else if (details.globalPosition.dx < 60)
                     startDx = details.globalPosition.dx;
-                  else {
-                    startDx = -1;
-                  }
-                },
-                onHorizontalDragUpdate: (details) {
-                  if (startDx == -1) return;
-                  double dx = (details.globalPosition.dx - startDx);
-                  if (isOpening && dx > 0 && dx <= maxSlideAmount) {
-                    percentage = Utils.fixed(dx / maxSlideAmount, 3);
+                 
+                }
+              } 
+              if (startDx < 0 &&
+                  details.globalPosition.dx > width - maxSlideAmount - 60) {
+                int focusDrawer = drawerFrom(Direction.right);
 
-                    menuController._animationController.animateTo(percentage,
-                        duration: Duration(microseconds: 0));
-                    menuController._animationController
-                        .notifyStatusListeners(AnimationStatus.forward);
-                  } else if (!isOpening && dx <= 0 && dx >= -maxSlideAmount) {
-                    percentage = Utils.fixed(1.0 + dx / maxSlideAmount, 3);
+                log("pass");
 
-                    menuController._animationController.animateTo(percentage,
-                        duration: Duration(microseconds: 0));
-                    menuController._animationController
-                        .notifyStatusListeners(AnimationStatus.reverse);
-                  }
-                },
-                onHorizontalDragEnd: (details) {
-                  if (startDx == -1) return;
-                  if (percentage < 0.5) {
-                    menuController.close();
-                  } else {
-                    menuController.open();
-                  }
-                },
-              ),
-            ),
+                if (focusDrawer < 0) {
+                  return;
+                } else {
+                  this.focusDrawer = focusDrawer;
+
+                  if (isDrawerOpen()) {
+                    startDx = details.globalPosition.dx;
+                  } else if (details.globalPosition.dx > width - 60)
+                    startDx = details.globalPosition.dx;
+                 
+                }
+              } 
+              log("startDx: $startDx");
+            },
+            onHorizontalDragUpdate: (details) {
+              if (startDx == -1) return;
+              log("startDx: $startDx");
+
+              double dx = (details.globalPosition.dx - startDx);
+              MenuController menuController = menuControllers[focusDrawer];
+
+              if (menuController.direction == Direction.right) {
+                dx = -dx;
+              }
+              if (isOpening && dx > 0 && dx <= maxSlideAmount) {
+                percentage = Utils.fixed(dx / maxSlideAmount, 3);
+
+                menuController._animationController
+                    .animateTo(percentage, duration: Duration(microseconds: 0));
+                menuController._animationController
+                    .notifyStatusListeners(AnimationStatus.forward);
+              } else if (!isOpening && dx <= 0 && dx >= -maxSlideAmount) {
+                percentage = Utils.fixed(1.0 + dx / maxSlideAmount, 3);
+
+                menuController._animationController
+                    .animateTo(percentage, duration: Duration(microseconds: 0));
+                menuController._animationController
+                    .notifyStatusListeners(AnimationStatus.reverse);
+              }
+            },
+            onHorizontalDragEnd: (details) {
+              if (startDx == -1) return;
+              menuControllers.forEach((menuController) {
+                if (percentage < 0.5) {
+                  menuController.close();
+                } else {
+                  menuController.open();
+                }
+              });
+            },
           );
 
     bool isIOS = Platform.isIOS;
@@ -220,8 +280,10 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
                 child: content,
                 onWillPop: () {
                   return new Future(() {
-                    if (menuController.isOpen()) {
-                      menuController.close();
+                    if (isDrawerOpen()) {
+                      menuControllers.forEach((element) {
+                        element.close();
+                      });
                       return false;
                     }
                     return true;
@@ -230,8 +292,8 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
   }
 
   zoomAndSlideContent(Widget content) {
-    double maxSlideAmount = widget.menuView.maxSlideAmount;
-
+    double maxSlideAmount = widget.drawers[focusDrawer].maxSlideAmount;
+    MenuController menuController = this.menuControllers[focusDrawer];
     var slidePercent, scalePercent;
     switch (menuController.state) {
       case MenuState.closed:
@@ -252,10 +314,13 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
         break;
     }
 
-    final slideAmount = maxSlideAmount * slidePercent;
+    double slideAmount = maxSlideAmount * slidePercent;
     final contentScale = 1.0 - ((1.0 - widget.percentage) * scalePercent);
     final cornerRadius = widget.cornerRadius * menuController.percentOpen;
+    log("slideAmount: $slideAmount $maxSlideAmount $contentScale");
 
+    if (widget.drawers[focusDrawer].direction == Direction.right)
+      slideAmount = -slideAmount + (maxSlideAmount * (1 - contentScale));
     return new Transform(
       transform: new Matrix4.translationValues(slideAmount, 0.0, 0.0)
         ..scale(contentScale, contentScale),
@@ -275,7 +340,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        widget.menuView,
+        focusDrawer != null ? widget.drawers[focusDrawer] : Container(),
         createContentDisplay(),
       ],
     );
@@ -313,11 +378,13 @@ class DrawerScaffoldMenuControllerState
     super.dispose();
   }
 
-  getMenuController(BuildContext context) {
+  MenuController getMenuController(BuildContext context) {
     final scaffoldState =
-        context.ancestorStateOfType(new TypeMatcher<_DrawerScaffoldState>())
-            as _DrawerScaffoldState;
-    return scaffoldState.menuController;
+        context.findAncestorStateOfType<_DrawerScaffoldState>();
+    return scaffoldState.menuControllers.firstWhere(
+      (element) => element.isOpen(),
+      orElse: () => scaffoldState.menuControllers[0],
+    );
   }
 
   _onMenuControllerChange() {
@@ -355,9 +422,11 @@ class Screen {
 class MenuController extends ChangeNotifier {
   final TickerProvider vsync;
   final AnimationController _animationController;
+  final Direction direction;
   MenuState state = MenuState.closed;
 
-  MenuController({
+  MenuController(
+    this.direction, {
     this.vsync,
   }) : _animationController = new AnimationController(vsync: vsync) {
     _animationController
@@ -416,14 +485,35 @@ class MenuController extends ChangeNotifier {
 }
 
 class DrawerScaffoldController {
-  MenuController menuController;
+  List<MenuController> _menuControllers;
 
-  DrawerScaffoldController({this.open = false});
+  DrawerScaffoldController({Direction open}) : _open = open;
 
-  bool open;
+  Direction _open;
+  toggle([Direction direction = Direction.left]) {
+    if (isOpen())
+      closeDrawer(direction);
+    else
+      openDrawer(direction);
+  }
+
+  openDrawer([Direction direction = Direction.left]) {
+    _menuControllers
+        .firstWhere((element) => element.direction == direction)
+        .open();
+  }
+
+  closeDrawer([Direction direction = Direction.left]) {
+    _menuControllers
+        .firstWhere((element) => element.direction == direction)
+        .close();
+  }
+
   ValueChanged<bool> onToggle;
 
-  bool isOpen() => menuController.isOpen();
+  bool isOpen([Direction direction = Direction.left]) => _menuControllers
+      .where((element) => element.direction == direction && element.isOpen())
+      .isNotEmpty;
 }
 
 enum MenuState {

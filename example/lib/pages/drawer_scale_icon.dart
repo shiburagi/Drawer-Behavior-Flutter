@@ -18,22 +18,24 @@ class _DrawerScaleIconState extends State<DrawerScaleIcon> {
 
   @override
   Widget build(BuildContext context) {
-    return new DrawerScaffold(
+    return DrawerScaffold(
       percentage: 0.6,
       appBar: AppBar(
           title: Text("Drawer - Scale with Icon"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
-      menuView: new MenuView(
-        menu: menuWithIcon,
-        animation: true,
-        color: Theme.of(context).primaryColor,
-        selectedItemId: selectedMenuItemId,
-        onMenuItemSelected: (itemId) {
-          setState(() {
-            selectedMenuItemId = itemId;
-          });
-        },
-      ),
+      drawers: [
+        MenuView(
+          menu: menuWithIcon,
+          animation: true,
+          color: Theme.of(context).primaryColor,
+          selectedItemId: selectedMenuItemId,
+          onMenuItemSelected: (itemId) {
+            setState(() {
+              selectedMenuItemId = itemId;
+            });
+          },
+        )
+      ],
       builder: (context, id) => IndexedStack(
         index: id,
         children: menu.items

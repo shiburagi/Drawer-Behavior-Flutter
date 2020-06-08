@@ -66,25 +66,27 @@ class _DrawerSlideWithFooterState extends State<DrawerSlideWithFooter> {
 
   @override
   Widget build(BuildContext context) {
-    return new DrawerScaffold(
+    return DrawerScaffold(
       percentage: 1,
       cornerRadius: 0,
       appBar: AppBar(
           title: Text("Drawer - with Footer"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
-      menuView: new MenuView(
-        menu: menu,
-        footerView: footerView(context),
-        animation: false,
-        alignment: Alignment.topLeft,
-        color: Theme.of(context).primaryColor,
-        selectedItemId: selectedMenuItemId,
-        onMenuItemSelected: (itemId) {
-          setState(() {
-            selectedMenuItemId = itemId;
-          });
-        },
-      ),
+      drawers: [
+        MenuView(
+          menu: menu,
+          footerView: footerView(context),
+          animation: false,
+          alignment: Alignment.topLeft,
+          color: Theme.of(context).primaryColor,
+          selectedItemId: selectedMenuItemId,
+          onMenuItemSelected: (itemId) {
+            setState(() {
+              selectedMenuItemId = itemId;
+            });
+          },
+        )
+      ],
       builder: (context, id) => IndexedStack(
         index: id,
         children: menu.items
