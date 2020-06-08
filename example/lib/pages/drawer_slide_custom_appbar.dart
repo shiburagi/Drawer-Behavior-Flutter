@@ -76,7 +76,7 @@ class _DrawerSlideCustomAppBarState extends State<DrawerSlideCustomAppBar> {
           title: Text("Drawer - Slide with Custom AppBar"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       drawers: [
-        MenuView(
+        SideDrawer(
           menu: menu,
           headerView: headerView(context),
           animation: false,

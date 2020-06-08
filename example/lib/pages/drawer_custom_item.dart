@@ -73,7 +73,7 @@ class _DrawerCustomItemState extends State<DrawerCustomItem> {
           title: Text("Drawer - Custom  Item"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       drawers: [
-        MenuView(
+        SideDrawer(
           menu: menu,
           headerView: headerView(context),
           animation: false,

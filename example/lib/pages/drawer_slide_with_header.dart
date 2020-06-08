@@ -73,7 +73,7 @@ class _DrawerSlideWithHeaderState extends State<DrawerSlideWithHeader> {
           title: Text("Drawer - with Header"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       drawers: [
-        MenuView(
+        SideDrawer(
           menu: menu,
           headerView: headerView(context),
           animation: false,

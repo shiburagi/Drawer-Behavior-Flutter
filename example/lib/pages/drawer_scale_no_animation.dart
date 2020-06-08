@@ -23,7 +23,7 @@ class _DrawerScaleNoAnimationState extends State<DrawerScaleNoAnimation> {
           title: Text("Drawer - Scale No Animaton"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       drawers: [
-        MenuView(
+        SideDrawer(
           menu: menu,
           animation: false,
           color: Theme.of(context).primaryColor,

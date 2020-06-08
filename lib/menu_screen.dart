@@ -8,8 +8,8 @@ enum Direction {
   right,
 }
 
-class MenuView<T> extends StatefulWidget {
-  MenuView({
+class SideDrawer<T> extends StatefulWidget {
+  SideDrawer({
     this.menu,
     this.headerView,
     this.footerView,
@@ -45,10 +45,10 @@ class MenuView<T> extends StatefulWidget {
   final EdgeInsets padding;
 
   @override
-  _MenuViewState createState() => _MenuViewState();
+  _SideDrawerState createState() => _SideDrawerState();
 }
 
-class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
+class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
   AnimationController titleAnimationController;
   double selectorYTop;
   double selectorYBottom;
@@ -350,7 +350,7 @@ class _AnimatedMenuListItemState
   updateSelectedRenderBox(bool useState) {
     final renderBox = context.findRenderObject() as RenderBox;
     if (renderBox != null && widget.isSelected) {
-      (menuScreenKey.currentState as _MenuViewState)
+      (menuScreenKey.currentState as _SideDrawerState)
           .setSelectedRenderBox(renderBox, useState);
     }
   }
@@ -410,7 +410,7 @@ class _MenuListItem extends StatelessWidget {
   final Function() onTap;
   final Color selectorColor;
   final TextStyle textStyle;
-  final MenuView menuView;
+  final SideDrawer menuView;
   final Widget icon;
   final Direction direction;
   final double width;

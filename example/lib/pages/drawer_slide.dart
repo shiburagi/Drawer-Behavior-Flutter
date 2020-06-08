@@ -24,7 +24,7 @@ class _DrawerSlideState extends State<DrawerSlide> {
           title: Text("Drawer - Slide"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       drawers: [
-        MenuView(
+        SideDrawer(
           textStyle: TextStyle(color: Colors.white, fontSize: 24.0),
           menu: menu,
           animation: false,

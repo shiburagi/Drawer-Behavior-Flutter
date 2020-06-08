@@ -24,7 +24,7 @@ class _DrawerLeftAndRightState extends State<DrawerLeftAndRight> {
           title: Text("Drawer - Left & Right"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       drawers: [
-        MenuView(
+        SideDrawer(
           menu: menu,
           direction: Direction.left,
           animation: true,
@@ -36,7 +36,7 @@ class _DrawerLeftAndRightState extends State<DrawerLeftAndRight> {
             });
           },
         ),
-        MenuView(
+        SideDrawer(
           menu: menu,
           direction: Direction.right,
           animation: true,

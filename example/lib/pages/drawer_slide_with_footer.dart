@@ -73,7 +73,7 @@ class _DrawerSlideWithFooterState extends State<DrawerSlideWithFooter> {
           title: Text("Drawer - with Footer"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       drawers: [
-        MenuView(
+        SideDrawer(
           menu: menu,
           footerView: footerView(context),
           animation: false,

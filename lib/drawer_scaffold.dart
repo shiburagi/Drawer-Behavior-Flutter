@@ -10,7 +10,7 @@ typedef Widget DrawerScaffoldBuilder(
     BuildContext context, MenuController menuController);
 
 class DrawerScaffold extends StatefulWidget {
-  final List<MenuView> drawers;
+  final List<SideDrawer> drawers;
   @deprecated
   final Screen contentView;
   final ScreenBuilder builder;

@@ -24,7 +24,7 @@ class _DrawerScaleState extends State<DrawerScale> {
           title: Text("Drawer - Scale"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       drawers: [
-        MenuView(
+        SideDrawer(
           menu: menu,
           direction: Direction.left,
           animation: true,
