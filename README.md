@@ -20,6 +20,23 @@ https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
 - [ ] 3D effect
 - [ ] Material design drawer's behavior
 
+
+### NEW UPDATES
+* Floating action button with location and animator
+* Bottom navigation bar
+* Extended body
+* AndroidX support  
+
+
+## Table of contents
+- [Usage](#usage)
+- [Example](#example)
+- [Migration](#migration)
+- [Preview](#preview)
+- [Customize](#customize)
+- [Contibutor](#contibutor)
+
+
 ## Usage
 
 1. **Depend on it**
@@ -109,6 +126,60 @@ class _DrawerScaleState extends State<DrawerScale> {
 
 ```
 
+
+
+## Migration
+---
+### contentView (Screen) -> builder (ScreenBuilder)
+```dart
+contentView: Screen(
+  contentBuilder: (context) => Center(child: _widget),
+  color: Colors.white,
+),
+```
+**to**
+```dart
+builder: (context, id) => Center(child: _widget),
+```
+---
+### menuView (MenuView) -> drawers (List<SideDrawer>)
+```dart
+menuView: new MenuView(
+    menu: menu,
+    headerView: headerView(context),
+    animation: false,
+    mainAxisAlignment: MainAxisAlignment.start,
+    color: Theme.of(context).primaryColor,
+    selectedItemId: selectedMenuItemId,
+    onMenuItemSelected: (String itemId) {
+      selectedMenuItemId = itemId;
+      if (itemId == 'restaurant') {
+        setState(() => _widget = Text("1"));
+      } else {
+        setState(() => _widget = Text("default"));
+      }
+    },
+  ),
+```
+**to**
+```dart
+drawers: [
+  SideDrawer(
+    menu: menu,
+    direction: Direction.left, // Drawer position, left or right
+    animation: true,
+    color: Theme.of(context).primaryColor,
+    selectedItemId: selectedMenuItemId,
+    onMenuItemSelected: (itemId) {
+      setState(() {
+        selectedMenuItemId = itemId;
+      });
+    },
+  )
+],
+```
+---
+ 
 
 ## Preview
 
@@ -232,3 +303,7 @@ String id;
 String title;
 IconData icon;
 ```
+
+## Contibutor
+- [Vladimir Vlach](https://github.com/vladaman)
+- [trademunch](https://github.com/trademunch)
