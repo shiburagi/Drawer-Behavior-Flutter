@@ -27,9 +27,16 @@ class DrawerScaffold extends StatefulWidget {
   final Widget bottomNavigationBar;
   final FloatingActionButtonLocation floatingActionButtonLocation;
   final FloatingActionButtonAnimator floatingActionButtonAnimator;
-
   final List<BoxShadow> contentShadow;
+  final Widget bottomSheet;
+  final bool extendBodyBehindAppBar;
+  final List<Widget> persistentFooterButtons;
 
+  final bool primary;
+
+  final bool resizeToAvoidBottomInset;
+
+  final bool resizeToAvoidBottomPadding;
   DrawerScaffold({
     this.appBar,
     this.contentShadow = const [
@@ -45,7 +52,7 @@ class DrawerScaffold extends StatefulWidget {
     this.contentView,
     this.percentage = 0.8,
     this.controller,
-    this.extendedBody,
+    this.extendedBody = false,
     this.bottomNavigationBar,
     this.floatingActionButtonLocation,
     this.floatingActionButton,
@@ -54,6 +61,12 @@ class DrawerScaffold extends StatefulWidget {
     this.enableGestures = true,
     this.mainDrawer = Direction.left,
     Key key,
+    this.bottomSheet,
+    this.extendBodyBehindAppBar = false,
+    this.persistentFooterButtons,
+    this.primary = true,
+    this.resizeToAvoidBottomInset,
+    this.resizeToAvoidBottomPadding,
   }) : super(key: key);
 
   @override
@@ -69,6 +82,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
   Curve slideInCurve = new Interval(0.0, 1.0, curve: Curves.easeOut);
   int listenDrawerIndex = 0;
   int focusDrawerIndex = 0;
+
   int get mainDrawerIndex => max(
       0,
       widget.drawers
@@ -193,11 +207,17 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
       backgroundColor: Colors.transparent,
       appBar: createAppBar(),
       body: body,
-      extendBody: widget.extendedBody ?? false,
+      extendBody: widget.extendedBody,
       floatingActionButton: widget.floatingActionButton,
       floatingActionButtonLocation: widget.floatingActionButtonLocation,
       bottomNavigationBar: widget.bottomNavigationBar,
       floatingActionButtonAnimator: widget.floatingActionButtonAnimator,
+      bottomSheet: widget.bottomSheet,
+      extendBodyBehindAppBar: widget.extendBodyBehindAppBar,
+      persistentFooterButtons: widget.persistentFooterButtons,
+      primary: widget.primary,
+      resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
+      resizeToAvoidBottomPadding: widget.resizeToAvoidBottomPadding,
     );
 
     double maxSlideAmount = widget.drawers[focusDrawerIndex].maxSlideAmount;
