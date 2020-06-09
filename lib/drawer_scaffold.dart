@@ -114,7 +114,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
   }
 
   assignContoller() {
-    Dev.log("assignContoller");
+    
     menuControllers = widget.drawers
         .map((d) => MenuController(
               d.direction,
@@ -189,7 +189,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
 
   int drawerFrom(Direction direction) {
     return menuControllers.indexWhere((element) {
-      Dev.log("Drawer From : $direction ${element.direction == direction}");
+      
       return element.direction == direction;
     });
   }
@@ -239,7 +239,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
               if (details.globalPosition.dx < maxSlideAmount + 60) {
                 int focusDrawer = drawerFrom(Direction.left);
 
-                Dev.log("$focusDrawer ${details.globalPosition.dx}");
+                
                 if (focusDrawer < 0) {
                 } else {
                   this.focusDrawerIndex = focusDrawer;
@@ -253,7 +253,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
                   details.globalPosition.dx > width - maxSlideAmount - 60) {
                 int focusDrawer = drawerFrom(Direction.right);
 
-                Dev.log("pass");
+                
 
                 if (focusDrawer < 0) {
                   return;
@@ -266,11 +266,11 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
                     startDx = details.globalPosition.dx;
                 }
               }
-              Dev.log("startDx: $startDx");
+              
             },
             onHorizontalDragUpdate: (details) {
               if (startDx == -1) return;
-              Dev.log("startDx: $startDx");
+              
 
               double dx = (details.globalPosition.dx - startDx);
               MenuController menuController = menuControllers[focusDrawerIndex];
@@ -357,13 +357,13 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
     double slideAmount = maxSlideAmount * slidePercent;
     final contentScale = 1.0 - ((1.0 - drawer.percentage) * scalePercent);
     final cornerRadius = widget.cornerRadius * menuController.percentOpen;
-    Dev.log("slideAmount: $slideAmount $maxSlideAmount $contentScale");
+    
 
     if (widget.drawers[focusDrawerIndex].direction == Direction.right)
       slideAmount = -slideAmount + (maxSlideAmount * (1 - contentScale));
     double degreeAmount = (drawer.degree ?? 0) * slidePercent;
     degreeAmount = degreeAmount * pi / 180;
-    Dev.log("Degree: $degreeAmount");
+    
 
     Matrix4 perspective;
     if (drawer.degree == null) {
@@ -458,7 +458,7 @@ class DrawerScaffoldMenuControllerState
 
   MenuController getMenuController(BuildContext context,
       [Direction direction = Direction.left]) {
-    Dev.log("Direction: $direction");
+    
     final scaffoldState =
         context.findAncestorStateOfType<_DrawerScaffoldState>();
     return scaffoldState.menuControllers.firstWhere(
