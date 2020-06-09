@@ -27,7 +27,7 @@ class _Drawer3dState extends State<Drawer3d> {
           degree:180,
           menu: menu,
           direction: Direction.left,
-          // animation: true,
+          animation: true,
           color: Theme.of(context).primaryColor,
           selectedItemId: selectedMenuItemId,
           onMenuItemSelected: (itemId) {

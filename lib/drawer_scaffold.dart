@@ -442,6 +442,15 @@ class DrawerScaffoldMenuControllerState
   }
 
   @override
+  void didUpdateWidget(Widget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (menuController != null)
+      menuController.removeListener(_onMenuControllerChange);
+    menuController = getMenuController(context, widget.direction);
+    menuController.addListener(_onMenuControllerChange);
+  }
+
+  @override
   void dispose() {
     menuController.removeListener(_onMenuControllerChange);
     super.dispose();
@@ -521,6 +530,7 @@ class MenuController extends ChangeNotifier {
             state = MenuState.closed;
             break;
         }
+
         notifyListeners();
       });
   }

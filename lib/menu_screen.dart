@@ -96,10 +96,11 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
     final animationIntervalDuration = 0.5;
     final perListItemDelay =
         menuController.state != MenuState.closing ? 0.15 : 0.0;
-
     final millis = menuController.state != MenuState.closing
         ? 150 * widget.menu.items.length
         : 600;
+    Dev.log("render menu items $millis");
+
     final maxDuration = (widget.menu.items.length - 1) * perListItemDelay +
         animationIntervalDuration;
     for (var i = 0; i < widget.menu.items.length; ++i) {
@@ -139,6 +140,8 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
               ),
               onTap: onTap,
             );
+      Dev.log(
+          "render menu items ${animationIntervalStart / maxDuration},${animationIntervalEnd / maxDuration}");
 
       if (widget.animation)
         listItems.add(AnimatedMenuListItem(
@@ -397,7 +400,7 @@ class _AnimatedMenuListItemState
   @override
   Widget build(BuildContext context) {
     updateSelectedRenderBox(false);
-
+    Dev.log("build animated ${_opacity.evaluate(animation)}");
     return Opacity(
       opacity: _opacity.evaluate(animation),
       child: Transform(
