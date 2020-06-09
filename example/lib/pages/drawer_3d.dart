@@ -2,12 +2,12 @@ import 'package:drawerbehavior/drawerbehavior.dart';
 import 'package:drawerbehavior_example/menus/main.dart';
 import 'package:flutter/material.dart';
 
-class DrawerSlide extends StatefulWidget {
+class Drawer3d extends StatefulWidget {
   @override
-  _DrawerSlideState createState() => _DrawerSlideState();
+  _Drawer3dState createState() => _Drawer3dState();
 }
 
-class _DrawerSlideState extends State<DrawerSlide> {
+class _Drawer3dState extends State<Drawer3d> {
   int selectedMenuItemId;
 
   @override
@@ -20,15 +20,14 @@ class _DrawerSlideState extends State<DrawerSlide> {
   Widget build(BuildContext context) {
     return DrawerScaffold(
       appBar: AppBar(
-          title: Text("Drawer - Slide"),
+          title: Text("Drawer - Scale"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       drawers: [
         SideDrawer(
-          percentage: 1,
-          textStyle: TextStyle(color: Colors.white, fontSize: 24.0),
+          percentage: 0.6,
           menu: menu,
-          animation: false,
-          alignment: Alignment.topLeft,
+          direction: Direction.left,
+          animation: true,
           color: Theme.of(context).primaryColor,
           selectedItemId: selectedMenuItemId,
           onMenuItemSelected: (itemId) {

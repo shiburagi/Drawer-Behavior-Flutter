@@ -9,7 +9,7 @@ class DrawerLeftAndRight extends StatefulWidget {
 
 class _DrawerLeftAndRightState extends State<DrawerLeftAndRight> {
   int selectedMenuItemId;
-  DrawerScaffoldController controller = DrawerScaffoldController(); 
+  DrawerScaffoldController controller = DrawerScaffoldController();
   @override
   void initState() {
     selectedMenuItemId = menu.items[0].id;
@@ -20,15 +20,16 @@ class _DrawerLeftAndRightState extends State<DrawerLeftAndRight> {
   Widget build(BuildContext context) {
     return DrawerScaffold(
       controller: controller,
-      percentage: 0.6,
-      appBar: AppBar(
-          title: Text("Drawer - Left & Right"),
-          actions: [IconButton(icon: Icon(Icons.notifications_none), onPressed: () {
-            controller.toggle(Direction.right);
-
-          })]),
+      appBar: AppBar(title: Text("Drawer - Left & Right"), actions: [
+        IconButton(
+            icon: Icon(Icons.notifications_none),
+            onPressed: () {
+              controller.toggle(Direction.right);
+            })
+      ]),
       drawers: [
         SideDrawer(
+          percentage: 0.6,
           menu: menu,
           direction: Direction.left,
           animation: true,

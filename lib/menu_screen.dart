@@ -16,6 +16,7 @@ class SideDrawer<T> extends StatefulWidget {
     this.headerView,
     this.footerView,
     this.selectedItemId,
+    this.percentage = 0.8,
     this.onMenuItemSelected,
     this.color = Colors.white,
     this.background,
@@ -28,6 +29,7 @@ class SideDrawer<T> extends StatefulWidget {
     this.itemBuilder,
   }) : super(key: menuScreenKey);
 
+  final double percentage;
   final double maxSlideAmount = 275.0;
   final Direction direction;
   final Menu menu;

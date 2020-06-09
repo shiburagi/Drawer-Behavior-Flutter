@@ -19,7 +19,6 @@ class DrawerScaffold extends StatefulWidget {
   final AppBar appBar;
   final Direction mainDrawer;
   final DrawerScaffoldController controller;
-  final double percentage;
   final double cornerRadius;
   final bool extendedBody;
   final bool enableGestures;
@@ -50,7 +49,6 @@ class DrawerScaffold extends StatefulWidget {
     this.drawers,
     this.cornerRadius = 10.0,
     this.contentView,
-    this.percentage = 0.8,
     this.controller,
     this.extendedBody = false,
     this.bottomNavigationBar,
@@ -332,7 +330,8 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
   }
 
   zoomAndSlideContent(Widget content) {
-    double maxSlideAmount = widget.drawers[focusDrawerIndex].maxSlideAmount;
+    SideDrawer drawer =widget.drawers[focusDrawerIndex];
+    double maxSlideAmount = drawer.maxSlideAmount;
     MenuController menuController = this.menuControllers[focusDrawerIndex];
     var slidePercent, scalePercent;
     switch (menuController.state) {
@@ -355,7 +354,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
     }
 
     double slideAmount = maxSlideAmount * slidePercent;
-    final contentScale = 1.0 - ((1.0 - widget.percentage) * scalePercent);
+    final contentScale = 1.0 - ((1.0 - drawer.percentage) * scalePercent);
     final cornerRadius = widget.cornerRadius * menuController.percentOpen;
     Dev.log("slideAmount: $slideAmount $maxSlideAmount $contentScale");
 

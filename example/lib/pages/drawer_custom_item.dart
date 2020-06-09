@@ -67,13 +67,13 @@ class _DrawerCustomItemState extends State<DrawerCustomItem> {
   @override
   Widget build(BuildContext context) {
     return DrawerScaffold(
-      percentage: 1,
       cornerRadius: 0,
       appBar: AppBar(
           title: Text("Drawer - Custom  Item"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       drawers: [
         SideDrawer(
+          percentage: 1,
           menu: menu,
           headerView: headerView(context),
           animation: false,

@@ -19,12 +19,12 @@ class _DrawerScaleState extends State<DrawerScale> {
   @override
   Widget build(BuildContext context) {
     return DrawerScaffold(
-      percentage: 0.6,
       appBar: AppBar(
           title: Text("Drawer - Scale"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       drawers: [
         SideDrawer(
+          percentage: 0.6,
           menu: menu,
           direction: Direction.left,
           animation: true,

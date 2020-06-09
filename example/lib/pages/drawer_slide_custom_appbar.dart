@@ -70,13 +70,13 @@ class _DrawerSlideCustomAppBarState extends State<DrawerSlideCustomAppBar> {
   buildDrawer(BuildContext context) {
     return DrawerScaffold(
       controller: controller,
-      percentage: 1,
       cornerRadius: 0,
       appBar: AppBar(
           title: Text("Drawer - Slide with Custom AppBar"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       drawers: [
         SideDrawer(
+          percentage: 1,
           menu: menu,
           headerView: headerView(context),
           animation: false,

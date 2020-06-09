@@ -67,13 +67,13 @@ class _DrawerSlideWithHeaderState extends State<DrawerSlideWithHeader> {
   @override
   Widget build(BuildContext context) {
     return new DrawerScaffold(
-      percentage: 1,
       cornerRadius: 0,
       appBar: AppBar(
           title: Text("Drawer - with Header"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       drawers: [
         SideDrawer(
+          percentage: 1,
           menu: menu,
           headerView: headerView(context),
           animation: false,
