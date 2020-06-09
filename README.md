@@ -178,6 +178,29 @@ drawers: [
   )
 ],
 ```
+
+
+
+---
+### percentage (DrawerScaffold -> drawers (List<SideDrawer>))
+```dart
+DrawerScaffold(
+  percentage: 0.6,
+  ...
+);
+```
+**to**
+```dart
+DrawerScaffold(
+  drawers: [
+    SideDrawer(
+      percentage: 0.6,
+      ...
+    )
+  ]  
+  ...
+);
+```
 ---
  
 
@@ -293,6 +316,7 @@ FloatingActionButtonAnimator floatingActionButtonAnimator;
 *SideDrawer*
 ```dart
 double percentage;
+double degree; // 15-45 degree
 Menu menu;
 String selectedItemId;
 Direction direction;
