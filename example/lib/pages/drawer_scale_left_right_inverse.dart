@@ -33,7 +33,7 @@ class _DrawerLeftAndRightInverseState extends State<DrawerLeftAndRightInverse> {
       drawers: [
         SideDrawer(
           menu: menu,
-          direction: Direction.left,
+          direction: Direction.right,
           animation: true,
           color: Theme.of(context).primaryColor,
           selectedItemId: selectedMenuItemId,
@@ -45,7 +45,7 @@ class _DrawerLeftAndRightInverseState extends State<DrawerLeftAndRightInverse> {
         ),
         SideDrawer(
           menu: menu,
-          direction: Direction.right,
+          direction: Direction.left,
           animation: true,
           selectorColor: Colors.white,
           color: Theme.of(context).accentColor,

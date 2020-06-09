@@ -53,7 +53,8 @@ class DrawerScaffold extends StatefulWidget {
     this.builder,
     this.enableGestures = true,
     this.mainDrawer = Direction.left,
-  });
+    Key key,
+  }) : super(key: key);
 
   @override
   _DrawerScaffoldState createState() => new _DrawerScaffoldState();
@@ -76,15 +77,15 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
   void initState() {
     super.initState();
     selectedItemId = widget.drawers[listenDrawerIndex].selectedItemId;
-    menuControllers = widget.drawers
-        .map((d) => MenuController(
-              d.direction,
-              vsync: this,
-            )..addListener(() => setState(() {})))
-        .toList();
+
+    assignContoller();
 
     updateDrawerState();
-    assignContoller();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   @override
@@ -102,6 +103,12 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
 
   assignContoller() {
     Dev.log("assignContoller");
+    menuControllers = widget.drawers
+        .map((d) => MenuController(
+              d.direction,
+              vsync: this,
+            )..addListener(() => setState(() {})))
+        .toList();
     if (widget.controller != null) {
       widget.controller._menuControllers = menuControllers;
       widget.controller._setFocus = (index) {
