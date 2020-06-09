@@ -1,4 +1,5 @@
 import 'package:drawerbehavior/drawerbehavior.dart';
+import 'package:drawerbehavior_example/menus/main.dart';
 import 'package:flutter/material.dart';
 
 class DrawerScaleIcon extends StatefulWidget {
@@ -7,73 +8,42 @@ class DrawerScaleIcon extends StatefulWidget {
 }
 
 class _DrawerScaleIconState extends State<DrawerScaleIcon> {
-  final menu = new Menu(
-    items: [
-      new MenuItem(
-        id: 'restaurant',
-        title: 'THE PADDOCK',
-        icon: Icons.fastfood,
-      ),
-      new MenuItem(
-        id: 'other1',
-        title: 'THE HERO',
-        icon: Icons.person,
-      ),
-      new MenuItem(
-        id: 'other2',
-        title: 'HELP US GROW',
-        icon: Icons.terrain,
-      ),
-      new MenuItem(
-        id: 'other3',
-        title: 'SETTINGS',
-        icon: Icons.settings,
-      ),
-    ],
-  );
+  int selectedMenuItemId;
 
-  var selectedMenuItemId = 'restaurant';
-  var _widget = Text("1");
+  @override
+  void initState() {
+    selectedMenuItemId = menuWithIcon.items[0].id;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return new DrawerScaffold(
-        percentage: 0.6,
-        appBar: AppBarProps(
-            title: Text("Drawer - Scale with Icon"),
-            actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
-        menuView: new MenuView(
-          menu: menu,
+    return DrawerScaffold(
+      percentage: 0.6,
+      appBar: AppBar(
+          title: Text("Drawer - Scale with Icon"),
+          actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
+      drawers: [
+        SideDrawer(
+          menu: menuWithIcon,
           animation: true,
           color: Theme.of(context).primaryColor,
           selectedItemId: selectedMenuItemId,
-          onMenuItemSelected: (String itemId) {
-            selectedMenuItemId = itemId;
-            if (itemId == 'restaurant') {
-              setState(() => _widget = Text("1"));
-            } else {
-              setState(() => _widget = Text("default"));
-            }
+          onMenuItemSelected: (itemId) {
+            setState(() {
+              selectedMenuItemId = itemId;
+            });
           },
-        ),
-        contentView: Screen(
-          contentBuilder: (context) => LayoutBuilder(
-                builder: (context, constraint) => GestureDetector(
-                      child: Container(
-                        color: Colors.white,
-                        width: constraint.maxWidth,
-                        height: constraint.maxHeight,
-                        child: Center(child: _widget),
-                      ),
-                      onTap: () {
-                        Scaffold.of(context).showSnackBar(SnackBar(
-                          content: Text("Clicked"),
-                          duration: Duration(seconds: 3),
-                        ));
-                      },
-                    ),
-              ),
-          color: Colors.white,
-        ));
+        )
+      ],
+      builder: (context, id) => IndexedStack(
+        index: id,
+        children: menu.items
+            .map((e) => Center(
+                  child: Text("Page~${e.title}"),
+                ))
+            .toList(),
+      ),
+    );
   }
 }

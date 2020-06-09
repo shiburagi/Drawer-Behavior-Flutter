@@ -16,15 +16,25 @@ https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
 
 ### Todo
 - [x] Radius Parameter
-- [ ] Right Menu View 
+- [x] Right Menu View 
 - [ ] 3D effect
 - [ ] Material design drawer's behavior
 
 ### NEW UPDATES
-* Floating action button with location and animator ([trademunch](https://github.com/trademunch)) 
+* Floating action button with location and animator
 * Bottom navigation bar
 * Extended body
-* AndroidX support  ([Vladimir Vlach](https://github.com/vladaman))
+* AndroidX support  
+
+
+## Table of contents
+- [Usage](#usage)
+- [Example](#example)
+- [Migration](#migration)
+- [Preview](#preview)
+- [Customize](#customize)
+- [Contibutor](#contibutor)
+
 
 ## Usage
 
@@ -36,17 +46,6 @@ Add this to your package's pubspec.yaml file:
 dependencies:
   drawerbehavior: latest_version
 ```
-
-### Version 1.0.0 (ALPHA)
-[Documentation](https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/Version-1.0.0/README.md)
-
-```yaml
-dependencies:
-  drawerbehavior:
-    git: https://github.com/shiburagi/Drawer-Behavior-Flutter.git
-```
-
-
 
 2. **Install it**
 
@@ -75,114 +74,49 @@ import 'package:drawerbehavior/drawerbehavior.dart';
 
 ## Example
 ```dart
-import 'package:flutter/material.dart';
-import 'package:drawerbehavior/drawerbehavior.dart';
 
-class Drawer4 extends StatefulWidget {
+class DrawerScale extends StatefulWidget {
   @override
-  _Drawer4State createState() => _Drawer4State();
+  _DrawerScaleState createState() => _DrawerScaleState();
 }
 
-class _Drawer4State extends State<Drawer4> {
-  final menu = new Menu(
-    items: [
-      new MenuItem(
-        id: 'restaurant',
-        title: 'THE PADDOCK',
-      ),
-      new MenuItem(
-        id: 'other1',
-        title: 'THE HERO',
-      ),
-      new MenuItem(
-        id: 'other2',
-        title: 'HELP US GROW',
-      ),
-      new MenuItem(
-        id: 'other3',
-        title: 'SETTINGS',
-      ),
-    ],
-  );
+class _DrawerScaleState extends State<DrawerScale> {
+  int selectedMenuItemId;
 
-  var selectedMenuItemId = 'restaurant';
-  var _widget = Text("1");
-
-  Widget headerView(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Container(
-          padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
-          child: Row(
-            children: <Widget>[
-              new Container(
-                  width: 48.0,
-                  height: 48.0,
-                  decoration: new BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: new DecorationImage(
-                          fit: BoxFit.fill,
-                          image: AssetImage("assets/user1.jpg")))),
-              Container(
-                  margin: EdgeInsets.only(left: 16),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        "John Witch",
-                        style: Theme.of(context)
-                            .textTheme
-                            .subhead
-                            .copyWith(color: Colors.white),
-                      ),
-                      Text(
-                        "test123@gmail.com",
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle
-                            .copyWith(color: Colors.white.withAlpha(200)),
-                      )
-                    ],
-                  ))
-            ],
-          ),
-        ),
-        Divider(
-          color: Colors.white.withAlpha(200),
-          height: 16,
-        )
-      ],
-    );
+  @override
+  void initState() {
+    selectedMenuItemId = menu.items[0].id;
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return new DrawerScaffold(
-      percentage: 1,
-      cornerRadius: 0,
-      appBar: AppBarProps(
-          title: Text("Drawer 4"),
+    return DrawerScaffold(
+      percentage: 0.6,
+      appBar: AppBar(
+          title: Text("Drawer - Scale"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
-      menuView: new MenuView(
-        menu: menu,
-        headerView: headerView(context),
-        animation: false,
-        mainAxisAlignment: MainAxisAlignment.start,
-        color: Theme.of(context).primaryColor,
-        selectedItemId: selectedMenuItemId,
-        onMenuItemSelected: (String itemId) {
-          selectedMenuItemId = itemId;
-          if (itemId == 'restaurant') {
-            setState(() => _widget = Text("1"));
-          } else {
-            setState(() => _widget = Text("default"));
-          }
-        },
-      ),
-      contentView: Screen(
-        contentBuilder: (context) => Center(child: _widget),
-        color: Colors.white,
+      drawers: [
+        SideDrawer(
+          menu: menu,
+          direction: Direction.left,
+          animation: true,
+          color: Theme.of(context).primaryColor,
+          selectedItemId: selectedMenuItemId,
+          onMenuItemSelected: (itemId) {
+            setState(() {
+              selectedMenuItemId = itemId;
+            });
+          },
+        )
+      ],
+      builder: (context, id) => IndexedStack(
+        index: id,
+        children: menu.items
+            .map((e) => Center(
+                  child: Text("Page~${e.title}"),
+                ))
+            .toList(),
       ),
     );
   }
@@ -191,6 +125,60 @@ class _Drawer4State extends State<Drawer4> {
 
 ```
 
+
+
+## Migration
+---
+### contentView (Screen) -> builder (ScreenBuilder)
+```dart
+contentView: Screen(
+  contentBuilder: (context) => Center(child: _widget),
+  color: Colors.white,
+),
+```
+**to**
+```dart
+builder: (context, id) => Center(child: _widget),
+```
+---
+### menuView (MenuView) -> drawers (List<SideDrawer>)
+```dart
+menuView: new MenuView(
+    menu: menu,
+    headerView: headerView(context),
+    animation: false,
+    mainAxisAlignment: MainAxisAlignment.start,
+    color: Theme.of(context).primaryColor,
+    selectedItemId: selectedMenuItemId,
+    onMenuItemSelected: (String itemId) {
+      selectedMenuItemId = itemId;
+      if (itemId == 'restaurant') {
+        setState(() => _widget = Text("1"));
+      } else {
+        setState(() => _widget = Text("default"));
+      }
+    },
+  ),
+```
+**to**
+```dart
+drawers: [
+  SideDrawer(
+    menu: menu,
+    direction: Direction.left, // Drawer position, left or right
+    animation: true,
+    color: Theme.of(context).primaryColor,
+    selectedItemId: selectedMenuItemId,
+    onMenuItemSelected: (itemId) {
+      setState(() {
+        selectedMenuItemId = itemId;
+      });
+    },
+  )
+],
+```
+---
+ 
 
 ## Preview
 
@@ -277,27 +265,23 @@ new DrawerScaffold(
 *DrawerScaffold*
 ```dart
 DrawerScaffoldController controller;
-MenuView menuView;
-Screen contentView;
-AppBarProps appBar;
+List<SideDrawer> drawers;
+ScreenBuilder builder;
+bool enableGestures;
+AppBar appBar;
 bool showAppBar;
 double percentage;
 double cornerRadius;
+Widget floatingActionButton;
+Widget bottomNavigationBar;
+FloatingActionButtonLocation floatingActionButtonLocation;
+FloatingActionButtonAnimator floatingActionButtonAnimator;
 ```
-
-*Screen*
-```dart
-String title;
-DecorationImage background;
-WidgetBuilder contentBuilder;
-Color color;
-Color appBarColor;
-```
-
-*MenuView*
+*SideDrawer*
 ```dart
 Menu menu;
 String selectedItemId;
+Direction direction;
 bool animation;
 Function(String) onMenuItemSelected;
 Widget headerView;
@@ -319,22 +303,6 @@ String title;
 IconData icon;
 ```
 
-*AppBarProps*
-```dart
-Icon leadingIcon;
-bool automaticallyImplyLeading;
-List<Widget> actions;
-Widget flexibleSpace;
-PreferredSizeWidget bottom;
-double elevation;
-Brightness brightness;
-IconThemeData iconTheme;
-TextTheme textTheme;
-bool primary;
-bool centerTitle;
-double titleSpacing;
-double toolbarOpacity;
-double bottomOpacity;
-Color backgroundColor;
-Widget title;
-```
+## Contibutor
+- [Vladimir Vlach](https://github.com/vladaman)
+- [trademunch](https://github.com/trademunch)

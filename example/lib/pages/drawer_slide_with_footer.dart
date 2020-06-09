@@ -1,3 +1,4 @@
+import 'package:drawerbehavior_example/menus/main.dart';
 import 'package:flutter/material.dart';
 import 'package:drawerbehavior/drawerbehavior.dart';
 
@@ -7,34 +8,17 @@ class DrawerSlideWithFooter extends StatefulWidget {
 }
 
 class _DrawerSlideWithFooterState extends State<DrawerSlideWithFooter> {
-  final menu = new Menu(
-    items: [
-      new MenuItem(
-        id: 'restaurant',
-        title: 'THE PADDOCK',
-      ),
-      new MenuItem(
-        id: 'other1',
-        title: 'THE HERO',
-      ),
-      new MenuItem(
-        id: 'other2',
-        title: 'HELP US GROW',
-      ),
-      new MenuItem(
-        id: 'other3',
-        title: 'SETTINGS',
-      ),
-    ],
-  );
+  int selectedMenuItemId;
 
-  var selectedMenuItemId = 'restaurant';
-  var _widget = Text("1");
+  @override
+  void initState() {
+    selectedMenuItemId = menu.items[0].id;
+    super.initState();
+  }
 
   Widget footerView(BuildContext context) {
     return Column(
       children: <Widget>[
-
         Divider(
           color: Colors.white.withAlpha(200),
           height: 16,
@@ -82,45 +66,34 @@ class _DrawerSlideWithFooterState extends State<DrawerSlideWithFooter> {
 
   @override
   Widget build(BuildContext context) {
-    return new DrawerScaffold(
+    return DrawerScaffold(
       percentage: 1,
       cornerRadius: 0,
-      appBar: AppBarProps(
+      appBar: AppBar(
           title: Text("Drawer - with Footer"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
-      menuView: new MenuView(
-        menu: menu,
-        footerView: footerView(context),
-        animation: false,
-        alignment: Alignment.topLeft,
-        color: Theme.of(context).primaryColor,
-        selectedItemId: selectedMenuItemId,
-        onMenuItemSelected: (String itemId) {
-          selectedMenuItemId = itemId;
-          if (itemId == 'restaurant') {
-            setState(() => _widget = Text("1"));
-          } else {
-            setState(() => _widget = Text("default"));
-          }
-        },
-      ),
-      contentView: Screen(
-        contentBuilder: (context) => LayoutBuilder(
-          builder: (context, constraint) => GestureDetector(
-            child: Container(
-              color: Colors.white,
-              width: constraint.maxWidth,
-              height: constraint.maxHeight,
-              child: Center(child: _widget),
-            ),
-            onTap: () {
-              Scaffold.of(context).showSnackBar(SnackBar(
-                content: Text("Clicked"),
-                duration: Duration(seconds: 3),
-              ));
-            },
-          ),
-        ),        color: Colors.white,
+      drawers: [
+        SideDrawer(
+          menu: menu,
+          footerView: footerView(context),
+          animation: false,
+          alignment: Alignment.topLeft,
+          color: Theme.of(context).primaryColor,
+          selectedItemId: selectedMenuItemId,
+          onMenuItemSelected: (itemId) {
+            setState(() {
+              selectedMenuItemId = itemId;
+            });
+          },
+        )
+      ],
+      builder: (context, id) => IndexedStack(
+        index: id,
+        children: menu.items
+            .map((e) => Center(
+                  child: Text("Page~${e.title}"),
+                ))
+            .toList(),
       ),
     );
   }

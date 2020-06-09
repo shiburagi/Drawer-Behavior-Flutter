@@ -2,14 +2,14 @@ import 'package:drawerbehavior/drawerbehavior.dart';
 import 'package:drawerbehavior_example/menus/main.dart';
 import 'package:flutter/material.dart';
 
-class DrawerSlide extends StatefulWidget {
+class DrawerRight extends StatefulWidget {
   @override
-  _DrawerSlideState createState() => _DrawerSlideState();
+  _DrawerRightState createState() => _DrawerRightState();
 }
 
-class _DrawerSlideState extends State<DrawerSlide> {
+class _DrawerRightState extends State<DrawerRight> {
   int selectedMenuItemId;
-
+  DrawerScaffoldController controller = DrawerScaffoldController(); 
   @override
   void initState() {
     selectedMenuItemId = menu.items[0].id;
@@ -19,24 +19,28 @@ class _DrawerSlideState extends State<DrawerSlide> {
   @override
   Widget build(BuildContext context) {
     return DrawerScaffold(
-      percentage: 1,
+      controller: controller,
+      percentage: 0.6,
       appBar: AppBar(
-          title: Text("Drawer - Slide"),
-          actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
+          title: Text("Drawer - Right"),
+          actions: [IconButton(icon: Icon(Icons.notifications_none), onPressed: () {
+            controller.toggle(Direction.right);
+
+          })]),
       drawers: [
         SideDrawer(
-          textStyle: TextStyle(color: Colors.white, fontSize: 24.0),
           menu: menu,
-          animation: false,
-          alignment: Alignment.topLeft,
-          color: Theme.of(context).primaryColor,
+          direction: Direction.right,
+          animation: true,
+          selectorColor: Colors.white,
+          color: Theme.of(context).accentColor,
           selectedItemId: selectedMenuItemId,
           onMenuItemSelected: (itemId) {
             setState(() {
               selectedMenuItemId = itemId;
             });
           },
-        )
+        ),
       ],
       builder: (context, id) => IndexedStack(
         index: id,

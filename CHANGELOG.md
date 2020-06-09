@@ -1,3 +1,8 @@
+# 1.0.0
+* Floating action button with location and animator
+* Bottom navigation bar
+* Extended body
+
 # 0.0.10
 * Floating action button with location and animator
 * Bottom navigation bar

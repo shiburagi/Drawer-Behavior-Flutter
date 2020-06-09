@@ -1,4 +1,5 @@
 import 'package:drawerbehavior/drawerbehavior.dart';
+import 'package:drawerbehavior_example/menus/main.dart';
 import 'package:flutter/material.dart';
 
 class DrawerSlideCustomAppBar extends StatefulWidget {
@@ -8,29 +9,13 @@ class DrawerSlideCustomAppBar extends StatefulWidget {
 }
 
 class _DrawerSlideCustomAppBarState extends State<DrawerSlideCustomAppBar> {
-  final menu = new Menu(
-    items: [
-      new MenuItem(
-        id: 'restaurant',
-        title: 'THE PADDOCK',
-      ),
-      new MenuItem(
-        id: 'other1',
-        title: 'THE HERO',
-      ),
-      new MenuItem(
-        id: 'other2',
-        title: 'HELP US GROW',
-      ),
-      new MenuItem(
-        id: 'other3',
-        title: 'SETTINGS',
-      ),
-    ],
-  );
+  int selectedMenuItemId;
 
-  var selectedMenuItemId = 'restaurant';
-  var _widget = Text("1");
+  @override
+  void initState() {
+    selectedMenuItemId = menu.items[0].id;
+    super.initState();
+  }
 
   Widget headerView(BuildContext context) {
     return Column(
@@ -86,56 +71,41 @@ class _DrawerSlideCustomAppBarState extends State<DrawerSlideCustomAppBar> {
     return DrawerScaffold(
       controller: controller,
       percentage: 1,
-      showAppBar: false,
       cornerRadius: 0,
-      appBar: AppBarProps(
+      appBar: AppBar(
           title: Text("Drawer - Slide with Custom AppBar"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
-      menuView: new MenuView(
-        menu: menu,
-        headerView: headerView(context),
-        animation: false,
-        alignment: Alignment.topLeft,
-        color: Theme.of(context).primaryColor,
-        selectedItemId: selectedMenuItemId,
-        onMenuItemSelected: (String itemId) {
-          selectedMenuItemId = itemId;
-          if (itemId == 'restaurant') {
-            setState(() => _widget = Text("1"));
-          } else {
-            setState(() => _widget = Text("default"));
-          }
-        },
-      ),
-      contentView: Screen(
-        contentBuilder: (context) => Scaffold(
-              appBar: AppBar(
-                leading: new IconButton(
-                    icon: new Icon(Icons.menu),
-                    onPressed: () {
-                      setState(() {
-                        controller.open = !controller.isOpen();
-                      });
-                    }),
-              ),
-              body: LayoutBuilder(
-                builder: (context, constraint) => GestureDetector(
-                      child: Container(
-                        color: Colors.white,
-                        width: constraint.maxWidth,
-                        height: constraint.maxHeight,
-                        child: Center(child: _widget),
-                      ),
-                      onTap: () {
-                        Scaffold.of(context).showSnackBar(SnackBar(
-                          content: Text("Clicked"),
-                          duration: Duration(seconds: 3),
-                        ));
-                      },
-                    ),
-              ),
-            ),
-        color: Colors.white,
+      drawers: [
+        SideDrawer(
+          menu: menu,
+          headerView: headerView(context),
+          animation: false,
+          alignment: Alignment.topLeft,
+          color: Theme.of(context).primaryColor,
+          selectedItemId: selectedMenuItemId,
+          onMenuItemSelected: (itemId) {
+            setState(() {
+              selectedMenuItemId = itemId;
+            });
+          },
+        )
+      ],
+      builder: (context, id) => Scaffold(
+        appBar: AppBar(
+          leading: new IconButton(
+              icon: new Icon(Icons.menu),
+              onPressed: () {
+                controller.toggle();
+              }),
+        ),
+        body: IndexedStack(
+          index: id,
+          children: menu.items
+              .map((e) => Center(
+                    child: Text("Page~${e.title}"),
+                  ))
+              .toList(),
+        ),
       ),
     );
   }

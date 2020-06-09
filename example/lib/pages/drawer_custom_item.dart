@@ -1,4 +1,5 @@
 import 'package:drawerbehavior/drawerbehavior.dart';
+import 'package:drawerbehavior_example/menus/main.dart';
 import 'package:flutter/material.dart';
 
 class DrawerCustomItem extends StatefulWidget {
@@ -7,29 +8,13 @@ class DrawerCustomItem extends StatefulWidget {
 }
 
 class _DrawerCustomItemState extends State<DrawerCustomItem> {
-  final menu = new Menu(
-    items: [
-      new MenuItem(
-        id: 'restaurant',
-        title: 'THE PADDOCK',
-      ),
-      new MenuItem(
-        id: 'other1',
-        title: 'THE HERO',
-      ),
-      new MenuItem(
-        id: 'other2',
-        title: 'HELP US GROW',
-      ),
-      new MenuItem(
-        id: 'other3',
-        title: 'SETTINGS',
-      ),
-    ],
-  );
+  int selectedMenuItemId;
 
-  var selectedMenuItemId = 'restaurant';
-  var _widget = Text("1");
+  @override
+  void initState() {
+    selectedMenuItemId = menu.items[0].id;
+    super.initState();
+  }
 
   Widget headerView(BuildContext context) {
     return Column(
@@ -81,60 +66,48 @@ class _DrawerCustomItemState extends State<DrawerCustomItem> {
 
   @override
   Widget build(BuildContext context) {
-    return new DrawerScaffold(
+    return DrawerScaffold(
       percentage: 1,
       cornerRadius: 0,
-      appBar: AppBarProps(
+      appBar: AppBar(
           title: Text("Drawer - Custom  Item"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
-      menuView: new MenuView(
-        menu: menu,
-        headerView: headerView(context),
-        animation: false,
-        alignment: Alignment.topLeft,
-        color: Theme.of(context).primaryColor,
-        selectedItemId: selectedMenuItemId,
-        itemBuilder:
-            (BuildContext context, MenuItem menuItem, bool isSelected) {
-          return Container(
-            color: isSelected
-                ? Theme.of(context).accentColor.withOpacity(0.7)
-                : Colors.transparent,
-            padding: EdgeInsets.fromLTRB(24, 16, 24, 16),
-            child: Text(
-              menuItem.title,
-              style: Theme.of(context).textTheme.subhead.copyWith(
-                  color: isSelected ? Colors.black87 : Colors.white70),
-            ),
-          );
-        },
-        onMenuItemSelected: (String itemId) {
-          selectedMenuItemId = itemId;
-          if (itemId == 'restaurant') {
-            setState(() => _widget = Text("1"));
-          } else {
-            setState(() => _widget = Text("default"));
-          }
-        },
-      ),
-      contentView: Screen(
-        contentBuilder: (context) => LayoutBuilder(
-              builder: (context, constraint) => GestureDetector(
-                    child: Container(
-                      color: Colors.white,
-                      width: constraint.maxWidth,
-                      height: constraint.maxHeight,
-                      child: Center(child: _widget),
-                    ),
-                    onTap: () {
-                      Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text("Clicked"),
-                        duration: Duration(seconds: 3),
-                      ));
-                    },
-                  ),
-            ),
-        color: Colors.white,
+      drawers: [
+        SideDrawer(
+          menu: menu,
+          headerView: headerView(context),
+          animation: false,
+          alignment: Alignment.topLeft,
+          color: Theme.of(context).primaryColor,
+          selectedItemId: selectedMenuItemId,
+          itemBuilder:
+              (BuildContext context, MenuItem menuItem, bool isSelected) {
+            return Container(
+              color: isSelected
+                  ? Theme.of(context).accentColor.withOpacity(0.7)
+                  : Colors.transparent,
+              padding: EdgeInsets.fromLTRB(24, 16, 24, 16),
+              child: Text(
+                menuItem.title,
+                style: Theme.of(context).textTheme.subhead.copyWith(
+                    color: isSelected ? Colors.black87 : Colors.white70),
+              ),
+            );
+          },
+          onMenuItemSelected: (itemId) {
+            setState(() {
+              selectedMenuItemId = itemId;
+            });
+          },
+        )
+      ],
+      builder: (context, id) => IndexedStack(
+        index: id,
+        children: menu.items
+            .map((e) => Center(
+                  child: Text("Page~${e.title}"),
+                ))
+            .toList(),
       ),
     );
   }

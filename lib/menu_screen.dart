@@ -1,10 +1,17 @@
+import 'dart:developer';
+
 import 'package:drawerbehavior/drawer_scaffold.dart';
 import 'package:flutter/material.dart';
 
-final menuScreenKey = new GlobalKey(debugLabel: 'MenuScreen');
+final menuScreenKey = GlobalKey(debugLabel: 'MenuScreen');
 
-class MenuView extends StatefulWidget {
-  MenuView({
+enum Direction {
+  left,
+  right,
+}
+
+class SideDrawer<T> extends StatefulWidget {
+  SideDrawer({
     this.menu,
     this.headerView,
     this.footerView,
@@ -13,19 +20,20 @@ class MenuView extends StatefulWidget {
     this.color = Colors.white,
     this.background,
     this.animation = false,
+    this.direction = Direction.left,
     this.selectorColor,
     this.textStyle,
     this.padding = const EdgeInsets.only(left: 40.0, top: 15.0, bottom: 15.0),
-    this.alignment = Alignment.center,
+    this.alignment = Alignment.centerLeft,
     this.itemBuilder,
   }) : super(key: menuScreenKey);
 
   final double maxSlideAmount = 275.0;
-
+  final Direction direction;
   final Menu menu;
-  final String selectedItemId;
+  final T selectedItemId;
   final bool animation;
-  final Function(String) onMenuItemSelected;
+  final Function(T) onMenuItemSelected;
 
   final Widget headerView;
   final Widget footerView;
@@ -39,11 +47,10 @@ class MenuView extends StatefulWidget {
   final EdgeInsets padding;
 
   @override
-  _MenuViewState createState() => new _MenuViewState();
+  _SideDrawerState createState() => _SideDrawerState();
 }
 
-class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
-  AnimationController titleAnimationController;
+class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
   double selectorYTop;
   double selectorYBottom;
 
@@ -64,62 +71,14 @@ class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    titleAnimationController = new AnimationController(
-      duration: const Duration(milliseconds: 250),
-      vsync: this,
-    );
   }
 
   @override
   void dispose() {
-    titleAnimationController.dispose();
     super.dispose();
   }
 
-  createMenuTitle(MenuController menuController) {
-    switch (menuController.state) {
-      case MenuState.open:
-      case MenuState.opening:
-        titleAnimationController.forward();
-        break;
-      case MenuState.closed:
-      case MenuState.closing:
-        titleAnimationController.reverse();
-        break;
-    }
-
-    return new AnimatedBuilder(
-        animation: titleAnimationController,
-        child: new OverflowBox(
-          maxWidth: double.infinity,
-          alignment: Alignment.topLeft,
-          child: new Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: new Text(
-              'Menu',
-              style: new TextStyle(
-                color: const Color(0x88444444),
-                fontSize: 240.0,
-                fontFamily: 'mermaid',
-              ),
-              textAlign: TextAlign.left,
-              softWrap: false,
-            ),
-          ),
-        ),
-        builder: (BuildContext context, Widget child) {
-          return new Transform(
-            transform: new Matrix4.translationValues(
-              250.0 * (1.0 - titleAnimationController.value) - 100.0,
-              0.0,
-              0.0,
-            ),
-            child: child,
-          );
-        });
-  }
-
-  createMenuItems(MenuController menuController) {
+  Widget createMenuItems(MenuController menuController) {
     final List<Widget> listItems = [];
 
     final animationIntervalDuration = 0.5;
@@ -146,11 +105,14 @@ class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
       };
       Widget listItem = widget.itemBuilder == null
           ? _MenuListItem(
+              padding: const EdgeInsets.only(left: 32.0),
+              direction: widget.direction,
               title: item.title,
               isSelected: isSelected,
               selectorColor: selectorColor,
               textStyle: textStyle,
               menuView: widget,
+              width: widget.maxSlideAmount,
               icon: item.icon == null ? null : Icon(item.icon),
               onTap: onTap,
               drawBorder: !widget.animation,
@@ -166,14 +128,12 @@ class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
               onTap: onTap,
             );
 
-//      print("$maxDuration, $animationIntervalEnd");
-
       if (widget.animation)
-        listItems.add(new AnimatedMenuListItem(
+        listItems.add(AnimatedMenuListItem(
           menuState: menuController.state,
           isSelected: isSelected,
           duration: Duration(milliseconds: millis),
-          curve: new Interval(animationIntervalStart / maxDuration,
+          curve: Interval(animationIntervalStart / maxDuration,
               animationIntervalEnd / maxDuration,
               curve: Curves.easeOut),
           menuListItem: listItem,
@@ -185,12 +145,17 @@ class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
 
     return Container(
       alignment: widget.alignment,
+      margin: EdgeInsets.only(
+          left: widget.direction == Direction.left
+              ? 0
+              : MediaQuery.of(context).size.width - widget.maxSlideAmount),
       child: SingleChildScrollView(
-
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: listItems,
+        child: Container(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: listItems,
+          ),
         ),
       ),
     );
@@ -214,7 +179,7 @@ class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
       ));
     }
     return Transform(
-      transform: new Matrix4.translationValues(
+      transform: Matrix4.translationValues(
         0.0,
         MediaQuery.of(context).padding.top,
         0.0,
@@ -233,76 +198,84 @@ class _MenuViewState extends State<MenuView> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     selectorColor = widget?.selectorColor ?? Theme.of(context).indicatorColor;
     textStyle = widget?.textStyle ??
-        Theme.of(context).textTheme.subtitle.copyWith(
+        Theme.of(context).textTheme.subtitle1.copyWith(
             color: widget.color.computeLuminance() < 0.5
                 ? Colors.white
                 : Colors.black);
-    return new DrawerScaffoldMenuController(
+    return DrawerScaffoldMenuController(
+        direction: widget.direction,
         builder: (BuildContext context, MenuController menuController) {
-      var shouldRenderSelector = true;
-      var actualSelectorYTop = selectorYTop;
-      var actualSelectorYBottom = selectorYBottom;
-      var selectorOpacity = 1.0;
+          log("menuController : ${menuController.direction} ${widget.direction}");
+          var shouldRenderSelector = true;
+          var actualSelectorYTop = selectorYTop;
+          var actualSelectorYBottom = selectorYBottom;
+          var selectorOpacity = 1.0;
 
-      if (menuController.state == MenuState.closed ||
-          menuController.state == MenuState.closing ||
-          selectorYTop == null) {
-        final RenderBox menuScreenRenderBox =
-            context.findRenderObject() as RenderBox;
+          if (menuController.state == MenuState.closed ||
+              menuController.state == MenuState.closing ||
+              selectorYTop == null) {
+            final RenderBox menuScreenRenderBox =
+                context.findRenderObject() as RenderBox;
 
-        if (menuScreenRenderBox != null) {
-          final menuScreenHeight = menuScreenRenderBox.size.height;
-          actualSelectorYTop = menuScreenHeight - 50.0;
-          actualSelectorYBottom = menuScreenHeight;
-          selectorOpacity = 0.0;
-        } else {
-          shouldRenderSelector = false;
-        }
-      }
+            if (menuScreenRenderBox != null) {
+              final menuScreenHeight = menuScreenRenderBox.size.height;
+              actualSelectorYTop = menuScreenHeight - 50.0;
+              actualSelectorYBottom = menuScreenHeight;
+              selectorOpacity = 0.0;
+            } else {
+              shouldRenderSelector = false;
+            }
+          }
 
-      return new Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: new BoxDecoration(
-          image: widget.background,
-          color: widget.color,
-        ),
-        child: new Material(
-          color: Colors.transparent,
-          child: new Stack(
-            children: [
-              createDrawer(menuController),
-              widget.animation && shouldRenderSelector
-                  ? new ItemSelector(
-                      selectorColor: selectorColor,
-                      topY: actualSelectorYTop,
-                      bottomY: actualSelectorYBottom,
-                      opacity: selectorOpacity)
-                  : new Container(),
-            ],
-          ),
-        ),
-      );
-    });
+          return Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              image: widget.background,
+              color: widget.color,
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: Stack(
+                children: [
+                  createDrawer(menuController),
+                  widget.animation && shouldRenderSelector
+                      ? ItemSelector(
+                          left: widget.direction == Direction.right
+                              ? MediaQuery.of(context).size.width -
+                                  widget.maxSlideAmount
+                              : 0,
+                          selectorColor: selectorColor,
+                          top: actualSelectorYTop,
+                          bottom: actualSelectorYBottom,
+                          opacity: selectorOpacity)
+                      : Container(),
+                ],
+              ),
+            ),
+          );
+        });
   }
 }
 
 class ItemSelector extends ImplicitlyAnimatedWidget {
-  final double topY;
-  final double bottomY;
+  final double top;
+  final double bottom;
+  final double left;
   final double opacity;
 
   final Color selectorColor;
 
   ItemSelector({
-    this.topY,
-    this.bottomY,
+    this.left,
+    this.top,
+    this.bottom,
     this.opacity,
     this.selectorColor,
   }) : super(duration: const Duration(milliseconds: 250));
 
   @override
-  _ItemSelectorState createState() => new _ItemSelectorState();
+  _ItemSelectorState createState() => _ItemSelectorState();
 }
 
 class _ItemSelectorState extends AnimatedWidgetBaseState<ItemSelector> {
@@ -314,28 +287,29 @@ class _ItemSelectorState extends AnimatedWidgetBaseState<ItemSelector> {
   void forEachTween(TweenVisitor visitor) {
     _topY = visitor(
       _topY,
-      widget.topY,
-      (dynamic value) => new Tween<double>(begin: value),
+      widget.top,
+      (dynamic value) => Tween<double>(begin: value),
     );
     _bottomY = visitor(
       _bottomY,
-      widget.bottomY,
-      (dynamic value) => new Tween<double>(begin: value),
+      widget.bottom,
+      (dynamic value) => Tween<double>(begin: value),
     );
     _opacity = visitor(
       _opacity,
       widget.opacity,
-      (dynamic value) => new Tween<double>(begin: value),
+      (dynamic value) => Tween<double>(begin: value),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return new Positioned(
+    return Positioned(
       top: _topY.evaluate(animation),
-      child: new Opacity(
+      left: widget.left,
+      child: Opacity(
         opacity: _opacity.evaluate(animation),
-        child: new Container(
+        child: Container(
           width: 5.0,
           height: _bottomY.evaluate(animation) - _topY.evaluate(animation),
           color: widget.selectorColor,
@@ -360,7 +334,7 @@ class AnimatedMenuListItem extends ImplicitlyAnimatedWidget {
   }) : super(duration: duration, curve: curve);
 
   @override
-  _AnimatedMenuListItemState createState() => new _AnimatedMenuListItemState();
+  _AnimatedMenuListItemState createState() => _AnimatedMenuListItemState();
 }
 
 class _AnimatedMenuListItemState
@@ -374,7 +348,7 @@ class _AnimatedMenuListItemState
   updateSelectedRenderBox(bool useState) {
     final renderBox = context.findRenderObject() as RenderBox;
     if (renderBox != null && widget.isSelected) {
-      (menuScreenKey.currentState as _MenuViewState)
+      (menuScreenKey.currentState as _SideDrawerState)
           .setSelectedRenderBox(renderBox, useState);
     }
   }
@@ -399,13 +373,13 @@ class _AnimatedMenuListItemState
     _translation = visitor(
       _translation,
       slide,
-      (dynamic value) => new Tween<double>(begin: value),
+      (dynamic value) => Tween<double>(begin: value),
     );
 
     _opacity = visitor(
       _opacity,
       opacity,
-      (dynamic value) => new Tween<double>(begin: value),
+      (dynamic value) => Tween<double>(begin: value),
     );
   }
 
@@ -413,10 +387,10 @@ class _AnimatedMenuListItemState
   Widget build(BuildContext context) {
     updateSelectedRenderBox(false);
 
-    return new Opacity(
+    return Opacity(
       opacity: _opacity.evaluate(animation),
-      child: new Transform(
-        transform: new Matrix4.translationValues(
+      child: Transform(
+        transform: Matrix4.translationValues(
           0.0,
           _translation.evaluate(animation),
           0.0,
@@ -434,18 +408,25 @@ class _MenuListItem extends StatelessWidget {
   final Function() onTap;
   final Color selectorColor;
   final TextStyle textStyle;
-  final MenuView menuView;
+  final SideDrawer menuView;
   final Widget icon;
+  final Direction direction;
+  final double width;
+  final EdgeInsets padding;
 
-  _MenuListItem(
-      {this.title,
-      this.isSelected,
-      this.onTap,
-      this.menuView,
-      @required this.textStyle,
-      @required this.selectorColor,
-      this.icon,
-      this.drawBorder});
+  _MenuListItem({
+    this.title,
+    this.isSelected,
+    this.onTap,
+    this.menuView,
+    @required this.textStyle,
+    @required this.selectorColor,
+    this.icon,
+    this.drawBorder,
+    this.direction = Direction.right,
+    this.width,
+    this.padding,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -461,18 +442,22 @@ class _MenuListItem extends StatelessWidget {
       ));
     children.add(
       Expanded(
-        child: new Text(
-          title,
-          style: _textStyle,
+        child: Container(
+          child: Text(
+            title,
+            style: _textStyle,
+          ),
         ),
         flex: 1,
       ),
     );
-    return new InkWell(
+    return InkWell(
       splashColor: const Color(0x44000000),
       onTap: isSelected ? null : onTap,
       child: Container(
-        width: double.infinity,
+        width: width,
+        alignment: Alignment.centerLeft,
+        // padding: padding,
         decoration: drawBorder
             ? ShapeDecoration(
                 shape: Border(
@@ -482,9 +467,10 @@ class _MenuListItem extends StatelessWidget {
                 ),
               )
             : null,
-        child: new Padding(
+        child: Padding(
           padding: menuView.padding,
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: children,
           ),
         ),
@@ -501,8 +487,8 @@ class Menu {
   });
 }
 
-class MenuItem {
-  final String id;
+class MenuItem<T> {
+  final T id;
   final String title;
   final IconData icon;
 
@@ -511,4 +497,16 @@ class MenuItem {
     this.title,
     this.icon,
   });
+
+  MenuItem<T> copyWith({
+    T id,
+    String title,
+    IconData icon,
+  }) {
+    return MenuItem<T>(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      icon: icon,
+    );
+  }
 }
