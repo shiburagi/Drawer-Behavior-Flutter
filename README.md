@@ -20,7 +20,6 @@ https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
 - [ ] 3D effect
 - [ ] Material design drawer's behavior
 
-
 ### NEW UPDATES
 * Floating action button with location and animator
 * Bottom navigation bar
