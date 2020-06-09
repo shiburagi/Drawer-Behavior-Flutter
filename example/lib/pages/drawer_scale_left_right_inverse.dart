@@ -22,7 +22,7 @@ class _DrawerLeftAndRightInverseState extends State<DrawerLeftAndRightInverse> {
     return DrawerScaffold(
       controller: controller,
       percentage: 0.6,
-      appBar: AppBar(title: Text("Drawer - Left & Right (Inverse)"), actions: [
+      appBar: AppBar(title: Text("Drawer - Left & Right"), actions: [
         IconButton(
             icon: Icon(Icons.notifications_none),
             onPressed: () {
@@ -33,7 +33,7 @@ class _DrawerLeftAndRightInverseState extends State<DrawerLeftAndRightInverse> {
       drawers: [
         SideDrawer(
           menu: menu,
-          direction: Direction.right,
+          direction: Direction.left,
           animation: true,
           color: Theme.of(context).primaryColor,
           selectedItemId: selectedMenuItemId,
@@ -45,7 +45,7 @@ class _DrawerLeftAndRightInverseState extends State<DrawerLeftAndRightInverse> {
         ),
         SideDrawer(
           menu: menu,
-          direction: Direction.left,
+          direction: Direction.right,
           animation: true,
           selectorColor: Colors.white,
           color: Theme.of(context).accentColor,
