@@ -1,3 +1,4 @@
+import 'package:drawerbehavior_example/pages/drawer_3d.dart';
 import 'package:drawerbehavior_example/pages/drawer_custom_item.dart';
 import 'package:drawerbehavior_example/pages/drawer_scale.dart';
 import 'package:drawerbehavior_example/pages/drawer_scale_icon.dart';
@@ -51,6 +52,10 @@ class _MyAppState extends State<MyApp> {
                 createButton(context,
                     text: "Scale - no animation",
                     navigate: "/drawer2",
+                    color: Theme.of(context).accentColor),
+                createButton(context,
+                    text: "3D",
+                    navigate: "/drawer12",
                     color: Theme.of(context).accentColor),
                 Divider(height: 16, color: Theme.of(context).dividerColor),
                 Text("Align Top"),
@@ -117,6 +122,7 @@ class _MyAppState extends State<MyApp> {
         "/drawer9": (context) => DrawerLeftAndRight(),
         "/drawer10": (context) => DrawerRight(),
         "/drawer11": (context) => DrawerLeftAndRightInverse(),
+        "/drawer12": (context) => Drawer3d(),
 
       },
     );

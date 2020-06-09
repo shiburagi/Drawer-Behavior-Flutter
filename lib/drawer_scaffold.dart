@@ -218,7 +218,8 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
       resizeToAvoidBottomPadding: widget.resizeToAvoidBottomPadding,
     );
 
-    double maxSlideAmount = widget.drawers[focusDrawerIndex].maxSlideAmount;
+    double maxSlideAmount =
+        widget.drawers[focusDrawerIndex].maxSlideAmount(context);
     Widget content = !widget.enableGestures
         ? _scaffoldWidget
         : GestureDetector(
@@ -330,8 +331,8 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
   }
 
   zoomAndSlideContent(Widget content) {
-    SideDrawer drawer =widget.drawers[focusDrawerIndex];
-    double maxSlideAmount = drawer.maxSlideAmount;
+    SideDrawer drawer = widget.drawers[focusDrawerIndex];
+    double maxSlideAmount = drawer.maxSlideAmount(context);
     MenuController menuController = this.menuControllers[focusDrawerIndex];
     var slidePercent, scalePercent;
     switch (menuController.state) {
@@ -360,9 +361,35 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
 
     if (widget.drawers[focusDrawerIndex].direction == Direction.right)
       slideAmount = -slideAmount + (maxSlideAmount * (1 - contentScale));
+    double degreeAmount = (drawer.degree ?? 0) * slidePercent;
+    degreeAmount = degreeAmount * pi / 180;
+    Dev.log("Degree: $degreeAmount");
+
+    Matrix4 perspective;
+    if (drawer.degree == null) {
+      perspective = Matrix4.translationValues(slideAmount, 0.0, 0)
+        ..scale(contentScale, contentScale);
+    } else {
+      // perspective = _pmat(0, 1).scaled(1.0, 1.0, 1.0)
+      perspective = Matrix4.identity()
+        ..translate(slideAmount, 0.0, 0)
+        ..scale(contentScale, contentScale)
+        ..setEntry(3, 2, drawer.direction == Direction.left ? 0.001 : -0.001)
+        ..rotateY(degreeAmount)
+        ..rotateX(0.0)
+        ..rotateZ(0.0);
+
+      // if (drawer.direction == Direction.left) {
+      //   perspective.translate(slideAmount, 0.0, 0);
+      //   perspective.scale(contentScale, contentScale);
+      // }
+    }
+
     return new Transform(
-      transform: new Matrix4.translationValues(slideAmount, 0.0, 0.0)
-        ..scale(contentScale, contentScale),
+      transform: perspective,
+      origin: drawer.direction == Direction.right
+          ? Offset(MediaQuery.of(context).size.width / 2, 0.0)
+          : null,
       alignment: Alignment.centerLeft,
       child: new Container(
         decoration: new BoxDecoration(
