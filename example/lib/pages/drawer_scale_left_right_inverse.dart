@@ -21,7 +21,6 @@ class _DrawerLeftAndRightInverseState extends State<DrawerLeftAndRightInverse> {
   Widget build(BuildContext context) {
     return DrawerScaffold(
       controller: controller,
-      percentage: 0.6,
       appBar: AppBar(title: Text("Drawer - Left & Right"), actions: [
         IconButton(
             icon: Icon(Icons.notifications_none),
@@ -32,6 +31,7 @@ class _DrawerLeftAndRightInverseState extends State<DrawerLeftAndRightInverse> {
       mainDrawer: Direction.right,
       drawers: [
         SideDrawer(
+          percentage: 0.6,
           menu: menu,
           direction: Direction.left,
           animation: true,

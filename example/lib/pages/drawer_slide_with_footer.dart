@@ -67,13 +67,13 @@ class _DrawerSlideWithFooterState extends State<DrawerSlideWithFooter> {
   @override
   Widget build(BuildContext context) {
     return DrawerScaffold(
-      percentage: 1,
       cornerRadius: 0,
       appBar: AppBar(
           title: Text("Drawer - with Footer"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       drawers: [
         SideDrawer(
+          percentage: 1,
           menu: menu,
           footerView: footerView(context),
           animation: false,

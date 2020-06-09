@@ -33,7 +33,7 @@ https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
 - [Migration](#migration)
 - [Preview](#preview)
 - [Customize](#customize)
-- [Contibutor](#contibutor)
+- [Contributor](#contributor)
 
 
 ## Usage
@@ -92,12 +92,12 @@ class _DrawerScaleState extends State<DrawerScale> {
   @override
   Widget build(BuildContext context) {
     return DrawerScaffold(
-      percentage: 0.6,
       appBar: AppBar(
           title: Text("Drawer - Scale"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       drawers: [
         SideDrawer(
+          percentage: 0.6,
           menu: menu,
           direction: Direction.left,
           animation: true,
@@ -177,6 +177,29 @@ drawers: [
   )
 ],
 ```
+
+
+
+---
+### percentage (DrawerScaffold -> drawers (List<SideDrawer>))
+```dart
+DrawerScaffold(
+  percentage: 0.6,
+  ...
+);
+```
+**to**
+```dart
+DrawerScaffold(
+  drawers: [
+    SideDrawer(
+      percentage: 0.6,
+      ...
+    )
+  ]  
+  ...
+);
+```
 ---
  
 
@@ -188,8 +211,12 @@ drawers: [
 
 ```dart
 new DrawerScaffold(
-  percentage: 0.6,
-  ...
+  drawers: [
+    SideDrawer(
+      percentage: 0.6,
+      ...
+    )
+  ]  ...
 );
 ```
 ---
@@ -198,8 +225,13 @@ new DrawerScaffold(
 
 ```dart
 new DrawerScaffold(
-  percentage: 0.6,
   headerView: headerView(context),
+  drawers: [
+    SideDrawer(
+      percentage: 0.6,
+      ...
+    )
+  ]
   ...
 );
 ```
@@ -210,7 +242,12 @@ new DrawerScaffold(
 
 ```dart
 new DrawerScaffold(
-  percentage: 0.6,
+  drawers: [
+    SideDrawer(
+      percentage: 0.6,
+      ...
+    )
+  ]
   ...
 );
 ```
@@ -269,8 +306,6 @@ List<SideDrawer> drawers;
 ScreenBuilder builder;
 bool enableGestures;
 AppBar appBar;
-bool showAppBar;
-double percentage;
 double cornerRadius;
 Widget floatingActionButton;
 Widget bottomNavigationBar;
@@ -279,6 +314,8 @@ FloatingActionButtonAnimator floatingActionButtonAnimator;
 ```
 *SideDrawer*
 ```dart
+double percentage;
+double degree; // 15-45 degree
 Menu menu;
 String selectedItemId;
 Direction direction;
@@ -303,6 +340,6 @@ String title;
 IconData icon;
 ```
 
-## Contibutor
+## Contributor
 - [Vladimir Vlach](https://github.com/vladaman)
 - [trademunch](https://github.com/trademunch)

@@ -1,3 +1,6 @@
+# 1.0.2
+* 3D-effect
+
 # 1.0.1
 * add more **Scaffold** config
 

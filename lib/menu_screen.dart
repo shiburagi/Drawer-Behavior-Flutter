@@ -1,4 +1,5 @@
-import 'dart:developer';
+import 'dart:developer' as Dev;
+import 'dart:math';
 
 import 'package:drawerbehavior/drawer_scaffold.dart';
 import 'package:flutter/material.dart';
@@ -16,19 +17,26 @@ class SideDrawer<T> extends StatefulWidget {
     this.headerView,
     this.footerView,
     this.selectedItemId,
+    double percentage,
+    double degree,
     this.onMenuItemSelected,
     this.color = Colors.white,
     this.background,
     this.animation = false,
     this.direction = Direction.left,
     this.selectorColor,
+    this.drawerWidth = 300,
     this.textStyle,
     this.padding = const EdgeInsets.only(left: 40.0, top: 15.0, bottom: 15.0),
     this.alignment = Alignment.centerLeft,
     this.itemBuilder,
-  }) : super(key: menuScreenKey);
+  })  : this.percentage = percentage ?? 0.8,
+        this.degree = degree == null ? null : max(min(45, degree), 15),
+        super(key: menuScreenKey);
 
-  final double maxSlideAmount = 275.0;
+  final double percentage;
+  final double degree;
+  final double drawerWidth;
   final Direction direction;
   final Menu menu;
   final T selectedItemId;
@@ -45,6 +53,8 @@ class SideDrawer<T> extends StatefulWidget {
   final TextStyle textStyle;
   final Alignment alignment;
   final EdgeInsets padding;
+  double maxSlideAmount(context) =>
+      drawerWidth ?? MediaQuery.of(context).size.width * percentage;
 
   @override
   _SideDrawerState createState() => _SideDrawerState();
@@ -56,6 +66,8 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
 
   Color selectorColor;
   TextStyle textStyle;
+
+  double get maxSlideAmount => widget.maxSlideAmount(context);
 
   setSelectedRenderBox(RenderBox newRenderBox, bool useState) async {
     final newYTop = newRenderBox.localToGlobal(const Offset(0.0, 0.0)).dy;
@@ -84,10 +96,11 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
     final animationIntervalDuration = 0.5;
     final perListItemDelay =
         menuController.state != MenuState.closing ? 0.15 : 0.0;
-
     final millis = menuController.state != MenuState.closing
         ? 150 * widget.menu.items.length
         : 600;
+    
+
     final maxDuration = (widget.menu.items.length - 1) * perListItemDelay +
         animationIntervalDuration;
     for (var i = 0; i < widget.menu.items.length; ++i) {
@@ -112,7 +125,7 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
               selectorColor: selectorColor,
               textStyle: textStyle,
               menuView: widget,
-              width: widget.maxSlideAmount,
+              width: maxSlideAmount,
               icon: item.icon == null ? null : Icon(item.icon),
               onTap: onTap,
               drawBorder: !widget.animation,
@@ -122,12 +135,12 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
                 alignment: Alignment.centerLeft,
                 child: Container(
                   child: widget.itemBuilder(context, item, isSelected),
-                  width: widget.maxSlideAmount,
+                  width: maxSlideAmount,
                 ),
               ),
               onTap: onTap,
             );
-
+   
       if (widget.animation)
         listItems.add(AnimatedMenuListItem(
           menuState: menuController.state,
@@ -148,7 +161,7 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
       margin: EdgeInsets.only(
           left: widget.direction == Direction.left
               ? 0
-              : MediaQuery.of(context).size.width - widget.maxSlideAmount),
+              : MediaQuery.of(context).size.width - maxSlideAmount),
       child: SingleChildScrollView(
         child: Container(
           child: Column(
@@ -205,7 +218,6 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
     return DrawerScaffoldMenuController(
         direction: widget.direction,
         builder: (BuildContext context, MenuController menuController) {
-          log("menuController : ${menuController.direction} ${widget.direction}");
           var shouldRenderSelector = true;
           var actualSelectorYTop = selectorYTop;
           var actualSelectorYBottom = selectorYBottom;
@@ -243,7 +255,7 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
                       ? ItemSelector(
                           left: widget.direction == Direction.right
                               ? MediaQuery.of(context).size.width -
-                                  widget.maxSlideAmount
+                                  maxSlideAmount
                               : 0,
                           selectorColor: selectorColor,
                           top: actualSelectorYTop,
@@ -386,7 +398,7 @@ class _AnimatedMenuListItemState
   @override
   Widget build(BuildContext context) {
     updateSelectedRenderBox(false);
-
+    
     return Opacity(
       opacity: _opacity.evaluate(animation),
       child: Transform(
