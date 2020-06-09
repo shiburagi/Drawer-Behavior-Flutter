@@ -1,7 +1,10 @@
+# 1.0.1
+* add more **Scaffold** config
+
 # 1.0.0
-* Floating action button with location and animator
-* Bottom navigation bar
-* Extended body
+* Replace **AppBarProps** with **AppBar** Widget
+* Multi-drawer
+* Right Drawer
 
 # 0.0.10
 * Floating action button with location and animator
