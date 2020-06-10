@@ -22,13 +22,16 @@ https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
 
 
 ### NEW UPDATES
-* 3D effect
-* Multi-Drawer
-* Right Drawer
-* Floating action button with location and animator
-* Bottom navigation bar
-* Extended body
-* AndroidX support  
+**Version 1.0**
+- Elevation Config
+- 3D effect
+- Multi-Drawer
+- Right Drawer
+**Version 0.0**
+- Floating action button with location and animator
+- Bottom navigation bar
+- Extended body
+- AndroidX support  
 
 
 ## Table of contents
