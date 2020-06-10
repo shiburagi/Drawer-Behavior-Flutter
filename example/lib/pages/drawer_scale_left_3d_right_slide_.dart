@@ -2,14 +2,15 @@ import 'package:drawerbehavior/drawerbehavior.dart';
 import 'package:drawerbehavior_example/menus/main.dart';
 import 'package:flutter/material.dart';
 
-class Drawer3d extends StatefulWidget {
+class DrawerLeft3DAndRightSlide extends StatefulWidget {
   @override
-  _Drawer3dState createState() => _Drawer3dState();
+  _DrawerLeft3DAndRightSlideState createState() =>
+      _DrawerLeft3DAndRightSlideState();
 }
 
-class _Drawer3dState extends State<Drawer3d> {
+class _DrawerLeft3DAndRightSlideState extends State<DrawerLeft3DAndRightSlide> {
   int selectedMenuItemId;
-
+  DrawerScaffoldController controller = DrawerScaffoldController();
   @override
   void initState() {
     selectedMenuItemId = menu.items[0].id;
@@ -19,12 +20,18 @@ class _Drawer3dState extends State<Drawer3d> {
   @override
   Widget build(BuildContext context) {
     return DrawerScaffold(
-      appBar: AppBar(
-          title: Text("Drawer - 3D"),
-          actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
+      controller: controller,
+      appBar: AppBar(title: Text("Drawer - Left(3D) & Right(Slide)"), actions: [
+        IconButton(
+            icon: Icon(Icons.notifications_none),
+            onPressed: () {
+              controller.toggle(Direction.right);
+            })
+      ]),
       drawers: [
         SideDrawer(
-          degree: 180,
+          percentage: 0.6,
+          degree: 45,
           menu: menu,
           direction: Direction.left,
           animation: true,
@@ -37,11 +44,13 @@ class _Drawer3dState extends State<Drawer3d> {
           },
         ),
         SideDrawer(
-          degree: 180,
+          cornerRadius: 0,
           menu: menu,
+          percentage: 1.0,
           direction: Direction.right,
           animation: true,
-          color: Theme.of(context).primaryColor,
+          selectorColor: Colors.white,
+          color: Theme.of(context).accentColor,
           selectedItemId: selectedMenuItemId,
           onMenuItemSelected: (itemId) {
             setState(() {

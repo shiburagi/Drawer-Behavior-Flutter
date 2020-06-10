@@ -17,11 +17,14 @@ https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
 ### Todo
 - [x] Radius Parameter
 - [x] Right Menu View 
-- [ ] 3D effect
+- [x] 3D effect
 - [ ] Material design drawer's behavior
 
 
 ### NEW UPDATES
+* 3D effect
+* Multi-Drawer
+* Right Drawer
 * Floating action button with location and animator
 * Bottom navigation bar
 * Extended body

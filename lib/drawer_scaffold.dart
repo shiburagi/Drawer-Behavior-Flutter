@@ -113,14 +113,25 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
     super.didUpdateWidget(oldWidget);
   }
 
+  MenuController createController(SideDrawer d) {
+    return MenuController(
+      d.direction,
+      vsync: this,
+    )..addListener(() => setState(() {}));
+  }
+
   assignContoller() {
-    
-    menuControllers = widget.drawers
-        .map((d) => MenuController(
-              d.direction,
-              vsync: this,
-            )..addListener(() => setState(() {})))
-        .toList();
+    if (menuControllers == null)
+      menuControllers ??= widget.drawers.map(createController).toList();
+    else
+      for (var i = 0;
+          i < widget.drawers.length && i < menuControllers.length;
+          i++) {
+        menuControllers[i].direction = widget.drawers[i].direction;
+      }
+    for (var i = menuControllers.length; i < widget.drawers.length; i++) {
+      menuControllers.add(createController(widget.drawers[i]));
+    }
     if (widget.controller != null) {
       widget.controller._menuControllers = menuControllers;
       widget.controller._setFocus = (index) {
@@ -189,7 +200,6 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
 
   int drawerFrom(Direction direction) {
     return menuControllers.indexWhere((element) {
-      
       return element.direction == direction;
     });
   }
@@ -239,7 +249,6 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
               if (details.globalPosition.dx < maxSlideAmount + 60) {
                 int focusDrawer = drawerFrom(Direction.left);
 
-                
                 if (focusDrawer < 0) {
                 } else {
                   this.focusDrawerIndex = focusDrawer;
@@ -253,8 +262,6 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
                   details.globalPosition.dx > width - maxSlideAmount - 60) {
                 int focusDrawer = drawerFrom(Direction.right);
 
-                
-
                 if (focusDrawer < 0) {
                   return;
                 } else {
@@ -266,11 +273,9 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
                     startDx = details.globalPosition.dx;
                 }
               }
-              
             },
             onHorizontalDragUpdate: (details) {
               if (startDx == -1) return;
-              
 
               double dx = (details.globalPosition.dx - startDx);
               MenuController menuController = menuControllers[focusDrawerIndex];
@@ -318,7 +323,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
             : WillPopScope(
                 child: content,
                 onWillPop: () {
-                  return new Future(() {
+                  return Future(() {
                     if (isDrawerOpen()) {
                       menuControllers.forEach((element) {
                         element.close();
@@ -356,14 +361,16 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
 
     double slideAmount = maxSlideAmount * slidePercent;
     final contentScale = 1.0 - ((1.0 - drawer.percentage) * scalePercent);
-    final cornerRadius = widget.cornerRadius * menuController.percentOpen;
-    
+    final cornerRadius = (drawer.cornerRadius ?? widget.cornerRadius) *
+        menuController.percentOpen;
 
     if (widget.drawers[focusDrawerIndex].direction == Direction.right)
-      slideAmount = -slideAmount + (maxSlideAmount * (1 - contentScale));
+      slideAmount = -slideAmount + (maxSlideAmount * (1 - contentScale)) / 2;
+    else if (drawer.degree != null) {
+      slideAmount = slideAmount - (maxSlideAmount * (1 - contentScale)) / 2;
+    }
     double degreeAmount = (drawer.degree ?? 0) * slidePercent;
     degreeAmount = degreeAmount * pi / 180;
-    
 
     Matrix4 perspective;
     if (drawer.degree == null) {
@@ -385,25 +392,27 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
       // }
     }
 
+    double elevation = drawer.elevation * slidePercent;
     return new Transform(
       transform: perspective,
-      origin: drawer.direction == Direction.right
+      origin: drawer.degree != null
           ? Offset(MediaQuery.of(context).size.width / 2, 0.0)
           : null,
       alignment: Alignment.centerLeft,
-      child: new Container(
-        decoration: new BoxDecoration(
-          boxShadow: widget.contentShadow,
-        ),
-        child: new ClipRRect(
-            borderRadius: new BorderRadius.circular(cornerRadius),
-            child: content),
+      child: Card(
+        elevation: elevation,
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(cornerRadius)),
+        margin: EdgeInsets.symmetric(horizontal: elevation),
+        child: content,
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    focusDrawerIndex = min(widget.drawers.length - 1, focusDrawerIndex);
     return Stack(
       children: [
         focusDrawerIndex != null
@@ -458,7 +467,6 @@ class DrawerScaffoldMenuControllerState
 
   MenuController getMenuController(BuildContext context,
       [Direction direction = Direction.left]) {
-    
     final scaffoldState =
         context.findAncestorStateOfType<_DrawerScaffoldState>();
     return scaffoldState.menuControllers.firstWhere(
@@ -503,7 +511,7 @@ class Screen {
 class MenuController extends ChangeNotifier {
   final TickerProvider vsync;
   final AnimationController _animationController;
-  final Direction direction;
+  Direction direction;
   MenuState state = MenuState.closed;
 
   MenuController(
