@@ -2,6 +2,7 @@
 * Reuse controller when scaffold config update
 * Add elevation & corner radius config on SideDrawer
 * Add more example
+* **Bug fixed**
 
 # 1.0.2
 * 3D-effect
