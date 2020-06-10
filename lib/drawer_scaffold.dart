@@ -30,12 +30,10 @@ class DrawerScaffold extends StatefulWidget {
   final Widget bottomSheet;
   final bool extendBodyBehindAppBar;
   final List<Widget> persistentFooterButtons;
-
   final bool primary;
-
   final bool resizeToAvoidBottomInset;
-
   final bool resizeToAvoidBottomPadding;
+
   DrawerScaffold({
     this.appBar,
     this.contentShadow = const [
@@ -47,7 +45,7 @@ class DrawerScaffold extends StatefulWidget {
       ),
     ],
     this.drawers,
-    this.cornerRadius = 10.0,
+    this.cornerRadius = 16.0,
     this.contentView,
     this.controller,
     this.extendedBody = false,
@@ -364,11 +362,14 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
     final cornerRadius = (drawer.cornerRadius ?? widget.cornerRadius) *
         menuController.percentOpen;
 
-    if (widget.drawers[focusDrawerIndex].direction == Direction.right)
-      slideAmount = -slideAmount + (maxSlideAmount * (1 - contentScale)) / 2;
-    else if (drawer.degree != null) {
-      slideAmount = slideAmount - (maxSlideAmount * (1 - contentScale)) / 2;
-    }
+    if (drawer.degree != null) {
+      slideAmount = slideAmount * (1 - (1 - contentScale) / 2);
+      if (widget.drawers[focusDrawerIndex].direction == Direction.right) {
+        slideAmount = -slideAmount;
+      }
+    } else if (widget.drawers[focusDrawerIndex].direction == Direction.right)
+      slideAmount = -slideAmount;
+
     double degreeAmount = (drawer.degree ?? 0) * slidePercent;
     degreeAmount = degreeAmount * pi / 180;
 
@@ -397,7 +398,9 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
       transform: perspective,
       origin: drawer.degree != null
           ? Offset(MediaQuery.of(context).size.width / 2, 0.0)
-          : null,
+          : drawer.direction == Direction.right
+              ? Offset(MediaQuery.of(context).size.width, 0.0)
+              : null,
       alignment: Alignment.centerLeft,
       child: Card(
         elevation: elevation,

@@ -24,7 +24,8 @@ class _Drawer3dState extends State<Drawer3d> {
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       drawers: [
         SideDrawer(
-          degree: 180,
+          percentage: 0.8,
+          degree: 45,
           menu: menu,
           direction: Direction.left,
           animation: true,
@@ -37,7 +38,7 @@ class _Drawer3dState extends State<Drawer3d> {
           },
         ),
         SideDrawer(
-          degree: 180,
+          degree: 45,
           menu: menu,
           direction: Direction.right,
           animation: true,

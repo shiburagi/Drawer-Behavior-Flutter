@@ -474,7 +474,6 @@ class _MenuListItem extends StatelessWidget {
       onTap: isSelected ? null : onTap,
       child: Container(
         width: width,
-
         alignment: Alignment.centerRight,
         // padding: padding,
         decoration: drawBorder
