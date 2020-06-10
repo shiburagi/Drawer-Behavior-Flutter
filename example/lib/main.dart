@@ -2,6 +2,7 @@ import 'package:drawerbehavior_example/pages/drawer_3d.dart';
 import 'package:drawerbehavior_example/pages/drawer_custom_item.dart';
 import 'package:drawerbehavior_example/pages/drawer_scale.dart';
 import 'package:drawerbehavior_example/pages/drawer_scale_icon.dart';
+import 'package:drawerbehavior_example/pages/drawer_scale_left_3d_right_slide_.dart';
 import 'package:drawerbehavior_example/pages/drawer_scale_left_right.dart';
 import 'package:drawerbehavior_example/pages/drawer_scale_left_right_inverse.dart';
 import 'package:drawerbehavior_example/pages/drawer_scale_no_animation.dart';
@@ -84,6 +85,10 @@ class _MyAppState extends State<MyApp> {
                     navigate: "/drawer11",
                     color: Theme.of(context).accentColor),
                 createButton(context,
+                    text: "Left(3D) & Right(Slide)",
+                    navigate: "/drawer13",
+                    color: Theme.of(context).accentColor),
+                createButton(context,
                     text: "Right",
                     navigate: "/drawer10",
                     color: Theme.of(context).accentColor),
@@ -123,6 +128,7 @@ class _MyAppState extends State<MyApp> {
         "/drawer10": (context) => DrawerRight(),
         "/drawer11": (context) => DrawerLeftAndRightInverse(),
         "/drawer12": (context) => Drawer3d(),
+        "/drawer13": (context) => DrawerLeft3DAndRightSlide(),
 
       },
     );

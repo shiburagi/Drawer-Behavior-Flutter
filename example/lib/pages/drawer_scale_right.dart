@@ -33,8 +33,7 @@ class _DrawerRightState extends State<DrawerRight> {
           menu: menu,
           direction: Direction.right,
           animation: true,
-          selectorColor: Colors.white,
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).primaryColor,
           selectedItemId: selectedMenuItemId,
           onMenuItemSelected: (itemId) {
             setState(() {

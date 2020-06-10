@@ -30,11 +30,15 @@ class SideDrawer<T> extends StatefulWidget {
     this.padding = const EdgeInsets.only(left: 40.0, top: 15.0, bottom: 15.0),
     this.alignment = Alignment.centerLeft,
     this.itemBuilder,
+    this.elevation = 16,
+    this.cornerRadius,
   })  : this.percentage = percentage ?? 0.8,
         this.degree = degree == null ? null : max(min(45, degree), 15),
         super(key: menuScreenKey);
 
   final double percentage;
+  final double elevation;
+  final double cornerRadius;
   final double degree;
   final double drawerWidth;
   final Direction direction;
@@ -99,7 +103,6 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
     final millis = menuController.state != MenuState.closing
         ? 150 * widget.menu.items.length
         : 600;
-    
 
     final maxDuration = (widget.menu.items.length - 1) * perListItemDelay +
         animationIntervalDuration;
@@ -140,7 +143,7 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
               ),
               onTap: onTap,
             );
-   
+
       if (widget.animation)
         listItems.add(AnimatedMenuListItem(
           menuState: menuController.state,
@@ -240,6 +243,9 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
           }
 
           return Container(
+            // padding: widget.direction == Direction.right
+            //     ? const EdgeInsets.only(left: 24)
+            //     : const EdgeInsets.only(right: 24),
             width: double.infinity,
             height: double.infinity,
             decoration: BoxDecoration(
@@ -398,7 +404,7 @@ class _AnimatedMenuListItemState
   @override
   Widget build(BuildContext context) {
     updateSelectedRenderBox(false);
-    
+
     return Opacity(
       opacity: _opacity.evaluate(animation),
       child: Transform(
@@ -468,7 +474,7 @@ class _MenuListItem extends StatelessWidget {
       onTap: isSelected ? null : onTap,
       child: Container(
         width: width,
-        alignment: Alignment.centerLeft,
+        alignment: Alignment.centerRight,
         // padding: padding,
         decoration: drawBorder
             ? ShapeDecoration(

@@ -17,15 +17,23 @@ https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
 ### Todo
 - [x] Radius Parameter
 - [x] Right Menu View 
-- [ ] 3D effect
+- [x] 3D effect
 - [ ] Material design drawer's behavior
 
 ### NEW UPDATES
-* Floating action button with location and animator
-* Bottom navigation bar
-* Extended body
-* AndroidX support  
-
+---
+**Version 1.0**
+- Elevation Config
+- 3D effect
+- Multi-Drawer
+- Right Drawer
+---
+**Version 0.0**
+- Floating action button with location and animator
+- Bottom navigation bar
+- Extended body
+- AndroidX support  
+---
 
 ## Table of contents
 - [Usage](#usage)
@@ -205,27 +213,10 @@ DrawerScaffold(
 
 ## Preview
 
-### Android
-
-<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-android-1.png?raw=true" width="400px"/>
+<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-1.png?raw=true" width="400px"/>
 
 ```dart
 new DrawerScaffold(
-  drawers: [
-    SideDrawer(
-      percentage: 0.6,
-      ...
-    )
-  ]  ...
-);
-```
----
-
-<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-android-2.png?raw=true" width="400px"/>
-
-```dart
-new DrawerScaffold(
-  headerView: headerView(context),
   drawers: [
     SideDrawer(
       percentage: 0.6,
@@ -237,14 +228,28 @@ new DrawerScaffold(
 ```
 ---
 
-### IOS
-<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-1.png?raw=true" width="400px"/>
+<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview_ios_scale_right.png?raw=true" width="400px"/>
 
 ```dart
 new DrawerScaffold(
   drawers: [
     SideDrawer(
-      percentage: 0.6,
+      direction:Direction.right
+      ...
+    )
+  ]
+  ...
+);
+```
+---
+
+<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview_ios_3d.png?raw=true" width="400px"/>
+
+```dart
+new DrawerScaffold(
+  drawers: [
+    SideDrawer(
+      degree: 45,
       ...
     )
   ]
@@ -304,17 +309,26 @@ new DrawerScaffold(
 DrawerScaffoldController controller;
 List<SideDrawer> drawers;
 ScreenBuilder builder;
-bool enableGestures;
+bool enableGestures; // default: true
 AppBar appBar;
-double cornerRadius;
+double cornerRadius; // default: 16
 Widget floatingActionButton;
 Widget bottomNavigationBar;
 FloatingActionButtonLocation floatingActionButtonLocation;
 FloatingActionButtonAnimator floatingActionButtonAnimator;
+List<BoxShadow> contentShadow;
+Widget bottomSheet;
+bool extendBodyBehindAppBar;
+List<Widget> persistentFooterButtons;
+bool primary;
+bool resizeToAvoidBottomInset;
+bool resizeToAvoidBottomPadding;
 ```
 *SideDrawer*
 ```dart
-double percentage;
+double percentage; // default: 0.8
+double elevation; // default: 4
+double cornerRadius;
 double degree; // 15-45 degree
 Menu menu;
 String selectedItemId;
