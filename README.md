@@ -149,7 +149,7 @@ contentView: Screen(
 builder: (context, id) => Center(child: _widget),
 ```
 ---
-### menuView (MenuView) -> drawers (List<SideDrawer>)
+### menuView (MenuView) -> drawers (List\<SideDrawer>)
 ```dart
 menuView: new MenuView(
     menu: menu,
@@ -189,7 +189,7 @@ drawers: [
 
 
 ---
-### percentage (DrawerScaffold -> drawers (List<SideDrawer>))
+### percentage (DrawerScaffold -> drawers (List\<SideDrawer>))
 ```dart
 DrawerScaffold(
   percentage: 0.6,
