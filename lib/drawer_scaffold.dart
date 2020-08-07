@@ -1,4 +1,3 @@
-import 'dart:io' show Platform;
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
@@ -317,11 +316,13 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
             },
           );
 
-    bool isIOS = !kIsWeb && Platform.isIOS;
+    bool isIOS = Theme.of(context).platform == TargetPlatform.iOS;
 
     return zoomAndSlideContent(new Container(
         decoration: new BoxDecoration(
+          // ignore: deprecated_member_use_from_same_package
           image: widget.contentView?.background,
+          // ignore: deprecated_member_use_from_same_package
           color: widget.contentView?.color ?? Theme.of(context).canvasColor,
         ),
         child: isIOS

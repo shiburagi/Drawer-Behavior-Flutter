@@ -1,6 +1,11 @@
+# 1.1.1
+* Supress deprecated warning
+
+# 1.1.0
+* Web support
+
 # 1.0.4
 * Duration & Curve variable on SideDrawer
-* Web support
 
 # 1.0.3
 * Reuse controller when scaffold config update

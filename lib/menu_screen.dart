@@ -45,28 +45,72 @@ class SideDrawer<T> extends StatefulWidget {
             new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
         super(key: menuScreenKey);
 
+  /// Scaling Percentage base on width and height
   final double percentage;
+
+  /// Card's elevation
+  /// Default : 16
   final double elevation;
+
+  /// Card's corner radius
   final double cornerRadius;
+
+  /// Degree of rotation : 15->45 degree
   final double degree;
+
+  /// Drawer's width in Pixel,
+  /// Default : 300px
   final double drawerWidth;
+
+  /// Direction the drawer will appear ([Direction.left] or [Direction.right])
+  /// Default: [Direction.left]
   final Direction direction;
+
+  /// Transition's [Curve],
+  /// Default : [Curves.easeOut]
   final Curve curve;
+
+  /// Transition's [Duration],
+  /// Defalut: 250ms
   final Duration duration;
+
+  /// [Menu] for drawer
   final Menu menu;
+
+  /// Current selected ID
   final T selectedItemId;
+
+  /// Flag for animation on menu item
   final bool animation;
+
+  /// listen to menu selected
   final Function(T) onMenuItemSelected;
 
+  /// [Widget] for header on drawer
   final Widget headerView;
+
+  /// [Widget] for footer on drawer
   final Widget footerView;
+
+  /// Custom builder for menu item
   final Function(BuildContext, MenuItem, bool) itemBuilder;
+
+  /// Background for drawer
   final DecorationImage background;
+
+  /// Background [Color] for drawer
   final Color color;
 
+  /// [Color] for selected menu item
   final Color selectorColor;
+
+  /// Menu item [TextStyle]
   final TextStyle textStyle;
+
+  /// Menu [Alignment] in drawer
   final Alignment alignment;
+
+  /// Menu [Padding] in drawer
   final EdgeInsets padding;
 
   final Curve scaleDownCurve;
