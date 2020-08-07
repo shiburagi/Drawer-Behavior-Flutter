@@ -19,10 +19,10 @@ jobs:
     - uses: actions/setup-java@v1
       with:
         java-version: '12.x'
-    - name: Flutter action
-      uses: subosito/flutter-action@v1.3.2
+    - name: setup-flutter
+      uses: takuyaohashi/setup-flutter@v1
       with:
-        channel: 'beta'
+        channel: beta
  
     - name: Install dependencies
       run: flutter pub get
