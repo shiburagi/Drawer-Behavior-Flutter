@@ -26,4 +26,5 @@ jobs:
       - run: flutter --version
       - run: flutter pub get
 #       - run: flutter test
-#       - run: flutter build apk
+      - run: cd example
+      - run: flutter build apk
