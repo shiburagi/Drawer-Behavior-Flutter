@@ -333,6 +333,8 @@ double degree; // 15-45 degree
 Menu menu;
 String selectedItemId;
 Direction direction;
+Duration duration;
+Curve curve;
 bool animation;
 Function(String) onMenuItemSelected;
 Widget headerView;
