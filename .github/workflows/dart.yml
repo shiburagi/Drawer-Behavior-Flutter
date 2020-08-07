@@ -21,6 +21,8 @@ jobs:
         java-version: '12.x'
     - name: Flutter action
       uses: subosito/flutter-action@v1.3.2
+      with:
+        channel: 'beta'
  
     - name: Install dependencies
       run: flutter pub get
