@@ -1,3 +1,7 @@
+# 1.0.4
+* Duration & Curve variable on SideDrawer
+* Web support
+
 # 1.0.3
 * Reuse controller when scaffold config update
 * Add elevation & corner radius config on SideDrawer

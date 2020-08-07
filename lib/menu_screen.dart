@@ -1,4 +1,3 @@
-import 'dart:developer' as Dev;
 import 'dart:math';
 
 import 'package:drawerbehavior/drawer_scaffold.dart';
@@ -26,6 +25,8 @@ class SideDrawer<T> extends StatefulWidget {
     this.direction = Direction.left,
     this.selectorColor,
     this.drawerWidth = 300,
+    this.duration,
+    this.curve,
     this.textStyle,
     this.padding = const EdgeInsets.only(left: 40.0, top: 15.0, bottom: 15.0),
     this.alignment = Alignment.centerLeft,
@@ -34,6 +35,14 @@ class SideDrawer<T> extends StatefulWidget {
     this.cornerRadius,
   })  : this.percentage = percentage ?? 0.8,
         this.degree = degree == null ? null : max(min(45, degree), 15),
+        this.scaleDownCurve =
+            new Interval(0.0, 0.3, curve: curve ?? Curves.easeOut),
+        this.scaleUpCurve =
+            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        this.slideOutCurve =
+            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        this.slideInCurve =
+            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
         super(key: menuScreenKey);
 
   final double percentage;
@@ -42,6 +51,8 @@ class SideDrawer<T> extends StatefulWidget {
   final double degree;
   final double drawerWidth;
   final Direction direction;
+  final Curve curve;
+  final Duration duration;
   final Menu menu;
   final T selectedItemId;
   final bool animation;
@@ -57,6 +68,11 @@ class SideDrawer<T> extends StatefulWidget {
   final TextStyle textStyle;
   final Alignment alignment;
   final EdgeInsets padding;
+
+  final Curve scaleDownCurve;
+  final Curve scaleUpCurve;
+  final Curve slideOutCurve;
+  final Curve slideInCurve;
   double maxSlideAmount(context) =>
       drawerWidth ?? MediaQuery.of(context).size.width * percentage;
 
@@ -77,10 +93,8 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
     final newYTop = newRenderBox.localToGlobal(const Offset(0.0, 0.0)).dy;
     final newYBottom = newYTop + newRenderBox.size.height;
     if (newYTop != selectorYTop) {
-//      setState(() {
       selectorYTop = newYTop;
       selectorYBottom = newYBottom;
-//      });
     }
   }
 

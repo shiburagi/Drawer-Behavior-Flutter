@@ -1,7 +1,7 @@
-import 'dart:developer' as Dev;
 import 'dart:io' show Platform;
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'menu_screen.dart';
@@ -10,6 +10,7 @@ import 'utils.dart';
 typedef Widget DrawerScaffoldBuilder(
     BuildContext context, MenuController menuController);
 
+/// a Scaffold wrapper
 class DrawerScaffold extends StatefulWidget {
   final List<SideDrawer> drawers;
   @deprecated
@@ -72,10 +73,16 @@ class DrawerScaffold extends StatefulWidget {
 class _DrawerScaffoldState<T> extends State<DrawerScaffold>
     with TickerProviderStateMixin {
   List<MenuController> menuControllers;
-  Curve scaleDownCurve = new Interval(0.0, 0.3, curve: Curves.easeOut);
-  Curve scaleUpCurve = new Interval(0.0, 1.0, curve: Curves.easeOut);
-  Curve slideOutCurve = new Interval(0.0, 1.0, curve: Curves.easeOut);
-  Curve slideInCurve = new Interval(0.0, 1.0, curve: Curves.easeOut);
+  // Curve scaleDownCurve = new Interval(0.0, 0.3, curve: Curves.easeOut);
+  // Curve scaleUpCurve = new Interval(0.0, 1.0, curve: Curves.easeOut);
+  // Curve slideOutCurve = new Interval(0.0, 1.0, curve: Curves.easeOut);
+  // Curve slideInCurve = new Interval(0.0, 1.0, curve: Curves.easeOut);
+
+  Curve get scaleDownCurve => widget.drawers[focusDrawerIndex].scaleDownCurve;
+  Curve get scaleUpCurve => widget.drawers[focusDrawerIndex].scaleUpCurve;
+  Curve get slideOutCurve => widget.drawers[focusDrawerIndex].slideOutCurve;
+  Curve get slideInCurve => widget.drawers[focusDrawerIndex].slideInCurve;
+
   int listenDrawerIndex = 0;
   int focusDrawerIndex = 0;
 
@@ -114,6 +121,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
   MenuController createController(SideDrawer d) {
     return MenuController(
       d.direction,
+      d.duration,
       vsync: this,
     )..addListener(() => setState(() {}));
   }
@@ -309,7 +317,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
             },
           );
 
-    bool isIOS = Platform.isIOS;
+    bool isIOS = !kIsWeb && Platform.isIOS;
 
     return zoomAndSlideContent(new Container(
         decoration: new BoxDecoration(
@@ -515,14 +523,17 @@ class MenuController extends ChangeNotifier {
   final TickerProvider vsync;
   final AnimationController _animationController;
   Direction direction;
+  Duration duration;
   MenuState state = MenuState.closed;
 
   MenuController(
-    this.direction, {
+    this.direction,
+    Duration duration, {
     this.vsync,
-  }) : _animationController = new AnimationController(vsync: vsync) {
+  })  : this.duration = duration ?? const Duration(milliseconds: 250),
+        _animationController = new AnimationController(vsync: vsync) {
     _animationController
-      ..duration = const Duration(milliseconds: 250)
+      ..duration = duration ?? const Duration(milliseconds: 250)
       ..addListener(() {
         notifyListeners();
       })
