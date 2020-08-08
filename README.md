@@ -1,5 +1,7 @@
 [![pub package](https://img.shields.io/pub/v/drawerbehavior.svg)](https://pub.dartlang.org/packages/drawerbehavior)
-![badge](https://action-badges.now.sh/shiburagi/Drawer-Behavior-Flutter)
+![fdsfd](https://github.com/shiburagi/Drawer-Behavior-Flutter/workflows/Dart%20CI/badge.svg)
+
+
 # Drawer Behavior - Flutter
 
 Drawer behavior is a library that provide an extra behavior on drawer, such as, move view or scaling view's height while drawer on slide.
