@@ -34,6 +34,10 @@ class DrawerScaffold extends StatefulWidget {
   final bool resizeToAvoidBottomInset;
   final bool resizeToAvoidBottomPadding;
 
+  final Function(SideDrawer, double) onSlide;
+  final Function(SideDrawer) onOpened;
+  final Function(SideDrawer) onClosed;
+
   DrawerScaffold({
     this.appBar,
     this.contentShadow = const [
@@ -63,6 +67,9 @@ class DrawerScaffold extends StatefulWidget {
     this.primary = true,
     this.resizeToAvoidBottomInset,
     this.resizeToAvoidBottomPadding,
+    this.onSlide,
+    this.onOpened,
+    this.onClosed,
   }) : super(key: key);
 
   @override
@@ -121,6 +128,11 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
     return MenuController(
       d.direction,
       d.duration,
+      (value) {
+        widget.onSlide?.call(d, value);
+        if (value == 0) widget.onClosed?.call(d);
+        if (value == 1) widget.onOpened?.call(d);
+      },
       vsync: this,
     )..addListener(() => setState(() {}));
   }
@@ -284,7 +296,6 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
 
               double dx = (details.globalPosition.dx - startDx);
               MenuController menuController = menuControllers[focusDrawerIndex];
-
               if (menuController.direction == Direction.right) {
                 dx = -dx;
               }
@@ -523,19 +534,22 @@ class Screen {
 class MenuController extends ChangeNotifier {
   final TickerProvider vsync;
   final AnimationController _animationController;
+  final Function(double) onAnimated;
   Direction direction;
   Duration duration;
   MenuState state = MenuState.closed;
 
   MenuController(
     this.direction,
-    Duration duration, {
+    Duration duration,
+    this.onAnimated, {
     this.vsync,
   })  : this.duration = duration ?? const Duration(milliseconds: 250),
         _animationController = new AnimationController(vsync: vsync) {
     _animationController
       ..duration = duration ?? const Duration(milliseconds: 250)
       ..addListener(() {
+        onAnimated(_animationController.value);
         notifyListeners();
       })
       ..addStatusListener((AnimationStatus status) {

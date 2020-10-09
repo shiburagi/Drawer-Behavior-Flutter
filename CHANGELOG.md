@@ -1,3 +1,9 @@
+# 1.1.2
+* Listener for onSlide, onOpened and onClosed 
+
+# 1.1.2
+* Supress deprecated warning
+
 # 1.1.1
 * Supress deprecated warning
 

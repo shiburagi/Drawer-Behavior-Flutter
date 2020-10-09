@@ -27,6 +27,15 @@ class _DrawerLeftAndRightState extends State<DrawerLeftAndRight> {
               controller.toggle(Direction.right);
             })
       ]),
+      onSlide: (drawer, value) {
+        debugPrint("[LOG] Drawer ${drawer.direction} $value");
+      },
+      onOpened: (drawer) {
+        debugPrint("[LOG] Drawer ${drawer.direction} opened");
+      },
+      onClosed: (drawer) {
+        debugPrint("[LOG] Drawer ${drawer.direction} closed");
+      },
       drawers: [
         SideDrawer(
           percentage: 0.6,
