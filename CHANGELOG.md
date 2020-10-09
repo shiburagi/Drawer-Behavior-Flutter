@@ -1,4 +1,4 @@
-# 1.1.2
+# 1.1.3
 * Listener for onSlide, onOpened and onClosed 
 
 # 1.1.2
