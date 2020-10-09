@@ -1,7 +1,6 @@
-import 'dart:developer' as Dev;
-import 'dart:io' show Platform;
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'menu_screen.dart';
@@ -10,6 +9,7 @@ import 'utils.dart';
 typedef Widget DrawerScaffoldBuilder(
     BuildContext context, MenuController menuController);
 
+/// a Scaffold wrapper
 class DrawerScaffold extends StatefulWidget {
   final List<SideDrawer> drawers;
   @deprecated
@@ -33,6 +33,15 @@ class DrawerScaffold extends StatefulWidget {
   final bool primary;
   final bool resizeToAvoidBottomInset;
   final bool resizeToAvoidBottomPadding;
+
+  /// Listen to offset value on slide event for which [SideDrawer]
+  final Function(SideDrawer, double) onSlide;
+
+  /// Listen to which [SideDrawer] is opened (offset=1)
+  final Function(SideDrawer) onOpened;
+
+  /// Listen to which [SideDrawer] is closed (offset=0)
+  final Function(SideDrawer) onClosed;
 
   DrawerScaffold({
     this.appBar,
@@ -63,6 +72,9 @@ class DrawerScaffold extends StatefulWidget {
     this.primary = true,
     this.resizeToAvoidBottomInset,
     this.resizeToAvoidBottomPadding,
+    this.onSlide,
+    this.onOpened,
+    this.onClosed,
   }) : super(key: key);
 
   @override
@@ -72,10 +84,16 @@ class DrawerScaffold extends StatefulWidget {
 class _DrawerScaffoldState<T> extends State<DrawerScaffold>
     with TickerProviderStateMixin {
   List<MenuController> menuControllers;
-  Curve scaleDownCurve = new Interval(0.0, 0.3, curve: Curves.easeOut);
-  Curve scaleUpCurve = new Interval(0.0, 1.0, curve: Curves.easeOut);
-  Curve slideOutCurve = new Interval(0.0, 1.0, curve: Curves.easeOut);
-  Curve slideInCurve = new Interval(0.0, 1.0, curve: Curves.easeOut);
+  // Curve scaleDownCurve = new Interval(0.0, 0.3, curve: Curves.easeOut);
+  // Curve scaleUpCurve = new Interval(0.0, 1.0, curve: Curves.easeOut);
+  // Curve slideOutCurve = new Interval(0.0, 1.0, curve: Curves.easeOut);
+  // Curve slideInCurve = new Interval(0.0, 1.0, curve: Curves.easeOut);
+
+  Curve get scaleDownCurve => widget.drawers[focusDrawerIndex].scaleDownCurve;
+  Curve get scaleUpCurve => widget.drawers[focusDrawerIndex].scaleUpCurve;
+  Curve get slideOutCurve => widget.drawers[focusDrawerIndex].slideOutCurve;
+  Curve get slideInCurve => widget.drawers[focusDrawerIndex].slideInCurve;
+
   int listenDrawerIndex = 0;
   int focusDrawerIndex = 0;
 
@@ -114,6 +132,12 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
   MenuController createController(SideDrawer d) {
     return MenuController(
       d.direction,
+      d.duration,
+      (value) {
+        widget.onSlide?.call(d, value);
+        if (value == 0) widget.onClosed?.call(d);
+        if (value == 1) widget.onOpened?.call(d);
+      },
       vsync: this,
     )..addListener(() => setState(() {}));
   }
@@ -207,6 +231,8 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
         body == null) {
       selectedItemId = widget.drawers[listenDrawerIndex].selectedItemId;
       body = widget.builder?.call(context, selectedItemId) ??
+          // ignore: deprecated_member_use_from_same_package
+          // ignore: deprecated_member_use
           widget.contentView?.contentBuilder(context);
     }
     Widget _scaffoldWidget = new Scaffold(
@@ -277,7 +303,6 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
 
               double dx = (details.globalPosition.dx - startDx);
               MenuController menuController = menuControllers[focusDrawerIndex];
-
               if (menuController.direction == Direction.right) {
                 dx = -dx;
               }
@@ -309,11 +334,13 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
             },
           );
 
-    bool isIOS = Platform.isIOS;
+    bool isIOS = Theme.of(context).platform == TargetPlatform.iOS;
 
     return zoomAndSlideContent(new Container(
         decoration: new BoxDecoration(
+          // ignore: deprecated_member_use_from_same_package
           image: widget.contentView?.background,
+          // ignore: deprecated_member_use_from_same_package
           color: widget.contentView?.color ?? Theme.of(context).canvasColor,
         ),
         child: isIOS
@@ -514,16 +541,22 @@ class Screen {
 class MenuController extends ChangeNotifier {
   final TickerProvider vsync;
   final AnimationController _animationController;
+  final Function(double) onAnimated;
   Direction direction;
+  Duration duration;
   MenuState state = MenuState.closed;
 
   MenuController(
-    this.direction, {
+    this.direction,
+    Duration duration,
+    this.onAnimated, {
     this.vsync,
-  }) : _animationController = new AnimationController(vsync: vsync) {
+  })  : this.duration = duration ?? const Duration(milliseconds: 250),
+        _animationController = new AnimationController(vsync: vsync) {
     _animationController
-      ..duration = const Duration(milliseconds: 250)
+      ..duration = duration ?? const Duration(milliseconds: 250)
       ..addListener(() {
+        onAnimated(_animationController.value);
         notifyListeners();
       })
       ..addStatusListener((AnimationStatus status) {

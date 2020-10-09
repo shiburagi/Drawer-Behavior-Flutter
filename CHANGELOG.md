@@ -1,3 +1,18 @@
+# 1.1.3
+* Listener for onSlide, onOpened and onClosed 
+
+# 1.1.2
+* Supress deprecated warning
+
+# 1.1.1
+* Supress deprecated warning
+
+# 1.1.0
+* Web support
+
+# 1.0.4
+* Duration & Curve variable on SideDrawer
+
 # 1.0.3
 * Reuse controller when scaffold config update
 * Add elevation & corner radius config on SideDrawer

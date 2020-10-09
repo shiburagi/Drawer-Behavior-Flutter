@@ -116,21 +116,27 @@ class _MyAppState extends State<MyApp> {
           primarySwatch: Colors.teal, accentColor: Colors.amberAccent),
       routes: {
         "/": home,
-        "/drawer1": (context) => DrawerScale(),
-        "/drawer2": (context) => DrawerScaleNoAnimation(),
-        "/drawer3": (context) => DrawerSlide(),
-        "/drawer4": (context) => DrawerSlideWithHeader(),
-        "/drawer5": (context) => DrawerCustomItem(),
-        "/drawer6": (context) => DrawerScaleIcon(),
-        "/drawer7": (context) => DrawerSlideCustomAppBar(),
-        "/drawer8": (context) => DrawerSlideWithFooter(),
-        "/drawer9": (context) => DrawerLeftAndRight(),
-        "/drawer10": (context) => DrawerRight(),
-        "/drawer11": (context) => DrawerLeftAndRightInverse(),
-        "/drawer12": (context) => Drawer3d(),
-        "/drawer13": (context) => DrawerLeft3DAndRightSlide(),
-
+        "/drawer1": (context) => createPage(DrawerScale()),
+        "/drawer2": (context) => createPage(DrawerScaleNoAnimation()),
+        "/drawer3": (context) => createPage(DrawerSlide()),
+        "/drawer4": (context) => createPage(DrawerSlideWithHeader()),
+        "/drawer5": (context) => createPage(DrawerCustomItem()),
+        "/drawer6": (context) => createPage(DrawerScaleIcon()),
+        "/drawer7": (context) => createPage(DrawerSlideCustomAppBar()),
+        "/drawer8": (context) => createPage(DrawerSlideWithFooter()),
+        "/drawer9": (context) => createPage(DrawerLeftAndRight()),
+        "/drawer10": (context) => createPage(DrawerRight()),
+        "/drawer11": (context) => createPage(DrawerLeftAndRightInverse()),
+        "/drawer12": (context) => createPage(Drawer3d()),
+        "/drawer13": (context) => createPage(DrawerLeft3DAndRightSlide()),
       },
+    );
+  }
+
+  Widget createPage(Widget child) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: child,
     );
   }
 }

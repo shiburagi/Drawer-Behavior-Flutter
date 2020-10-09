@@ -1,4 +1,6 @@
 [![pub package](https://img.shields.io/pub/v/drawerbehavior.svg)](https://pub.dartlang.org/packages/drawerbehavior)
+![fdsfd](https://github.com/shiburagi/Drawer-Behavior-Flutter/workflows/Dart%20CI/badge.svg)
+
 
 # Drawer Behavior - Flutter
 
@@ -14,11 +16,7 @@ https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
 
 ---
 
-### Todo
-- [x] Radius Parameter
-- [x] Right Menu View 
-- [x] 3D effect
-- [ ] Material design drawer's behavior
+### Todo : https://github.com/shiburagi/Drawer-Behavior-Flutter/projects/1
 
 
 ### NEW UPDATES
@@ -150,7 +148,7 @@ contentView: Screen(
 builder: (context, id) => Center(child: _widget),
 ```
 ---
-### menuView (MenuView) -> drawers (List<SideDrawer>)
+### menuView (MenuView) -> drawers (List\<SideDrawer>)
 ```dart
 menuView: new MenuView(
     menu: menu,
@@ -190,7 +188,7 @@ drawers: [
 
 
 ---
-### percentage (DrawerScaffold -> drawers (List<SideDrawer>))
+### percentage (DrawerScaffold -> drawers (List\<SideDrawer>))
 ```dart
 DrawerScaffold(
   percentage: 0.6,
@@ -324,6 +322,13 @@ List<Widget> persistentFooterButtons;
 bool primary;
 bool resizeToAvoidBottomInset;
 bool resizeToAvoidBottomPadding;
+
+/// Listen to offset value on slide event for which [SideDrawer]
+Function(SideDrawer, double) onSlide;
+/// Listen to which [SideDrawer] is opened (offset=1)
+Function(SideDrawer) onOpened;
+/// Listen to which [SideDrawer] is closed (offset=0)
+Function(SideDrawer) onClosed;
 ```
 *SideDrawer*
 ```dart
@@ -334,6 +339,8 @@ double degree; // 15-45 degree
 Menu menu;
 String selectedItemId;
 Direction direction;
+Duration duration;
+Curve curve;
 bool animation;
 Function(String) onMenuItemSelected;
 Widget headerView;

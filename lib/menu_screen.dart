@@ -1,4 +1,3 @@
-import 'dart:developer' as Dev;
 import 'dart:math';
 
 import 'package:drawerbehavior/drawer_scaffold.dart';
@@ -26,6 +25,8 @@ class SideDrawer<T> extends StatefulWidget {
     this.direction = Direction.left,
     this.selectorColor,
     this.drawerWidth = 300,
+    this.duration,
+    this.curve,
     this.textStyle,
     this.padding = const EdgeInsets.only(left: 40.0, top: 15.0, bottom: 15.0),
     this.alignment = Alignment.centerLeft,
@@ -34,29 +35,88 @@ class SideDrawer<T> extends StatefulWidget {
     this.cornerRadius,
   })  : this.percentage = percentage ?? 0.8,
         this.degree = degree == null ? null : max(min(45, degree), 15),
+        this.scaleDownCurve =
+            new Interval(0.0, 0.3, curve: curve ?? Curves.easeOut),
+        this.scaleUpCurve =
+            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        this.slideOutCurve =
+            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        this.slideInCurve =
+            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
         super(key: menuScreenKey);
 
+  /// Scaling Percentage base on width and height
   final double percentage;
+
+  /// Card's elevation
+  /// Default : 16
   final double elevation;
+
+  /// Card's corner radius
   final double cornerRadius;
+
+  /// Degree of rotation : 15->45 degree
   final double degree;
+
+  /// Drawer's width in Pixel,
+  /// Default : 300px
   final double drawerWidth;
+
+  /// Direction the drawer will appear ([Direction.left] or [Direction.right])
+  /// Default: [Direction.left]
   final Direction direction;
+
+  /// Transition's [Curve],
+  /// Default : [Curves.easeOut]
+  final Curve curve;
+
+  /// Transition's [Duration],
+  /// Defalut: 250ms
+  final Duration duration;
+
+  /// [Menu] for drawer
   final Menu menu;
+
+  /// Current selected ID
   final T selectedItemId;
+
+  /// Flag for animation on menu item
   final bool animation;
+
+  /// listen to menu selected
   final Function(T) onMenuItemSelected;
 
+  /// [Widget] for header on drawer
   final Widget headerView;
+
+  /// [Widget] for footer on drawer
   final Widget footerView;
+
+  /// Custom builder for menu item
   final Function(BuildContext, MenuItem, bool) itemBuilder;
+
+  /// Background for drawer
   final DecorationImage background;
+
+  /// Background [Color] for drawer
   final Color color;
 
+  /// [Color] for selected menu item
   final Color selectorColor;
+
+  /// Menu item [TextStyle]
   final TextStyle textStyle;
+
+  /// Menu [Alignment] in drawer
   final Alignment alignment;
+
+  /// Menu [Padding] in drawer
   final EdgeInsets padding;
+
+  final Curve scaleDownCurve;
+  final Curve scaleUpCurve;
+  final Curve slideOutCurve;
+  final Curve slideInCurve;
   double maxSlideAmount(context) =>
       drawerWidth ?? MediaQuery.of(context).size.width * percentage;
 
@@ -77,10 +137,8 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
     final newYTop = newRenderBox.localToGlobal(const Offset(0.0, 0.0)).dy;
     final newYBottom = newYTop + newRenderBox.size.height;
     if (newYTop != selectorYTop) {
-//      setState(() {
       selectorYTop = newYTop;
       selectorYBottom = newYBottom;
-//      });
     }
   }
 

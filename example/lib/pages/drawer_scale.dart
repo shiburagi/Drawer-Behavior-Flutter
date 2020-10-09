@@ -22,6 +22,15 @@ class _DrawerScaleState extends State<DrawerScale> {
       appBar: AppBar(
           title: Text("Drawer - Scale"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
+      onSlide: (drawer, value) {
+        debugPrint("[LOG] Drawer ${drawer.direction} $value");
+      },
+      onOpened: (drawer) {
+        debugPrint("[LOG] Drawer ${drawer.direction} opened");
+      },
+      onClosed: (drawer) {
+        debugPrint("[LOG] Drawer ${drawer.direction} closed");
+      },
       drawers: [
         SideDrawer(
           percentage: 0.6,
