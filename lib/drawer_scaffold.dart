@@ -34,8 +34,13 @@ class DrawerScaffold extends StatefulWidget {
   final bool resizeToAvoidBottomInset;
   final bool resizeToAvoidBottomPadding;
 
+  /// Listen to offset value on slide event for which [SideDrawer]
   final Function(SideDrawer, double) onSlide;
+
+  /// Listen to which [SideDrawer] is opened (offset=1)
   final Function(SideDrawer) onOpened;
+
+  /// Listen to which [SideDrawer] is closed (offset=0)
   final Function(SideDrawer) onClosed;
 
   DrawerScaffold({

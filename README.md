@@ -322,6 +322,13 @@ List<Widget> persistentFooterButtons;
 bool primary;
 bool resizeToAvoidBottomInset;
 bool resizeToAvoidBottomPadding;
+
+/// Listen to offset value on slide event for which [SideDrawer]
+Function(SideDrawer, double) onSlide;
+/// Listen to which [SideDrawer] is opened (offset=1)
+Function(SideDrawer) onOpened;
+/// Listen to which [SideDrawer] is closed (offset=0)
+Function(SideDrawer) onClosed;
 ```
 *SideDrawer*
 ```dart
