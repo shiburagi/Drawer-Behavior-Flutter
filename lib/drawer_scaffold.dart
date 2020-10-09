@@ -232,7 +232,6 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
       selectedItemId = widget.drawers[listenDrawerIndex].selectedItemId;
       body = widget.builder?.call(context, selectedItemId) ??
           // ignore: deprecated_member_use_from_same_package
-          // ignore: deprecated_member_use
           widget.contentView?.contentBuilder(context);
     }
     Widget _scaffoldWidget = new Scaffold(
