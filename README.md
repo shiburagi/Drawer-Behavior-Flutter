@@ -1,4 +1,6 @@
 [![pub package](https://img.shields.io/pub/v/drawerbehavior.svg)](https://pub.dartlang.org/packages/drawerbehavior)
+![fdsfd](https://github.com/shiburagi/Drawer-Behavior-Flutter/workflows/Dart%20CI/badge.svg)
+
 
 # Drawer Behavior - Flutter
 
@@ -14,11 +16,8 @@ https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
 
 ---
 
-### Todo
-- [x] Radius Parameter
-- [x] Right Menu View 
-- [x] 3D effect
-- [ ] Material design drawer's behavior
+### Todo : https://github.com/shiburagi/Drawer-Behavior-Flutter/projects/1
+
 
 ### NEW UPDATES
 ---
