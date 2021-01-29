@@ -341,7 +341,8 @@ String selectedItemId;
 Direction direction;
 Duration duration;
 Curve curve;
-bool animation;
+bool animation; //default: false
+bool slide; //default: false
 Function(String) onMenuItemSelected;
 Widget headerView;
 Widget footerView;
