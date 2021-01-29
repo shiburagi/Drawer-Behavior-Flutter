@@ -16,6 +16,7 @@ class SideDrawer<T> extends StatefulWidget {
     this.headerView,
     this.footerView,
     this.selectedItemId,
+    this.slide = false,
     double percentage,
     double degree,
     this.onMenuItemSelected,
@@ -83,6 +84,9 @@ class SideDrawer<T> extends StatefulWidget {
   /// Flag for animation on menu item
   final bool animation;
 
+  /// Flag for drawer slide with main container
+  final bool slide;
+
   /// listen to menu selected
   final Function(T) onMenuItemSelected;
 
@@ -113,12 +117,27 @@ class SideDrawer<T> extends StatefulWidget {
   /// Menu [Padding] in drawer
   final EdgeInsets padding;
 
+  /// Easing [Curve] for scale down
   final Curve scaleDownCurve;
+
+  /// Easing [Curve] for scale up
   final Curve scaleUpCurve;
+
+  /// Easing [Curve] for slide out
   final Curve slideOutCurve;
+
+  /// Easing [Curve] for slide in
   final Curve slideInCurve;
+
+  final _Setting _setting = _Setting();
   double maxSlideAmount(context) =>
       drawerWidth ?? MediaQuery.of(context).size.width * percentage;
+
+  MenuController createController(
+      BuildContext context, TickerProvider vsync, Function(double) onAnimated) {
+    _setting.createController(context, this, vsync, onAnimated);
+    return _setting.controller;
+  }
 
   @override
   _SideDrawerState createState() => _SideDrawerState();
@@ -149,6 +168,7 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
 
   @override
   void dispose() {
+    widget._setting.controller.dispose();
     super.dispose();
   }
 
@@ -254,7 +274,9 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
     }
     return Transform(
       transform: Matrix4.translationValues(
-        0.0,
+        (widget.direction == Direction.left ? 1 : -1) *
+            widget.maxSlideAmount(context) *
+            (widget._setting.controller.slidePercent - 1),
         MediaQuery.of(context).padding.top,
         0.0,
       ),
@@ -331,6 +353,22 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
             ),
           );
         });
+  }
+}
+
+class _Setting {
+  MenuController controller;
+
+  MenuController createController(BuildContext context, SideDrawer drawer,
+      TickerProvider vsync, Function(double) onAnimated) {
+    controller = MenuController(
+      drawer,
+      onAnimated,
+      context: context,
+      vsync: vsync,
+    );
+
+    return controller;
   }
 }
 
