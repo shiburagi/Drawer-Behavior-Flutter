@@ -37,6 +37,7 @@ class _DrawerScaleState extends State<DrawerScale> {
           menu: menu,
           direction: Direction.left,
           animation: true,
+          // alignment: Alignment.topLeft,
           color: Theme.of(context).primaryColor,
           selectedItemId: selectedMenuItemId,
           onMenuItemSelected: (itemId) {

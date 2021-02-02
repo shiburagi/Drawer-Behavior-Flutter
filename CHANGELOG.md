@@ -1,3 +1,8 @@
+# 1.2.2
+* Add child option on [MenuScreen]
+* Animation fixed
+* GlobalKey error fixed
+
 # 1.2.1
 * ```slide``` parameter on SideDrawer as a flag to slide menu with main container while drawer is opening or closing  
 * Bug fixed
