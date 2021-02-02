@@ -79,6 +79,20 @@ class DrawerScaffold extends StatefulWidget {
 
   @override
   _DrawerScaffoldState createState() => new _DrawerScaffoldState();
+
+  static MenuController currentController(BuildContext context,
+      {bool nullOk = true}) {
+    assert(nullOk != null);
+    assert(context != null);
+    final _DrawerScaffoldState result =
+        context.findAncestorStateOfType<_DrawerScaffoldState>();
+    if (nullOk || result != null) return result._controller;
+    throw FlutterError.fromParts(<DiagnosticsNode>[
+      ErrorSummary(
+          '_SideDrawerState.of() called with a context that does not contain a MenuController.'),
+      context.describeElement('The context used was')
+    ]);
+  }
 }
 
 class _DrawerScaffoldState<T> extends State<DrawerScaffold>
@@ -124,13 +138,13 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
   @override
   void didUpdateWidget(Widget oldWidget) {
     assignContoller();
-
     super.didUpdateWidget(oldWidget);
   }
 
   MenuController createController(SideDrawer d) {
-    MenuController controller = d.createController(
+    MenuController controller = dcreateController(
       context,
+      d,
       this,
       (value) {
         widget.onSlide?.call(d, value);
@@ -141,8 +155,30 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
     return controller;
   }
 
+  MenuController dcreateController(BuildContext context, SideDrawer d,
+      TickerProvider vsync, Function(double) onAnimated) {
+    MenuController controller = MenuController(
+      d,
+      onAnimated,
+      context: context,
+      vsync: vsync,
+    );
+
+    return controller;
+  }
+
   assignContoller() {
-    menuControllers = widget.drawers.map(createController).toList();
+    if (menuControllers == null)
+      menuControllers ??= widget.drawers.map(createController).toList();
+    else
+      for (var i = 0;
+          i < widget.drawers.length && i < menuControllers.length;
+          i++) {
+        menuControllers[i]._drawer = widget.drawers[i];
+      }
+    for (var i = menuControllers.length; i < widget.drawers.length; i++) {
+      menuControllers.add(createController(widget.drawers[i]));
+    }
     if (widget.controller != null) {
       widget.controller._menuControllers = menuControllers;
       widget.controller._setFocus = (index) {
@@ -402,16 +438,17 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
 
   @override
   Widget build(BuildContext context) {
-    focusDrawerIndex = min(widget.drawers.length - 1, focusDrawerIndex);
+    focusDrawerIndex = min(
+        widget.drawers.length - 1, focusDrawerIndex ?? widget.drawers.length);
     return Stack(
       children: [
-        focusDrawerIndex != null
-            ? widget.drawers[focusDrawerIndex]
-            : Container(),
+        focusDrawerIndex >= 0 ? widget.drawers[focusDrawerIndex] : Container(),
         createContentDisplay(),
       ],
     );
   }
+
+  MenuController get _controller => menuControllers[focusDrawerIndex];
 }
 
 class DrawerScaffoldMenuController extends StatefulWidget {

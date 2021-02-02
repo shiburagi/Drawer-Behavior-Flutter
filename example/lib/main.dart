@@ -12,6 +12,7 @@ import 'package:drawerbehavior_example/pages/drawer_slide_custom_appbar.dart';
 import 'package:drawerbehavior_example/pages/drawer_slide_menu_slide.dart';
 import 'package:drawerbehavior_example/pages/drawer_slide_with_footer.dart';
 import 'package:drawerbehavior_example/pages/drawer_slide_with_header.dart';
+import 'package:drawerbehavior_example/pages/drawer_with_child.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -102,11 +103,15 @@ class _MyAppState extends State<MyApp> {
                 Divider(height: 16, color: Theme.of(context).dividerColor),
                 createButton(context,
                     text: "Customize Item",
-                    navigate: "/slide/customitem",
+                    navigate: "/custom/item",
                     color: Theme.of(context).accentColor),
                 createButton(context,
                     text: "Custom AppBar",
-                    navigate: "/slide/customappbar",
+                    navigate: "/custom/appbar",
+                    color: Theme.of(context).accentColor),
+                createButton(context,
+                    text: "Using child",
+                    navigate: "/custom/withchild",
                     color: Theme.of(context).accentColor),
               ],
             )),
@@ -126,11 +131,7 @@ class _MyAppState extends State<MyApp> {
         "/slide": (context) => createPage(DrawerSlide()),
         "/slide/menuslide": (context) => createPage(DrawerSlideMenuSlide()),
         "/slide/header": (context) => createPage(DrawerSlideWithHeader()),
-        "/slide/customitem": (context) => createPage(DrawerCustomItem()),
         "/slide/scaleicon": (context) => createPage(DrawerScaleIcon()),
-        "/slide/customappbar": (context) =>
-            createPage(DrawerSlideCustomAppBar()),
-        "/drawer8": (context) => createPage(DrawerSlideWithFooter()),
         "/duo/leftandright": (context) => createPage(DrawerLeftAndRight()),
         "/duo/right": (context) => createPage(DrawerRight()),
         "/duo/leftandright/inverse": (context) =>
@@ -138,6 +139,10 @@ class _MyAppState extends State<MyApp> {
         "/3d": (context) => createPage(Drawer3d()),
         "/duo/left3dandrightslide": (context) =>
             createPage(DrawerLeft3DAndRightSlide()),
+        "/drawer8": (context) => createPage(DrawerSlideWithFooter()),
+        "/custom/appbar": (context) => createPage(DrawerSlideCustomAppBar()),
+        "/custom/item": (context) => createPage(DrawerCustomItem()),
+        "/custom/withchild": (context) => createPage(DrawerWithChild()),
       },
     );
   }
