@@ -19,8 +19,8 @@ class SideDrawer<T> extends StatefulWidget {
     this.footerView,
     this.selectedItemId,
     this.slide = false,
-    double percentage,
-    double degree,
+    double? percentage,
+    double? degree,
     this.onMenuItemSelected,
     this.child,
     this.color = Colors.white,
@@ -37,7 +37,7 @@ class SideDrawer<T> extends StatefulWidget {
     this.itemBuilder,
     this.elevation = 16,
     this.cornerRadius,
-    Key key,
+    Key? key,
   })  : assert((child != null && menu == null && itemBuilder == null) ||
             (child == null && menu != null)),
         this.percentage = percentage ?? 0.8,
@@ -60,10 +60,10 @@ class SideDrawer<T> extends StatefulWidget {
   final double elevation;
 
   /// Card's corner radius
-  final double cornerRadius;
+  final double? cornerRadius;
 
   /// Degree of rotation : 15->45 degree
-  final double degree;
+  final double? degree;
 
   /// Drawer's width in Pixel,
   /// Default : 300px
@@ -75,17 +75,17 @@ class SideDrawer<T> extends StatefulWidget {
 
   /// Transition's [Curve],
   /// Default : [Curves.easeOut]
-  final Curve curve;
+  final Curve? curve;
 
   /// Transition's [Duration],
   /// Defalut: 250ms
-  final Duration duration;
+  final Duration? duration;
 
   /// [Menu] for drawer
-  final Menu menu;
+  final Menu? menu;
 
   /// Current selected ID
-  final T selectedItemId;
+  final T? selectedItemId;
 
   /// Flag for animation on menu item
   final bool animation;
@@ -94,31 +94,31 @@ class SideDrawer<T> extends StatefulWidget {
   final bool slide;
 
   /// listen to menu selected
-  final Function(T) onMenuItemSelected;
+  final Function(T)? onMenuItemSelected;
 
   /// [Widget] for header on drawer
-  final Widget headerView;
+  final Widget? headerView;
 
   /// [Widget] for footer on drawer
-  final Widget footerView;
+  final Widget? footerView;
 
   /// Custom builder for menu item
-  final SideDrawerItemBuilder itemBuilder;
+  final SideDrawerItemBuilder? itemBuilder;
 
   /// Widget for side drawer
-  final Widget child;
+  final Widget? child;
 
   /// Background for drawer
-  final DecorationImage background;
+  final DecorationImage? background;
 
   /// Background [Color] for drawer
   final Color color;
 
   /// [Color] for selected menu item
-  final Color selectorColor;
+  final Color? selectorColor;
 
   /// Menu item [TextStyle]
-  final TextStyle textStyle;
+  final TextStyle? textStyle;
 
   /// Menu [Alignment] in drawer
   final Alignment alignment;
@@ -139,23 +139,23 @@ class SideDrawer<T> extends StatefulWidget {
   final Curve slideInCurve;
 
   double maxSlideAmount(context) =>
-      drawerWidth ?? MediaQuery.of(context).size.width * percentage;
+      drawerWidth; // ?? MediaQuery.of(context).size.width * percentage;
 
   @override
   _SideDrawerState createState() => _SideDrawerState();
 }
 
 class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
-  double selectorYTop;
-  double selectorYBottom;
+  double? selectorYTop;
+  double? selectorYBottom;
 
-  Color selectorColor;
-  TextStyle textStyle;
+  Color? selectorColor;
+  TextStyle? textStyle;
 
   double get maxSlideAmount => widget.maxSlideAmount(context);
 
   setSelectedRenderBox(RenderBox newRenderBox, bool useState) async {
-    final renderBox = context.findRenderObject() as RenderBox;
+    final renderBox = context.findRenderObject() as RenderBox?;
 
     final newYTop =
         newRenderBox.localToGlobal(Offset(0.0, 0.0), ancestor: renderBox).dy;
@@ -181,23 +181,23 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
     final List<Widget> listItems = [];
 
     if (widget.child != null) {
-      listItems.add(widget.child);
+      listItems.add(widget.child ?? SizedBox());
     } else {
       final animationIntervalDuration = 0.5;
       final perListItemDelay =
           menuController.state != MenuState.closing ? 0.15 : 0.0;
       final millis = menuController.state != MenuState.closing
-          ? 150 * widget.menu.items.length
+          ? 150 * widget.menu!.items.length
           : 600;
 
-      final maxDuration = (widget.menu.items.length - 1) * perListItemDelay +
+      final maxDuration = (widget.menu!.items.length - 1) * perListItemDelay +
           animationIntervalDuration;
 
-      for (var i = 0; i < widget.menu.items.length; ++i) {
+      for (var i = 0; i < widget.menu!.items.length; ++i) {
         final animationIntervalStart = i * perListItemDelay;
         final animationIntervalEnd =
             animationIntervalStart + animationIntervalDuration;
-        MenuItem item = widget.menu.items[i];
+        MenuItem item = widget.menu!.items[i];
         listItems.add(buildListItem(menuController, item,
             animationIntervalStart, animationIntervalEnd, millis, maxDuration));
       }
@@ -232,7 +232,7 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
     final isSelected = item.id == widget.selectedItemId;
 
     Function onTap = () {
-      widget.onMenuItemSelected(item.id);
+      widget.onMenuItemSelected!(item.id);
       menuController.close();
     };
     Widget listItem = widget.itemBuilder == null
@@ -246,18 +246,18 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
             menuView: widget,
             width: maxSlideAmount,
             icon: item.icon == null ? null : Icon(item.icon),
-            onTap: onTap,
+            onTap: onTap as dynamic Function()?,
             drawBorder: !widget.animation,
           )
         : InkWell(
             child: Container(
               alignment: Alignment.centerLeft,
               child: Container(
-                child: widget.itemBuilder(context, item, isSelected),
+                child: widget.itemBuilder!(context, item, isSelected),
                 width: maxSlideAmount,
               ),
             ),
-            onTap: onTap,
+            onTap: onTap as void Function()?,
           );
 
     if (widget.animation)
@@ -268,7 +268,7 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
         curve: Interval(animationIntervalStart / maxDuration,
             animationIntervalEnd / maxDuration,
             curve: Curves.easeOut),
-        menuListItem: listItem,
+        menuListItem: listItem as _MenuListItem?,
       );
     else {
       return listItem;
@@ -315,9 +315,9 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    selectorColor = widget?.selectorColor ?? Theme.of(context).indicatorColor;
-    textStyle = widget?.textStyle ??
-        Theme.of(context).textTheme.subtitle1.copyWith(
+    selectorColor = widget.selectorColor ?? Theme.of(context).indicatorColor;
+    textStyle = widget.textStyle ??
+        Theme.of(context).textTheme.subtitle1?.copyWith(
             color: widget.color.computeLuminance() < 0.5
                 ? Colors.white
                 : Colors.black);
@@ -332,8 +332,8 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
           if (menuController.state == MenuState.closed ||
               menuController.state == MenuState.closing ||
               selectorYTop == null) {
-            final RenderBox menuScreenRenderBox =
-                context.findRenderObject() as RenderBox;
+            final RenderBox? menuScreenRenderBox =
+                context.findRenderObject() as RenderBox?;
 
             if (menuScreenRenderBox != null) {
               final menuScreenHeight = menuScreenRenderBox.size.height;
@@ -378,10 +378,10 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
         });
   }
 
-  static _SideDrawerState of(BuildContext context, {bool nullOk = true}) {
+  static _SideDrawerState? of(BuildContext context, {bool nullOk = true}) {
     assert(nullOk != null);
     assert(context != null);
-    final _SideDrawerState result =
+    final _SideDrawerState? result =
         context.findAncestorStateOfType<_SideDrawerState>();
     if (nullOk || result != null) return result;
     throw FlutterError.fromParts(<DiagnosticsNode>[
@@ -393,12 +393,12 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
 }
 
 class ItemSelector extends ImplicitlyAnimatedWidget {
-  final double top;
-  final double bottom;
-  final double left;
-  final double opacity;
+  final double? top;
+  final double? bottom;
+  final double? left;
+  final double? opacity;
 
-  final Color selectorColor;
+  final Color? selectorColor;
 
   ItemSelector({
     this.left,
@@ -413,39 +413,39 @@ class ItemSelector extends ImplicitlyAnimatedWidget {
 }
 
 class _ItemSelectorState extends AnimatedWidgetBaseState<ItemSelector> {
-  Tween<double> _topY;
-  Tween<double> _bottomY;
-  Tween<double> _opacity;
+  Tween<double?>? _topY;
+  Tween<double?>? _bottomY;
+  Tween<double?>? _opacity;
 
   @override
-  void forEachTween(TweenVisitor visitor) {
+  void forEachTween(visitor) {
     _topY = visitor(
       _topY,
-      widget.top,
+      widget.top!,
       (dynamic value) => Tween<double>(begin: value),
-    );
+    ) as Tween<double?>?;
     _bottomY = visitor(
       _bottomY,
-      widget.bottom,
+      widget.bottom!,
       (dynamic value) => Tween<double>(begin: value),
-    );
+    ) as Tween<double?>?;
     _opacity = visitor(
       _opacity,
-      widget.opacity,
+      widget.opacity!,
       (dynamic value) => Tween<double>(begin: value),
-    );
+    ) as Tween<double?>?;
   }
 
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      top: _topY.evaluate(animation),
+      top: _topY!.evaluate(animation),
       left: widget.left,
       child: Opacity(
-        opacity: _opacity.evaluate(animation),
+        opacity: _opacity!.evaluate(animation)!,
         child: Container(
           width: 5.0,
-          height: _bottomY.evaluate(animation) - _topY.evaluate(animation),
+          height: _bottomY!.evaluate(animation)! - _topY!.evaluate(animation)!,
           color: widget.selectorColor,
         ),
       ),
@@ -454,18 +454,18 @@ class _ItemSelectorState extends AnimatedWidgetBaseState<ItemSelector> {
 }
 
 class AnimatedMenuListItem extends ImplicitlyAnimatedWidget {
-  final _MenuListItem menuListItem;
-  final MenuState menuState;
-  final bool isSelected;
+  final _MenuListItem? menuListItem;
+  final MenuState? menuState;
+  final bool? isSelected;
   final Duration duration;
 
   AnimatedMenuListItem({
     this.menuListItem,
     this.menuState,
     this.isSelected,
-    this.duration,
-    Curve curve,
-    Key key,
+    required this.duration,
+    required Curve curve,
+    Key? key,
   }) : super(key: key, duration: duration, curve: curve);
 
   @override
@@ -477,20 +477,20 @@ class _AnimatedMenuListItemState
   final double closedSlidePosition = 200.0;
   final double openSlidePosition = 0.0;
 
-  _SideDrawerState get _sideDrawerState => _SideDrawerState.of(context);
+  _SideDrawerState? get _sideDrawerState => _SideDrawerState.of(context);
 
-  Tween<double> _translation;
-  Tween<double> _opacity;
+  Tween<double?>? _translation;
+  Tween<double?>? _opacity;
 
   updateSelectedRenderBox(bool useState) {
-    final renderBox = context.findRenderObject() as RenderBox;
-    if (renderBox != null && widget.isSelected) {
-      _sideDrawerState?.setSelectedRenderBox?.call(renderBox, useState);
+    final renderBox = context.findRenderObject() as RenderBox?;
+    if (renderBox != null && widget.isSelected!) {
+      _sideDrawerState?.setSelectedRenderBox.call(renderBox, useState);
     }
   }
 
   @override
-  void forEachTween(TweenVisitor visitor) {
+  void forEachTween(visitor) {
     var slide, opacity;
 
     switch (widget.menuState) {
@@ -504,19 +504,22 @@ class _AnimatedMenuListItemState
         slide = openSlidePosition;
         opacity = 1.0;
         break;
+
+      default:
+        break;
     }
 
     _translation = visitor(
       _translation,
       slide,
       (dynamic value) => Tween<double>(begin: value),
-    );
+    ) as Tween<double?>?;
 
     _opacity = visitor(
       _opacity,
       opacity,
       (dynamic value) => Tween<double>(begin: value),
-    );
+    ) as Tween<double?>?;
   }
 
   @override
@@ -524,11 +527,11 @@ class _AnimatedMenuListItemState
     updateSelectedRenderBox(false);
 
     return Opacity(
-      opacity: _opacity.evaluate(animation),
+      opacity: _opacity!.evaluate(animation)!,
       child: Transform(
         transform: Matrix4.translationValues(
           0.0,
-          _translation.evaluate(animation),
+          _translation!.evaluate(animation)!,
           0.0,
         ),
         child: widget.menuListItem,
@@ -539,24 +542,24 @@ class _AnimatedMenuListItemState
 
 class _MenuListItem extends StatelessWidget {
   final String title;
-  final bool isSelected;
-  final bool drawBorder;
-  final Function() onTap;
-  final Color selectorColor;
-  final TextStyle textStyle;
-  final SideDrawer menuView;
-  final Widget icon;
+  final bool? isSelected;
+  final bool? drawBorder;
+  final Function()? onTap;
+  final Color? selectorColor;
+  final TextStyle? textStyle;
+  final SideDrawer? menuView;
+  final Widget? icon;
   final Direction direction;
-  final double width;
-  final EdgeInsets padding;
+  final double? width;
+  final EdgeInsets? padding;
 
   _MenuListItem({
-    this.title,
+    required this.title,
     this.isSelected,
     this.onTap,
     this.menuView,
-    @required this.textStyle,
-    @required this.selectorColor,
+    required this.textStyle,
+    required this.selectorColor,
     this.icon,
     this.drawBorder,
     this.direction = Direction.right,
@@ -566,15 +569,15 @@ class _MenuListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle _textStyle =
-        textStyle.copyWith(color: isSelected ? selectorColor : textStyle.color);
+    TextStyle _textStyle = textStyle!
+        .copyWith(color: isSelected! ? selectorColor : textStyle!.color);
 
     List<Widget> children = [];
     if (icon != null)
       children.add(Padding(
         padding: EdgeInsets.only(right: 12),
         child: IconTheme(
-            data: IconThemeData(color: _textStyle.color), child: icon),
+            data: IconThemeData(color: _textStyle.color), child: icon!),
       ));
     children.add(
       Expanded(
@@ -589,22 +592,22 @@ class _MenuListItem extends StatelessWidget {
     );
     return InkWell(
       splashColor: const Color(0x44000000),
-      onTap: isSelected ? null : onTap,
+      onTap: isSelected! ? null : onTap,
       child: Container(
         width: width,
         alignment: Alignment.centerRight,
         // padding: padding,
-        decoration: drawBorder
+        decoration: drawBorder!
             ? ShapeDecoration(
                 shape: Border(
                   left: BorderSide(
-                      color: isSelected ? selectorColor : Colors.transparent,
+                      color: isSelected! ? selectorColor! : Colors.transparent,
                       width: 5.0),
                 ),
               )
             : null,
         child: Padding(
-          padding: menuView.padding,
+          padding: menuView!.padding,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: children,
@@ -619,25 +622,25 @@ class Menu {
   final List<MenuItem> items;
 
   const Menu({
-    this.items,
+    required this.items,
   });
 }
 
 class MenuItem<T> {
-  final T id;
+  final T? id;
   final String title;
-  final IconData icon;
+  final IconData? icon;
 
   MenuItem({
     this.id,
-    this.title,
+    required this.title,
     this.icon,
   });
 
   MenuItem<T> copyWith({
-    T id,
-    String title,
-    IconData icon,
+    T? id,
+    String? title,
+    IconData? icon,
   }) {
     return MenuItem<T>(
       id: id ?? this.id,

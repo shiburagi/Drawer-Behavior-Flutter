@@ -88,7 +88,7 @@ class DrawerScale extends StatefulWidget {
 }
 
 class _DrawerScaleState extends State<DrawerScale> {
-  int selectedMenuItemId;
+  late int selectedMenuItemId;
 
   @override
   void initState() {
@@ -131,8 +131,23 @@ class _DrawerScaleState extends State<DrawerScale> {
 
 
 ```
-
-
+## Migration (Null-safety Release)
+---
+### mainDrawer (DrawerScaffold) -> defaultDirection (DrawerScaffold)
+```dart
+new DrawerScaffold(
+  mainDrawer: Direction.right,
+  ...
+);
+```
+**to**
+```dart
+new DrawerScaffold(
+  defaultDirection: Direction.right,
+  ...
+);
+```
+---
 
 ## Migration
 ---
@@ -188,7 +203,7 @@ drawers: [
 
 
 ---
-### percentage (DrawerScaffold -> drawers (List\<SideDrawer>))
+### percentage (DrawerScaffold) -> drawers (List\<SideDrawer>))
 ```dart
 DrawerScaffold(
   percentage: 0.6,
@@ -291,7 +306,7 @@ new DrawerScaffold(
       padding: EdgeInsets.fromLTRB(24, 16, 24, 16),
       child: Text(
         menuItem.title,
-        style: Theme.of(context).textTheme.subhead.copyWith(
+        style: Theme.of(context).textTheme.subhead?.copyWith(
             color: isSelected ? Colors.black87 : Colors.white70),
       ),
     );
@@ -311,6 +326,7 @@ ScreenBuilder builder;
 bool enableGestures; // default: true
 AppBar appBar;
 double cornerRadius; // default: 16
+double bacgroundColor; // default: Theme.of(context).scaffoldBackgroundColor
 Widget floatingActionButton;
 Widget bottomNavigationBar;
 FloatingActionButtonLocation floatingActionButtonLocation;

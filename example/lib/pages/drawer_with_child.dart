@@ -8,7 +8,7 @@ class DrawerWithChild extends StatefulWidget {
 }
 
 class _DrawerWithChildState extends State<DrawerWithChild> {
-  int selectedMenuItemId;
+  late int selectedMenuItemId;
 
   @override
   void initState() {
@@ -42,14 +42,14 @@ class _DrawerWithChildState extends State<DrawerWithChild> {
                         style: Theme.of(context)
                             .textTheme
                             .subtitle1
-                            .copyWith(color: Colors.white),
+                            ?.copyWith(color: Colors.white),
                       ),
                       Text(
                         "test123@gmail.com",
                         style: Theme.of(context)
                             .textTheme
                             .subtitle2
-                            .copyWith(color: Colors.white.withAlpha(200)),
+                            ?.copyWith(color: Colors.white.withAlpha(200)),
                       )
                     ],
                   ))

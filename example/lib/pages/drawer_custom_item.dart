@@ -8,7 +8,7 @@ class DrawerCustomItem extends StatefulWidget {
 }
 
 class _DrawerCustomItemState extends State<DrawerCustomItem> {
-  int selectedMenuItemId;
+  late int selectedMenuItemId;
 
   @override
   void initState() {
@@ -41,15 +41,15 @@ class _DrawerCustomItemState extends State<DrawerCustomItem> {
                         "John Witch",
                         style: Theme.of(context)
                             .textTheme
-                            .subhead
-                            .copyWith(color: Colors.white),
+                            .subtitle1
+                            ?.copyWith(color: Colors.white),
                       ),
                       Text(
                         "test123@gmail.com",
                         style: Theme.of(context)
                             .textTheme
-                            .subtitle
-                            .copyWith(color: Colors.white.withAlpha(200)),
+                            .subtitle2
+                            ?.copyWith(color: Colors.white.withAlpha(200)),
                       )
                     ],
                   ))
@@ -89,7 +89,7 @@ class _DrawerCustomItemState extends State<DrawerCustomItem> {
               padding: EdgeInsets.fromLTRB(24, 16, 24, 16),
               child: Text(
                 menuItem.title,
-                style: Theme.of(context).textTheme.subhead.copyWith(
+                style: Theme.of(context).textTheme.subhead?.copyWith(
                     color: isSelected ? Colors.black87 : Colors.white70),
               ),
             );

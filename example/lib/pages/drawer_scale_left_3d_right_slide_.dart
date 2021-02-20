@@ -9,7 +9,7 @@ class DrawerLeft3DAndRightSlide extends StatefulWidget {
 }
 
 class _DrawerLeft3DAndRightSlideState extends State<DrawerLeft3DAndRightSlide> {
-  int selectedMenuItemId;
+  late int selectedMenuItemId;
   DrawerScaffoldController controller = DrawerScaffoldController();
   @override
   void initState() {

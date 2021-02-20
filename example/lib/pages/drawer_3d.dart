@@ -8,7 +8,7 @@ class Drawer3d extends StatefulWidget {
 }
 
 class _Drawer3dState extends State<Drawer3d> {
-  int selectedMenuItemId;
+  late int selectedMenuItemId;
 
   @override
   void initState() {

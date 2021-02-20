@@ -8,7 +8,7 @@ class DrawerScaleNoAnimation extends StatefulWidget {
 }
 
 class _DrawerScaleNoAnimationState extends State<DrawerScaleNoAnimation> {
-  int selectedMenuItemId;
+  late int selectedMenuItemId;
   @override
   void initState() {
     selectedMenuItemId = menu.items[0].id;

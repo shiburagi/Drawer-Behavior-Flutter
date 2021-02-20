@@ -1,3 +1,9 @@
+# 2.0.0
+* Migrate to null safety
+* add **backgroundColor** parameter
+* change **mainDrawer to defaultDirection
+* remove **contentView** parameter
+
 # 1.2.2
 * Add child option on [MenuScreen]
 * Animation fixed
