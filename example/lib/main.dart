@@ -23,12 +23,18 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Widget createButton(context, {text, navigate, color}) {
+  Widget createButton(context, {text, navigate, Color? color}) {
+    Color buttonColor = color ?? Theme.of(context).primaryColor;
     return SizedBox(
         width: double.infinity,
-        child: RaisedButton(
+        child: ElevatedButton(
             child: Text(text),
-            color: color,
+            style: ElevatedButton.styleFrom(primary: buttonColor).copyWith(
+                foregroundColor: MaterialStateProperty.all(
+                    ThemeData.estimateBrightnessForColor(buttonColor) ==
+                            Brightness.light
+                        ? Colors.black
+                        : Colors.white)),
             onPressed: () {
               Navigator.pushNamed(context, navigate);
             }));

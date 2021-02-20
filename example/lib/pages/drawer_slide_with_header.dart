@@ -8,7 +8,7 @@ class DrawerSlideWithHeader extends StatefulWidget {
 }
 
 class _DrawerSlideWithHeaderState extends State<DrawerSlideWithHeader> {
-  int selectedMenuItemId;
+  late int selectedMenuItemId;
 
   @override
   void initState() {
@@ -42,14 +42,14 @@ class _DrawerSlideWithHeaderState extends State<DrawerSlideWithHeader> {
                         style: Theme.of(context)
                             .textTheme
                             .subhead
-                            .copyWith(color: Colors.white),
+                            ?.copyWith(color: Colors.white),
                       ),
                       Text(
                         "test123@gmail.com",
                         style: Theme.of(context)
                             .textTheme
                             .subtitle
-                            .copyWith(color: Colors.white.withAlpha(200)),
+                            ?.copyWith(color: Colors.white.withAlpha(200)),
                       )
                     ],
                   ))

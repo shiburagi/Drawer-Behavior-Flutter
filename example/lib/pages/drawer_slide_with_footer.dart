@@ -8,7 +8,7 @@ class DrawerSlideWithFooter extends StatefulWidget {
 }
 
 class _DrawerSlideWithFooterState extends State<DrawerSlideWithFooter> {
-  int selectedMenuItemId;
+  late int selectedMenuItemId;
 
   @override
   void initState() {
@@ -46,14 +46,14 @@ class _DrawerSlideWithFooterState extends State<DrawerSlideWithFooter> {
                         style: Theme.of(context)
                             .textTheme
                             .subhead
-                            .copyWith(color: Colors.white),
+                            ?.copyWith(color: Colors.white),
                       ),
                       Text(
                         "test123@gmail.com",
                         style: Theme.of(context)
                             .textTheme
                             .subtitle
-                            .copyWith(color: Colors.white.withAlpha(200)),
+                            ?.copyWith(color: Colors.white.withAlpha(200)),
                       )
                     ],
                   ))

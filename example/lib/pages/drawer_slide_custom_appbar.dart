@@ -9,7 +9,7 @@ class DrawerSlideCustomAppBar extends StatefulWidget {
 }
 
 class _DrawerSlideCustomAppBarState extends State<DrawerSlideCustomAppBar> {
-  int selectedMenuItemId;
+  late int selectedMenuItemId;
 
   @override
   void initState() {
@@ -43,14 +43,14 @@ class _DrawerSlideCustomAppBarState extends State<DrawerSlideCustomAppBar> {
                         style: Theme.of(context)
                             .textTheme
                             .subhead
-                            .copyWith(color: Colors.white),
+                            ?.copyWith(color: Colors.white),
                       ),
                       Text(
                         "test123@gmail.com",
                         style: Theme.of(context)
                             .textTheme
                             .subtitle
-                            .copyWith(color: Colors.white.withAlpha(200)),
+                            ?.copyWith(color: Colors.white.withAlpha(200)),
                       )
                     ],
                   ))
@@ -71,9 +71,9 @@ class _DrawerSlideCustomAppBarState extends State<DrawerSlideCustomAppBar> {
     return DrawerScaffold(
       controller: controller,
       cornerRadius: 0,
-      appBar: AppBar(
-          title: Text("Drawer - Slide with Custom AppBar"),
-          actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
+      // appBar: AppBar(
+      //     title: Text("Drawer - Slide with Custom AppBar"),
+      //     actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       drawers: [
         SideDrawer(
           percentage: 1,
@@ -92,6 +92,7 @@ class _DrawerSlideCustomAppBarState extends State<DrawerSlideCustomAppBar> {
       ],
       builder: (context, id) => Scaffold(
         appBar: AppBar(
+          title: Text("Drawer - Slide with Custom AppBar"),
           leading: new IconButton(
               icon: new Icon(Icons.menu),
               onPressed: () {

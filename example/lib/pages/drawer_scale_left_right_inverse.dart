@@ -9,7 +9,7 @@ class DrawerLeftAndRightInverse extends StatefulWidget {
 }
 
 class _DrawerLeftAndRightInverseState extends State<DrawerLeftAndRightInverse> {
-  int selectedMenuItemId;
+  late int selectedMenuItemId;
   DrawerScaffoldController controller = DrawerScaffoldController();
   @override
   void initState() {
@@ -28,7 +28,7 @@ class _DrawerLeftAndRightInverseState extends State<DrawerLeftAndRightInverse> {
               controller.toggle(Direction.left);
             })
       ]),
-      mainDrawer: Direction.right,
+      defaultDirection: Direction.right,
       drawers: [
         SideDrawer(
           percentage: 0.6,
