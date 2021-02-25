@@ -1,7 +1,5 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-
 import 'menu_screen.dart';
 import 'utils.dart';
 
