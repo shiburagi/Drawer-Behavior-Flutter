@@ -38,18 +38,19 @@ class SideDrawer<T> extends StatefulWidget {
     this.elevation = 16,
     this.cornerRadius,
     Key? key,
-  })  : assert((child != null && menu == null && itemBuilder == null) ||
-            (child == null && menu != null)),
+  })
+      : assert((child != null && menu == null && itemBuilder == null) ||
+      (child == null && menu != null)),
         this.percentage = percentage ?? 0.8,
         this.degree = degree == null ? null : max(min(45, degree), 15),
         this.scaleDownCurve =
-            new Interval(0.0, 0.3, curve: curve ?? Curves.easeOut),
+        new Interval(0.0, 0.3, curve: curve ?? Curves.easeOut),
         this.scaleUpCurve =
-            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
         this.slideOutCurve =
-            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
         this.slideInCurve =
-            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
         super(key: key);
 
   /// Scaling Percentage base on width and height
@@ -158,7 +159,9 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
     final renderBox = context.findRenderObject() as RenderBox?;
 
     final newYTop =
-        newRenderBox.localToGlobal(Offset(0.0, 0.0), ancestor: renderBox).dy;
+        newRenderBox
+            .localToGlobal(Offset(0.0, 0.0), ancestor: renderBox)
+            .dy;
 
     final newYBottom = newYTop + newRenderBox.size.height;
     if (newYTop != selectorYTop) {
@@ -185,7 +188,7 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
     } else {
       final animationIntervalDuration = 0.5;
       final perListItemDelay =
-          menuController.state != MenuState.closing ? 0.15 : 0.0;
+      menuController.state != MenuState.closing ? 0.15 : 0.0;
       final millis = menuController.state != MenuState.closing
           ? 150 * widget.menu!.items.length
           : 600;
@@ -208,7 +211,10 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
       margin: EdgeInsets.only(
           left: widget.direction == Direction.left
               ? 0
-              : MediaQuery.of(context).size.width - maxSlideAmount),
+              : MediaQuery
+              .of(context)
+              .size
+              .width - maxSlideAmount),
       child: SingleChildScrollView(
         child: Container(
           child: Column(
@@ -221,14 +227,12 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
     );
   }
 
-  buildListItem(
-    MenuController menuController,
-    MenuItem item,
-    double animationIntervalStart,
-    double animationIntervalEnd,
-    int millis,
-    double maxDuration,
-  ) {
+  buildListItem(MenuController menuController,
+      MenuItem item,
+      double animationIntervalStart,
+      double animationIntervalEnd,
+      int millis,
+      double maxDuration,) {
     final isSelected = item.id == widget.selectedItemId;
 
     Function onTap = () {
@@ -237,28 +241,29 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
     };
     Widget listItem = widget.itemBuilder == null
         ? _MenuListItem(
-            padding: const EdgeInsets.only(left: 32.0),
-            direction: widget.direction,
-            title: item.title,
-            isSelected: isSelected,
-            selectorColor: selectorColor,
-            textStyle: textStyle,
-            menuView: widget,
-            width: maxSlideAmount,
-            icon: item.icon == null ? null : Icon(item.icon),
-            onTap: onTap as dynamic Function()?,
-            drawBorder: !widget.animation,
-          )
+        padding: const EdgeInsets.only(left: 32.0),
+        direction: widget.direction,
+        title: item.title,
+        isSelected: isSelected,
+        selectorColor: selectorColor,
+        textStyle: textStyle,
+        menuView: widget,
+        width: maxSlideAmount,
+        icon: item.icon == null ? null : Icon(item.icon),
+        onTap: onTap as dynamic Function()?,
+        drawBorder: !widget.animation,
+        incompleteProfile: item.incompleteProfile
+    )
         : InkWell(
-            child: Container(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                child: widget.itemBuilder!(context, item, isSelected),
-                width: maxSlideAmount,
-              ),
-            ),
-            onTap: onTap as void Function()?,
-          );
+      child: Container(
+        alignment: Alignment.centerLeft,
+        child: Container(
+          child: widget.itemBuilder!(context, item, isSelected),
+          width: maxSlideAmount,
+        ),
+      ),
+      onTap: onTap as void Function()?,
+    );
 
     if (widget.animation)
       return AnimatedMenuListItem(
@@ -289,7 +294,10 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
       widgets.add(Container(
         width: double.infinity,
         child: widget.footerView,
-        margin: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+        margin: EdgeInsets.only(bottom: MediaQuery
+            .of(context)
+            .padding
+            .bottom),
       ));
     }
     MenuController controller = DrawerScaffold.currentController(context);
@@ -297,15 +305,24 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
       transform: Matrix4.translationValues(
         widget.slide
             ? (widget.direction == Direction.left ? 1 : -1) *
-                widget.maxSlideAmount(context) *
-                (controller.slidePercent - 1)
+            widget.maxSlideAmount(context) *
+            (controller.slidePercent - 1)
             : 0,
-        MediaQuery.of(context).padding.top,
+        MediaQuery
+            .of(context)
+            .padding
+            .top,
         0.0,
       ),
       child: Container(
-        height: MediaQuery.of(context).size.height -
-            MediaQuery.of(context).padding.top,
+        height: MediaQuery
+            .of(context)
+            .size
+            .height -
+            MediaQuery
+                .of(context)
+                .padding
+                .top,
         child: Column(
           children: widgets,
         ),
@@ -315,9 +332,15 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    selectorColor = widget.selectorColor ?? Theme.of(context).indicatorColor;
+    selectorColor = widget.selectorColor ?? Theme
+        .of(context)
+        .indicatorColor;
     textStyle = widget.textStyle ??
-        Theme.of(context).textTheme.subtitle1?.copyWith(
+        Theme
+            .of(context)
+            .textTheme
+            .subtitle1
+            ?.copyWith(
             color: widget.color.computeLuminance() < 0.5
                 ? Colors.white
                 : Colors.black);
@@ -333,7 +356,7 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
               menuController.state == MenuState.closing ||
               selectorYTop == null) {
             final RenderBox? menuScreenRenderBox =
-                context.findRenderObject() as RenderBox?;
+            context.findRenderObject() as RenderBox?;
 
             if (menuScreenRenderBox != null) {
               final menuScreenHeight = menuScreenRenderBox.size.height;
@@ -362,14 +385,17 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
                   createDrawer(menuController),
                   widget.animation && shouldRenderSelector
                       ? ItemSelector(
-                          left: widget.direction == Direction.right
-                              ? MediaQuery.of(context).size.width -
-                                  maxSlideAmount
-                              : 0,
-                          selectorColor: selectorColor,
-                          top: actualSelectorYTop,
-                          bottom: actualSelectorYBottom,
-                          opacity: selectorOpacity)
+                      left: widget.direction == Direction.right
+                          ? MediaQuery
+                          .of(context)
+                          .size
+                          .width -
+                          maxSlideAmount
+                          : 0,
+                      selectorColor: selectorColor,
+                      top: actualSelectorYTop,
+                      bottom: actualSelectorYBottom,
+                      opacity: selectorOpacity)
                       : Container(),
                 ],
               ),
@@ -382,7 +408,7 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
     assert(nullOk != null);
     assert(context != null);
     final _SideDrawerState? result =
-        context.findAncestorStateOfType<_SideDrawerState>();
+    context.findAncestorStateOfType<_SideDrawerState>();
     if (nullOk || result != null) return result;
     throw FlutterError.fromParts(<DiagnosticsNode>[
       ErrorSummary(
@@ -422,17 +448,17 @@ class _ItemSelectorState extends AnimatedWidgetBaseState<ItemSelector> {
     _topY = visitor(
       _topY,
       widget.top!,
-      (dynamic value) => Tween<double>(begin: value),
+          (dynamic value) => Tween<double>(begin: value),
     ) as Tween<double?>?;
     _bottomY = visitor(
       _bottomY,
       widget.bottom!,
-      (dynamic value) => Tween<double>(begin: value),
+          (dynamic value) => Tween<double>(begin: value),
     ) as Tween<double?>?;
     _opacity = visitor(
       _opacity,
       widget.opacity!,
-      (dynamic value) => Tween<double>(begin: value),
+          (dynamic value) => Tween<double>(begin: value),
     ) as Tween<double?>?;
   }
 
@@ -512,13 +538,13 @@ class _AnimatedMenuListItemState
     _translation = visitor(
       _translation,
       slide,
-      (dynamic value) => Tween<double>(begin: value),
+          (dynamic value) => Tween<double>(begin: value),
     ) as Tween<double?>?;
 
     _opacity = visitor(
       _opacity,
       opacity,
-      (dynamic value) => Tween<double>(begin: value),
+          (dynamic value) => Tween<double>(begin: value),
     ) as Tween<double?>?;
   }
 
@@ -552,6 +578,7 @@ class _MenuListItem extends StatelessWidget {
   final Direction direction;
   final double? width;
   final EdgeInsets? padding;
+  final bool? incompleteProfile;
 
   _MenuListItem({
     required this.title,
@@ -565,6 +592,7 @@ class _MenuListItem extends StatelessWidget {
     this.direction = Direction.right,
     this.width,
     this.padding,
+    this.incompleteProfile,
   });
 
   @override
@@ -580,16 +608,21 @@ class _MenuListItem extends StatelessWidget {
             data: IconThemeData(color: _textStyle.color), child: icon!),
       ));
     children.add(
-      Expanded(
-        child: Container(
+       Container(
           child: Text(
             title,
             style: _textStyle,
           ),
         ),
-        flex: 1,
-      ),
+
     );
+    if (incompleteProfile!)
+      children.add(
+          Padding(
+              padding: EdgeInsets.only(left: 8),
+              child:
+              Icon(Icons.error_outline, color: Colors.red,))
+      );
     return InkWell(
       splashColor: const Color(0x44000000),
       onTap: isSelected! ? null : onTap,
@@ -599,12 +632,12 @@ class _MenuListItem extends StatelessWidget {
         // padding: padding,
         decoration: drawBorder!
             ? ShapeDecoration(
-                shape: Border(
-                  left: BorderSide(
-                      color: isSelected! ? selectorColor! : Colors.transparent,
-                      width: 5.0),
-                ),
-              )
+          shape: Border(
+            left: BorderSide(
+                color: isSelected! ? selectorColor! : Colors.transparent,
+                width: 5.0),
+          ),
+        )
             : null,
         child: Padding(
           padding: menuView!.padding,
@@ -630,11 +663,13 @@ class MenuItem<T> {
   final T? id;
   final String title;
   final IconData? icon;
+  bool incompleteProfile = false;
 
   MenuItem({
     this.id,
     required this.title,
     this.icon,
+    this.incompleteProfile = false
   });
 
   MenuItem<T> copyWith({
