@@ -298,20 +298,24 @@ new DrawerScaffold(
 ```dart
 new DrawerScaffold(
   headerView: headerView(context),
-  itemBuilder:
-      (BuildContext context, MenuItem menuItem, bool isSelected) {
-    return Container(
-      color: isSelected
-          ? Theme.of(context).accentColor.withOpacity(0.7)
-          : Colors.transparent,
-      padding: EdgeInsets.fromLTRB(24, 16, 24, 16),
-      child: Text(
-        menuItem.title,
-        style: Theme.of(context).textTheme.subhead?.copyWith(
-            color: isSelected ? Colors.black87 : Colors.white70),
-      ),
-    );
-  }
+  drawers: [
+      SideDrawer(
+        itemBuilder:
+            (BuildContext context, MenuItem menuItem, bool isSelected) {
+          return Container(
+            color: isSelected
+                ? Theme.of(context).accentColor.withOpacity(0.7)
+                : Colors.transparent,
+            padding: EdgeInsets.fromLTRB(24, 16, 24, 16),
+            child: Text(
+              menuItem.title,
+              style: Theme.of(context).textTheme.subhead?.copyWith(
+                  color: isSelected ? Colors.black87 : Colors.white70),
+            ),
+          );
+        }
+      )
+  ],
   ...
 );
 ```
