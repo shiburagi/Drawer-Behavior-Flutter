@@ -379,8 +379,6 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
   }
 
   static _SideDrawerState? of(BuildContext context, {bool nullOk = true}) {
-    assert(nullOk != null);
-    assert(context != null);
     final _SideDrawerState? result =
         context.findAncestorStateOfType<_SideDrawerState>();
     if (nullOk || result != null) return result;
