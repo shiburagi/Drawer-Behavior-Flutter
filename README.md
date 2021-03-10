@@ -37,6 +37,7 @@ https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
 ## Table of contents
 - [Usage](#usage)
 - [Example](#example)
+- [Migration (Null-safety Release)](#migration-null-safety-release)
 - [Migration](#migration)
 - [Preview](#preview)
 - [Customize](#customize)
