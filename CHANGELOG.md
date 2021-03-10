@@ -1,3 +1,6 @@
+# 2.1.0
+* Prefix and suffix attribute
+
 # 2.0.0+4
 * Change minimum version for dart
 
