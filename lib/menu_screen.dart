@@ -242,10 +242,11 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
             title: item.title,
             isSelected: isSelected,
             selectorColor: selectorColor,
-            textStyle: textStyle,
+            textStyle: item.textStyle ?? textStyle,
             menuView: widget,
             width: maxSlideAmount,
-            icon: item.icon == null ? null : Icon(item.icon),
+            icon: item.icon == null ? item.prefix : Icon(item.icon),
+            suffix: item.suffix,
             onTap: onTap as dynamic Function()?,
             drawBorder: !widget.animation,
           )
@@ -549,6 +550,7 @@ class _MenuListItem extends StatelessWidget {
   final TextStyle? textStyle;
   final SideDrawer? menuView;
   final Widget? icon;
+  final Widget? suffix;
   final Direction direction;
   final double? width;
   final EdgeInsets? padding;
@@ -565,6 +567,7 @@ class _MenuListItem extends StatelessWidget {
     this.direction = Direction.right,
     this.width,
     this.padding,
+    this.suffix,
   });
 
   @override
@@ -590,18 +593,25 @@ class _MenuListItem extends StatelessWidget {
         flex: 1,
       ),
     );
+    if (suffix != null)
+      children.add(Padding(
+        padding: EdgeInsets.only(right: 12),
+        child: IconTheme(
+            data: IconThemeData(color: _textStyle.color), child: suffix!),
+      ));
     return InkWell(
       splashColor: const Color(0x44000000),
       onTap: isSelected! ? null : onTap,
       child: Container(
         width: width,
         alignment: Alignment.centerRight,
-        // padding: padding,
         decoration: drawBorder!
             ? ShapeDecoration(
                 shape: Border(
                   left: BorderSide(
-                      color: isSelected! ? selectorColor! : Colors.transparent,
+                      color: isSelected == true
+                          ? selectorColor!
+                          : Colors.transparent,
                       width: 5.0),
                 ),
               )
@@ -630,22 +640,38 @@ class MenuItem<T> {
   final T? id;
   final String title;
   final IconData? icon;
+  final Widget? prefix;
+  final Widget? suffix;
+  final TextStyle? textStyle;
+  final dynamic data;
 
   MenuItem({
     this.id,
     required this.title,
     this.icon,
-  });
+    this.prefix,
+    this.suffix,
+    this.textStyle,
+    this.data,
+  }) : assert(prefix != null && icon != null);
 
   MenuItem<T> copyWith({
     T? id,
     String? title,
     IconData? icon,
+    Widget? prefix,
+    Widget? suffix,
+    TextStyle? textStyle,
+    dynamic? data,
   }) {
     return MenuItem<T>(
       id: id ?? this.id,
       title: title ?? this.title,
       icon: icon,
+      prefix: prefix,
+      suffix: suffix,
+      textStyle: textStyle ?? this.textStyle,
+      data: data ?? this.data,
     );
   }
 }
