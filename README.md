@@ -377,11 +377,14 @@ Function(BuildContext, MenuItem, bool) itemBuilder;
 
 ```
 
-*MenuItem*
+*MenuItem\<T\>*
 ```dart
-String id;
+T id;
 String title;
 IconData icon;
+Widget prefix;
+Widget suffix;
+dynamic data;
 ```
 
 ## Contributor
