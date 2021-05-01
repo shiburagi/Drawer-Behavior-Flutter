@@ -1,3 +1,6 @@
+# 2.1.1
+* Change appBar parameter type to **PreferredSizeWidget**
+
 # 2.1.0
 * Prefix and suffix attribute
 
