@@ -21,6 +21,9 @@ https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
 
 ### NEW UPDATES
 ---
+**Version 2.0**
+- Sound null-safety
+---
 **Version 1.0**
 - Elevation Config
 - 3D effect
@@ -329,7 +332,7 @@ DrawerScaffoldController controller;
 List<SideDrawer> drawers;
 ScreenBuilder builder;
 bool enableGestures; // default: true
-AppBar appBar;
+PreferredSizeWidget appBar;
 double cornerRadius; // default: 16
 double bacgroundColor; // default: Theme.of(context).scaffoldBackgroundColor
 Widget floatingActionButton;
