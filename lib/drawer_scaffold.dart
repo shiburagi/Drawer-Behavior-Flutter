@@ -48,7 +48,7 @@ class DrawerScaffold extends StatefulWidget {
   final ScreenBuilder? builder;
 
   /// Appbar for Scaffold
-  final AppBar? appBar;
+  final PreferredSizeWidget? appBar;
 
   /// set default drawer from which [Direction], default: [Direction.left]
   final Direction defaultDirection;
@@ -206,36 +206,40 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
     }
   }
 
-  Widget? createAppBar() {
-    if (widget.appBar != null)
-      return AppBar(
-          actionsIconTheme: widget.appBar!.actionsIconTheme,
-          excludeHeaderSemantics: widget.appBar!.excludeHeaderSemantics,
-          shape: widget.appBar!.shape,
-          key: widget.appBar!.key,
-          backgroundColor: widget.appBar!.backgroundColor,
-          leading: widget.appBar!.leading ??
-              new IconButton(
-                  icon: Icon(Icons.menu),
-                  onPressed: () {
-                    focusDrawerIndex = mainDrawerIndex;
-                    menuControllers![mainDrawerIndex].toggle();
-                  }),
-          title: widget.appBar!.title,
-          automaticallyImplyLeading: widget.appBar!.automaticallyImplyLeading,
-          actions: widget.appBar!.actions,
-          flexibleSpace: widget.appBar!.flexibleSpace,
-          bottom: widget.appBar!.bottom,
-          elevation: widget.appBar!.elevation,
-          brightness: widget.appBar!.brightness,
-          iconTheme: widget.appBar!.iconTheme,
-          textTheme: widget.appBar!.textTheme,
-          primary: widget.appBar!.primary,
-          centerTitle: widget.appBar!.centerTitle,
-          titleSpacing: widget.appBar!.titleSpacing,
-          toolbarOpacity: widget.appBar!.toolbarOpacity,
-          bottomOpacity: widget.appBar!.bottomOpacity);
-
+  PreferredSizeWidget? createAppBar() {
+    if (widget.appBar != null) {
+      if (widget.appBar is AppBar) {
+        final appBar = widget.appBar as AppBar;
+        return AppBar(
+            actionsIconTheme: appBar.actionsIconTheme,
+            excludeHeaderSemantics: appBar.excludeHeaderSemantics,
+            shape: appBar.shape,
+            key: appBar.key,
+            backgroundColor: appBar.backgroundColor,
+            leading: appBar.leading ??
+                new IconButton(
+                    icon: Icon(Icons.menu),
+                    onPressed: () {
+                      focusDrawerIndex = mainDrawerIndex;
+                      menuControllers![mainDrawerIndex].toggle();
+                    }),
+            title: appBar.title,
+            automaticallyImplyLeading: appBar.automaticallyImplyLeading,
+            actions: appBar.actions,
+            flexibleSpace: appBar.flexibleSpace,
+            bottom: appBar.bottom,
+            elevation: appBar.elevation,
+            brightness: appBar.brightness,
+            iconTheme: appBar.iconTheme,
+            textTheme: appBar.textTheme,
+            primary: appBar.primary,
+            centerTitle: appBar.centerTitle,
+            titleSpacing: appBar.titleSpacing,
+            toolbarOpacity: appBar.toolbarOpacity,
+            bottomOpacity: appBar.bottomOpacity);
+      } else
+        return widget.appBar;
+    }
     return null;
   }
 
@@ -264,7 +268,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
     }
     Widget _scaffoldWidget = new Scaffold(
       backgroundColor: Colors.transparent,
-      appBar: createAppBar() as PreferredSizeWidget?,
+      appBar: createAppBar(),
       body: body,
       extendBody: widget.extendedBody,
       floatingActionButton: widget.floatingActionButton,
