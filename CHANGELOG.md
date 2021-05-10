@@ -1,3 +1,6 @@
+# 2.1.2
+* Set/assign/copy missing attribute from **AppBar** 
+
 # 2.1.1
 * Change appBar parameter type to **PreferredSizeWidget**
 

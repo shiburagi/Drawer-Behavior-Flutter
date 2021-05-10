@@ -235,6 +235,14 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
             primary: appBar.primary,
             centerTitle: appBar.centerTitle,
             titleSpacing: appBar.titleSpacing,
+            toolbarHeight: appBar.toolbarHeight,
+            backwardsCompatibility: appBar.backwardsCompatibility,
+            foregroundColor: appBar.foregroundColor,
+            leadingWidth: appBar.leadingWidth,
+            shadowColor: appBar.shadowColor,
+            systemOverlayStyle: appBar.systemOverlayStyle,
+            titleTextStyle: appBar.titleTextStyle,
+            toolbarTextStyle: appBar.toolbarTextStyle,
             toolbarOpacity: appBar.toolbarOpacity,
             bottomOpacity: appBar.bottomOpacity);
       } else
