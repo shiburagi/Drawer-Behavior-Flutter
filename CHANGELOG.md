@@ -1,3 +1,6 @@
+# 2.2.0
+* Fix itemBuilder with animation
+
 # 2.1.2
 * Set/assign/copy missing attribute from **AppBar** 
 

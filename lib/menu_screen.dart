@@ -269,7 +269,7 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
         curve: Interval(animationIntervalStart / maxDuration,
             animationIntervalEnd / maxDuration,
             curve: Curves.easeOut),
-        menuListItem: listItem as _MenuListItem?,
+        menuListItem: listItem,
       );
     else {
       return listItem;
@@ -279,7 +279,14 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
   Widget createDrawer(MenuController menuController) {
     List<Widget> widgets = [];
     if (widget.headerView != null) {
-      widgets.add(Container(width: double.infinity, child: widget.headerView));
+      widgets.add(Container(
+        alignment: widget.alignment,
+        margin: EdgeInsets.only(
+            left: widget.direction == Direction.left
+                ? 0
+                : MediaQuery.of(context).size.width - maxSlideAmount),
+        child: Container(width: maxSlideAmount, child: widget.headerView),
+      ));
     }
     widgets.add(Expanded(
       child: createMenuItems(menuController),
@@ -288,17 +295,24 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
 
     if (widget.footerView != null) {
       widgets.add(Container(
-        width: double.infinity,
-        child: widget.footerView,
-        margin: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
-      ));
+          alignment: widget.alignment,
+          margin: EdgeInsets.only(
+              left: widget.direction == Direction.left
+                  ? 0
+                  : MediaQuery.of(context).size.width - maxSlideAmount),
+          child: Container(
+            width: maxSlideAmount,
+            child: widget.footerView,
+            margin:
+                EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+          )));
     }
     MenuController controller = DrawerScaffold.currentController(context);
     return Transform(
       transform: Matrix4.translationValues(
         widget.slide
             ? (widget.direction == Direction.left ? 1 : -1) *
-                widget.maxSlideAmount(context) *
+                (widget.maxSlideAmount(context)) *
                 (controller.slidePercent - 1)
             : 0,
         MediaQuery.of(context).padding.top,
@@ -453,7 +467,7 @@ class _ItemSelectorState extends AnimatedWidgetBaseState<ItemSelector> {
 }
 
 class AnimatedMenuListItem extends ImplicitlyAnimatedWidget {
-  final _MenuListItem? menuListItem;
+  final Widget? menuListItem;
   final MenuState? menuState;
   final bool? isSelected;
   final Duration duration;

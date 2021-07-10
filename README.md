@@ -312,7 +312,7 @@ new DrawerScaffold(
             padding: EdgeInsets.fromLTRB(24, 16, 24, 16),
             child: Text(
               menuItem.title,
-              style: Theme.of(context).textTheme.subhead?.copyWith(
+              style: Theme.of(context).textTheme.subtitle1?.copyWith(
                   color: isSelected ? Colors.black87 : Colors.white70),
             ),
           );
