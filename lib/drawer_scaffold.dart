@@ -614,7 +614,8 @@ class MenuController extends ChangeNotifier {
         break;
     }
     contentScale = 1.0 - ((1.0 - _drawer.percentage) * scalePercent);
-    slideAmount = _drawer.maxSlideAmount(context) * slidePercent;
+    slideAmount = (_drawer.maxSlideAmount(context) - _drawer.elevation - 2) *
+        slidePercent;
     if (_drawer.degree != null) {
       slideAmount = slideAmount * (1 - (1 - contentScale) / 2);
       if (_drawer.direction == Direction.right) {

@@ -73,6 +73,7 @@ class _DrawerSlideWithHeaderState extends State<DrawerSlideWithHeader> {
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       drawers: [
         SideDrawer(
+          // withSafeAre: false,
           percentage: 1,
           menu: menu,
           headerView: headerView(context),

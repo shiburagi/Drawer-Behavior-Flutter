@@ -9,7 +9,7 @@ class DrawerCustomItem extends StatefulWidget {
 
 class _DrawerCustomItemState extends State<DrawerCustomItem> {
   late int selectedMenuItemId;
-
+  final DrawerScaffoldController controller = DrawerScaffoldController();
   @override
   void initState() {
     selectedMenuItemId = menu.items[0].id;
@@ -20,6 +20,7 @@ class _DrawerCustomItemState extends State<DrawerCustomItem> {
     return Column(
       children: <Widget>[
         Container(
+          width: 400,
           padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
           child: Row(
             children: <Widget>[
@@ -67,6 +68,7 @@ class _DrawerCustomItemState extends State<DrawerCustomItem> {
   @override
   Widget build(BuildContext context) {
     return DrawerScaffold(
+      controller: controller,
       cornerRadius: 0,
       appBar: AppBar(
           title: Text("Drawer - Custom  Item"),
@@ -76,7 +78,6 @@ class _DrawerCustomItemState extends State<DrawerCustomItem> {
           percentage: 1,
           menu: menu,
           headerView: headerView(context),
-          animation: false,
           alignment: Alignment.topLeft,
           color: Theme.of(context).primaryColor,
           selectedItemId: selectedMenuItemId,
@@ -89,7 +90,7 @@ class _DrawerCustomItemState extends State<DrawerCustomItem> {
               padding: EdgeInsets.fromLTRB(24, 16, 24, 16),
               child: Text(
                 menuItem.title,
-                style: Theme.of(context).textTheme.subhead?.copyWith(
+                style: Theme.of(context).textTheme.subtitle1?.copyWith(
                     color: isSelected ? Colors.black87 : Colors.white70),
               ),
             );
