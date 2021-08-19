@@ -425,8 +425,11 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
   }
 
   zoomAndSlideContent(Widget content) {
-    SideDrawer drawer = widget.drawers![focusDrawerIndex];
     MenuController menuController = this.menuControllers![focusDrawerIndex];
+    debugPrint("${menuController.state}");
+
+    SideDrawer drawer = widget.drawers![focusDrawerIndex];
+
     double slidePercent = menuController._slidePercent;
     double contentScale = menuController.contentScale;
     double slideAmount = menuController.slideAmount;
@@ -482,7 +485,11 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
 
   @override
   Widget build(BuildContext context) {
+    if (menuControllers?[focusDrawerIndex].state == MenuState.closed) {
+      focusDrawerIndex = drawerFrom(widget.defaultDirection);
+    }
     focusDrawerIndex = min(widget.drawers!.length - 1, focusDrawerIndex);
+
     return Stack(
       children: [
         focusDrawerIndex >= 0 ? widget.drawers![focusDrawerIndex] : Container(),
@@ -524,9 +531,9 @@ class DrawerScaffoldMenuControllerState
   void didUpdateWidget(Widget oldWidget) {
     super.didUpdateWidget(oldWidget as DrawerScaffoldMenuController);
     if (menuController != null)
-      menuController!.removeListener(_onMenuControllerChange);
+      menuController?.removeListener(_onMenuControllerChange);
     menuController = getMenuController(context, widget.direction);
-    menuController!.addListener(_onMenuControllerChange);
+    menuController?.addListener(_onMenuControllerChange);
   }
 
   @override

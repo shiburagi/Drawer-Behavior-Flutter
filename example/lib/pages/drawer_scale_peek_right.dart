@@ -2,12 +2,12 @@ import 'package:drawerbehavior/drawerbehavior.dart';
 import 'package:drawerbehavior_example/menus/main.dart';
 import 'package:flutter/material.dart';
 
-class DrawerPeekLeftRight extends StatefulWidget {
+class DrawerPeekRight extends StatefulWidget {
   @override
-  _DrawerPeekLeftRightState createState() => _DrawerPeekLeftRightState();
+  _DrawerPeekRightState createState() => _DrawerPeekRightState();
 }
 
-class _DrawerPeekLeftRightState extends State<DrawerPeekLeftRight> {
+class _DrawerPeekRightState extends State<DrawerPeekRight> {
   late int selectedMenuItemId;
   DrawerScaffoldController controller = DrawerScaffoldController();
   @override
@@ -20,11 +20,12 @@ class _DrawerPeekLeftRightState extends State<DrawerPeekLeftRight> {
   Widget build(BuildContext context) {
     return DrawerScaffold(
       controller: controller,
+      defaultDirection: Direction.right,
       appBar: AppBar(title: Text("Drawer - Peek Left"), actions: [
         IconButton(
             icon: Icon(Icons.notifications_none),
             onPressed: () {
-              controller.toggle(Direction.right);
+              controller.toggle(Direction.left);
             })
       ]),
       onSlide: (drawer, value) {
@@ -41,7 +42,7 @@ class _DrawerPeekLeftRightState extends State<DrawerPeekLeftRight> {
           peekMenu: true,
           percentage: 1,
           menu: menuWithIcon,
-          direction: Direction.left,
+          direction: Direction.right,
           animation: true,
           color: Theme.of(context).primaryColor,
           selectedItemId: selectedMenuItemId,
@@ -53,7 +54,7 @@ class _DrawerPeekLeftRightState extends State<DrawerPeekLeftRight> {
         ),
         SideDrawer(
           menu: menu,
-          direction: Direction.right,
+          direction: Direction.left,
           animation: true,
           selectorColor: Colors.white,
           color: Theme.of(context).accentColor,
