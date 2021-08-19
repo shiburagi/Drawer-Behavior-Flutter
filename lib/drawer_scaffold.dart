@@ -160,6 +160,30 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
     return controller;
   }
 
+  double get totalPeekSize =>
+      _getPeekSize(Direction.left) + _getPeekSize(Direction.right);
+  double _getPeekSize(Direction direction) {
+    try {
+      return widget.drawers
+              ?.firstWhere((element) =>
+                  element.peekMenu && direction == element.direction)
+              .peekSize ??
+          0;
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  double? _getDefaultElevation() {
+    try {
+      return widget.drawers
+          ?.firstWhere((element) => element.peekMenu)
+          .elevation;
+    } catch (e) {
+      return null;
+    }
+  }
+
   MenuController dcreateController(BuildContext context, SideDrawer d,
       TickerProvider vsync, Function(double) onAnimated) {
     MenuController controller = MenuController(
@@ -274,20 +298,23 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
       selectedItemId = widget.drawers![listenDrawerIndex].selectedItemId;
       body = widget.builder?.call(context, selectedItemId);
     }
-    Widget _scaffoldWidget = new Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: createAppBar(),
-      body: body,
-      extendBody: widget.extendedBody,
-      floatingActionButton: widget.floatingActionButton,
-      floatingActionButtonLocation: widget.floatingActionButtonLocation,
-      bottomNavigationBar: widget.bottomNavigationBar,
-      floatingActionButtonAnimator: widget.floatingActionButtonAnimator,
-      bottomSheet: widget.bottomSheet,
-      extendBodyBehindAppBar: widget.extendBodyBehindAppBar,
-      persistentFooterButtons: widget.persistentFooterButtons,
-      primary: widget.primary,
-      resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
+    Widget _scaffoldWidget = Container(
+      width: MediaQuery.of(context).size.width - totalPeekSize,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: createAppBar(),
+        body: body,
+        extendBody: widget.extendedBody,
+        floatingActionButton: widget.floatingActionButton,
+        floatingActionButtonLocation: widget.floatingActionButtonLocation,
+        bottomNavigationBar: widget.bottomNavigationBar,
+        floatingActionButtonAnimator: widget.floatingActionButtonAnimator,
+        bottomSheet: widget.bottomSheet,
+        extendBodyBehindAppBar: widget.extendBodyBehindAppBar,
+        persistentFooterButtons: widget.persistentFooterButtons,
+        primary: widget.primary,
+        resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
+      ),
     );
 
     double maxSlideAmount =
@@ -429,7 +456,8 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
       // }
     }
 
-    double elevation = drawer.elevation * slidePercent;
+    final defaultElavation = _getDefaultElevation();
+    double elevation = defaultElavation ?? drawer.elevation * slidePercent;
     return new Transform(
       transform: perspective,
       origin: drawer.degree != null
@@ -439,11 +467,14 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
               : null,
       alignment: Alignment.centerLeft,
       child: Card(
+        margin: defaultElavation == null
+            ? EdgeInsets.symmetric(horizontal: elevation)
+            : EdgeInsets.fromLTRB(_getPeekSize(Direction.left), 0,
+                _getPeekSize(Direction.right), 0),
         elevation: elevation,
         clipBehavior: Clip.antiAliasWithSaveLayer,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(cornerRadius)),
-        margin: EdgeInsets.symmetric(horizontal: elevation),
         child: content,
       ),
     );

@@ -29,16 +29,19 @@ class SideDrawer<T> extends StatefulWidget {
     this.direction = Direction.left,
     this.selectorColor,
     this.drawerWidth = 300,
+    this.peekSize = 56,
     this.duration,
     this.curve,
     this.textStyle,
-    this.padding = const EdgeInsets.only(left: 40.0, top: 15.0, bottom: 15.0),
+    EdgeInsets? padding,
     this.alignment = Alignment.centerLeft,
     this.itemBuilder,
     this.elevation = 16,
     this.cornerRadius,
     this.withSafeAre = true,
     Key? key,
+    this.peekMenu = false,
+    this.hideOnItemPressed = true,
   })  : assert((child != null && menu == null && itemBuilder == null) ||
             (child == null && menu != null)),
         this.percentage = percentage ?? 0.8,
@@ -51,6 +54,10 @@ class SideDrawer<T> extends StatefulWidget {
             new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
         this.slideInCurve =
             new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        this.padding = padding ??
+            (peekMenu
+                ? const EdgeInsets.only(left: 16.0, top: 15.0, bottom: 15.0)
+                : const EdgeInsets.only(left: 40.0, top: 15.0, bottom: 15.0)),
         super(key: key);
 
   /// Scaling Percentage base on width and height
@@ -65,6 +72,9 @@ class SideDrawer<T> extends StatefulWidget {
 
   /// Degree of rotation : 15->45 degree
   final double? degree;
+
+  /// peekSize
+  final double peekSize;
 
   /// Drawer's width in Pixel,
   /// Default : 300px
@@ -90,6 +100,12 @@ class SideDrawer<T> extends StatefulWidget {
 
   /// Flag for animation on menu item
   final bool animation;
+
+  // peek
+  final bool peekMenu;
+
+  // close drawer when menu clicked, default : true
+  final bool hideOnItemPressed;
 
   /// Flag for drawer slide with main container
   final bool slide;
@@ -225,6 +241,7 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
     );
   }
 
+  bool get useAnimation => widget.animation && !widget.peekMenu;
   buildListItem(
     MenuController menuController,
     MenuItem item,
@@ -236,12 +253,14 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
     final isSelected = item.id == widget.selectedItemId;
 
     Function onTap = () {
-      widget.onMenuItemSelected!(item.id);
-      menuController.close();
+      widget.onMenuItemSelected?.call(item.id);
+      if (widget.hideOnItemPressed) menuController.close();
     };
     Widget listItem = widget.itemBuilder == null
         ? _MenuListItem(
-            padding: const EdgeInsets.only(left: 32.0),
+            padding: widget.peekMenu
+                ? EdgeInsets.zero
+                : const EdgeInsets.only(left: 32.0),
             direction: widget.direction,
             title: item.title,
             isSelected: isSelected,
@@ -252,8 +271,7 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
             icon: item.icon == null ? item.prefix : Icon(item.icon),
             suffix: item.suffix,
             onTap: onTap as dynamic Function()?,
-            drawBorder: !widget.animation,
-          )
+            drawBorder: !useAnimation)
         : InkWell(
             child: Container(
               alignment: Alignment.centerLeft,
@@ -265,7 +283,7 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
             onTap: onTap as void Function()?,
           );
 
-    if (widget.animation)
+    if (useAnimation)
       return AnimatedMenuListItem(
         menuState: menuController.state,
         isSelected: isSelected,
@@ -383,7 +401,7 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
                 child: Stack(
                   children: [
                     createDrawer(menuController),
-                    widget.animation && shouldRenderSelector
+                    useAnimation && shouldRenderSelector
                         ? ItemSelector(
                             left: widget.direction == Direction.right
                                 ? MediaQuery.of(context).size.width -
@@ -565,7 +583,7 @@ class _AnimatedMenuListItemState
 class _MenuListItem extends StatelessWidget {
   final String title;
   final bool? isSelected;
-  final bool? drawBorder;
+  final bool drawBorder;
   final Function()? onTap;
   final Color? selectorColor;
   final TextStyle? textStyle;
@@ -584,7 +602,7 @@ class _MenuListItem extends StatelessWidget {
     required this.textStyle,
     required this.selectorColor,
     this.icon,
-    this.drawBorder,
+    this.drawBorder = false,
     this.direction = Direction.right,
     this.width,
     this.padding,
@@ -599,7 +617,7 @@ class _MenuListItem extends StatelessWidget {
     List<Widget> children = [];
     if (icon != null)
       children.add(Padding(
-        padding: EdgeInsets.only(right: 12),
+        padding: EdgeInsets.only(right: 16),
         child: IconTheme(
             data: IconThemeData(color: _textStyle.color), child: icon!),
       ));
@@ -621,29 +639,30 @@ class _MenuListItem extends StatelessWidget {
             data: IconThemeData(color: _textStyle.color), child: suffix!),
       ));
     return InkWell(
-      splashColor: const Color(0x44000000),
       onTap: isSelected! ? null : onTap,
-      child: Container(
-        width: width,
-        alignment: Alignment.centerRight,
-        decoration: drawBorder!
-            ? ShapeDecoration(
-                shape: Border(
-                  left: BorderSide(
-                      color: isSelected == true
-                          ? selectorColor!
-                          : Colors.transparent,
-                      width: 5.0),
-                ),
-              )
-            : null,
-        child: Padding(
-          padding: menuView!.padding,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: children,
+      child: Stack(
+        children: [
+          if (drawBorder)
+            Positioned(
+              top: 0,
+              bottom: 0,
+              child: Container(
+                width: 4,
+                color: isSelected == true ? selectorColor! : Colors.transparent,
+              ),
+            ),
+          Container(
+            width: width,
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: menuView?.padding ?? EdgeInsets.zero,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: children,
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

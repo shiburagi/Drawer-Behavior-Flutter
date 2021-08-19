@@ -6,6 +6,7 @@ import 'package:drawerbehavior_example/pages/drawer_scale_left_3d_right_slide_.d
 import 'package:drawerbehavior_example/pages/drawer_scale_left_right.dart';
 import 'package:drawerbehavior_example/pages/drawer_scale_left_right_inverse.dart';
 import 'package:drawerbehavior_example/pages/drawer_scale_no_animation.dart';
+import 'package:drawerbehavior_example/pages/drawer_scale_peek_left_right.dart';
 import 'package:drawerbehavior_example/pages/drawer_scale_right.dart';
 import 'package:drawerbehavior_example/pages/drawer_slide.dart';
 import 'package:drawerbehavior_example/pages/drawer_slide_custom_appbar.dart';
@@ -108,6 +109,13 @@ class _MyAppState extends State<MyApp> {
                 Text("Customize"),
                 Divider(height: 16, color: Theme.of(context).dividerColor),
                 createButton(context,
+                    text: "Peek Left",
+                    navigate: "/peek/duo/leftandright",
+                    color: Theme.of(context).accentColor),
+                Divider(height: 16, color: Theme.of(context).dividerColor),
+                Text("Customize"),
+                Divider(height: 16, color: Theme.of(context).dividerColor),
+                createButton(context,
                     text: "Customize Item",
                     navigate: "/custom/item",
                     color: Theme.of(context).accentColor),
@@ -146,6 +154,8 @@ class _MyAppState extends State<MyApp> {
         "/duo/left3dandrightslide": (context) =>
             createPage(DrawerLeft3DAndRightSlide()),
         "/drawer8": (context) => createPage(DrawerSlideWithFooter()),
+        "/peek/duo/leftandright": (context) =>
+            createPage(DrawerPeekLeftRight()),
         "/custom/appbar": (context) => createPage(DrawerSlideCustomAppBar()),
         "/custom/item": (context) => createPage(DrawerCustomItem()),
         "/custom/withchild": (context) => createPage(DrawerWithChild()),
