@@ -39,7 +39,9 @@ class DrawerScaffold extends StatefulWidget {
     this.onOpened,
     this.onClosed,
     this.backgroundColor,
-  }) : super(key: key);
+  })  : assert((drawers?.where((element) => element.peekMenu).length ?? 0) < 2,
+            "\n\nOnly can have one SideDrawer with peek menu\n"),
+        super(key: key);
 
   /// List of drawers
   final List<SideDrawer>? drawers;
@@ -92,6 +94,19 @@ class DrawerScaffold extends StatefulWidget {
     final _DrawerScaffoldState? result =
         context.findAncestorStateOfType<_DrawerScaffoldState>();
     if (nullOk || result != null) return result!._controller;
+    throw FlutterError.fromParts(<DiagnosticsNode>[
+      ErrorSummary(
+          '_SideDrawerState.of() called with a context that does not contain a MenuController.'),
+      context.describeElement('The context used was')
+    ]);
+  }
+
+  static MenuController? getControllerFor(
+      BuildContext context, SideDrawer drawer,
+      {bool nullOk = true}) {
+    final _DrawerScaffoldState? result =
+        context.findAncestorStateOfType<_DrawerScaffoldState>();
+    if (nullOk || result != null) return result!._getControllerFor(drawer);
     throw FlutterError.fromParts(<DiagnosticsNode>[
       ErrorSummary(
           '_SideDrawerState.of() called with a context that does not contain a MenuController.'),
@@ -158,6 +173,30 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
       },
     )..addListener(() => setState(() {}));
     return controller;
+  }
+
+  double get totalPeekSize =>
+      _getPeekSize(Direction.left) + _getPeekSize(Direction.right);
+  double _getPeekSize(Direction direction) {
+    try {
+      return widget.drawers
+              ?.firstWhere((element) =>
+                  element.peekMenu && direction == element.direction)
+              .peekSize ??
+          0;
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  double? _getDefaultElevation() {
+    try {
+      return widget.drawers
+          ?.firstWhere((element) => element.peekMenu)
+          .elevation;
+    } catch (e) {
+      return null;
+    }
   }
 
   MenuController dcreateController(BuildContext context, SideDrawer d,
@@ -274,20 +313,23 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
       selectedItemId = widget.drawers![listenDrawerIndex].selectedItemId;
       body = widget.builder?.call(context, selectedItemId);
     }
-    Widget _scaffoldWidget = new Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: createAppBar(),
-      body: body,
-      extendBody: widget.extendedBody,
-      floatingActionButton: widget.floatingActionButton,
-      floatingActionButtonLocation: widget.floatingActionButtonLocation,
-      bottomNavigationBar: widget.bottomNavigationBar,
-      floatingActionButtonAnimator: widget.floatingActionButtonAnimator,
-      bottomSheet: widget.bottomSheet,
-      extendBodyBehindAppBar: widget.extendBodyBehindAppBar,
-      persistentFooterButtons: widget.persistentFooterButtons,
-      primary: widget.primary,
-      resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
+    Widget _scaffoldWidget = Container(
+      width: MediaQuery.of(context).size.width - totalPeekSize,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: createAppBar(),
+        body: body,
+        extendBody: widget.extendedBody,
+        floatingActionButton: widget.floatingActionButton,
+        floatingActionButtonLocation: widget.floatingActionButtonLocation,
+        bottomNavigationBar: widget.bottomNavigationBar,
+        floatingActionButtonAnimator: widget.floatingActionButtonAnimator,
+        bottomSheet: widget.bottomSheet,
+        extendBodyBehindAppBar: widget.extendBodyBehindAppBar,
+        persistentFooterButtons: widget.persistentFooterButtons,
+        primary: widget.primary,
+        resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
+      ),
     );
 
     double maxSlideAmount =
@@ -397,9 +439,11 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
                 })));
   }
 
-  zoomAndSlideContent(Widget content) {
-    SideDrawer drawer = widget.drawers![focusDrawerIndex];
+  zoomAndSlideContent(Widget content, [bool isDrawer = false]) {
     MenuController menuController = this.menuControllers![focusDrawerIndex];
+
+    SideDrawer drawer = widget.drawers![focusDrawerIndex];
+
     double slidePercent = menuController._slidePercent;
     double contentScale = menuController.contentScale;
     double slideAmount = menuController.slideAmount;
@@ -429,21 +473,31 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
       // }
     }
 
-    double elevation = drawer.elevation * slidePercent;
+    final defaultElavation = _getDefaultElevation();
+    double elevation = defaultElavation ?? drawer.elevation * slidePercent;
     return new Transform(
       transform: perspective,
       origin: drawer.degree != null
           ? Offset(MediaQuery.of(context).size.width / 2, 0.0)
           : drawer.direction == Direction.right
-              ? Offset(MediaQuery.of(context).size.width, 0.0)
+              ? Offset(
+                  MediaQuery.of(context).size.width -
+                      drawer.elevation -
+                      totalPeekSize,
+                  0.0)
               : null,
       alignment: Alignment.centerLeft,
       child: Card(
+        margin: isDrawer
+            ? EdgeInsets.zero
+            : defaultElavation == null
+                ? EdgeInsets.symmetric(horizontal: elevation)
+                : EdgeInsets.fromLTRB(_getPeekSize(Direction.left), 0,
+                    _getPeekSize(Direction.right), 0),
         elevation: elevation,
         clipBehavior: Clip.antiAliasWithSaveLayer,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(cornerRadius)),
-        margin: EdgeInsets.symmetric(horizontal: elevation),
         child: content,
       ),
     );
@@ -451,16 +505,31 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
 
   @override
   Widget build(BuildContext context) {
+    // if (menuControllers?[focusDrawerIndex].state == MenuState.closed) {
+    //   focusDrawerIndex = drawerFrom(widget.defaultDirection);
+    // }
     focusDrawerIndex = min(widget.drawers!.length - 1, focusDrawerIndex);
+
     return Stack(
       children: [
+        // widget.drawers![i],
         focusDrawerIndex >= 0 ? widget.drawers![focusDrawerIndex] : Container(),
+
+        for (var i = 0; i < (widget.drawers?.length ?? 0); i++)
+          if (widget.drawers![i].peekMenu && i != focusDrawerIndex)
+            zoomAndSlideContent(widget.drawers![i], true),
+
         createContentDisplay(),
       ],
     );
   }
 
   MenuController get _controller => menuControllers![focusDrawerIndex];
+  MenuController? _getControllerFor(SideDrawer drawer) {
+    final index = widget.drawers?.indexOf(drawer);
+    if (index != null && index >= 0) return menuControllers?[index];
+    return null;
+  }
 }
 
 class DrawerScaffoldMenuController extends StatefulWidget {
@@ -493,9 +562,9 @@ class DrawerScaffoldMenuControllerState
   void didUpdateWidget(Widget oldWidget) {
     super.didUpdateWidget(oldWidget as DrawerScaffoldMenuController);
     if (menuController != null)
-      menuController!.removeListener(_onMenuControllerChange);
+      menuController?.removeListener(_onMenuControllerChange);
     menuController = getMenuController(context, widget.direction);
-    menuController!.addListener(_onMenuControllerChange);
+    menuController?.addListener(_onMenuControllerChange);
   }
 
   @override
@@ -621,7 +690,9 @@ class MenuController extends ChangeNotifier {
       if (_drawer.direction == Direction.right) {
         slideAmount = -slideAmount;
       }
-    } else if (_drawer.direction == Direction.right) slideAmount = -slideAmount;
+    } else if (_drawer.direction == Direction.right) {
+      slideAmount = -slideAmount;
+    }
   }
 
   @override

@@ -1,3 +1,7 @@
+# 2.3.0-dev
+* peek menu
+* hideOnItemPressed 
+
 # 2.2.1
 * withSafeArea attribute
 

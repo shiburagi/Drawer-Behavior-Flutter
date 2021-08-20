@@ -2,12 +2,12 @@ import 'package:drawerbehavior/drawerbehavior.dart';
 import 'package:drawerbehavior_example/menus/main.dart';
 import 'package:flutter/material.dart';
 
-class DrawerLeftAndRight extends StatefulWidget {
+class DrawerPeekLeft extends StatefulWidget {
   @override
-  _DrawerLeftAndRightState createState() => _DrawerLeftAndRightState();
+  _DrawerPeekLeftState createState() => _DrawerPeekLeftState();
 }
 
-class _DrawerLeftAndRightState extends State<DrawerLeftAndRight> {
+class _DrawerPeekLeftState extends State<DrawerPeekLeft> {
   late int selectedMenuItemId;
   DrawerScaffoldController controller = DrawerScaffoldController();
   @override
@@ -20,7 +20,7 @@ class _DrawerLeftAndRightState extends State<DrawerLeftAndRight> {
   Widget build(BuildContext context) {
     return DrawerScaffold(
       controller: controller,
-      appBar: AppBar(title: Text("Drawer - Left & Right"), actions: [
+      appBar: AppBar(title: Text("Drawer - Peek Left"), actions: [
         IconButton(
             icon: Icon(Icons.notifications_none),
             onPressed: () {
@@ -38,8 +38,9 @@ class _DrawerLeftAndRightState extends State<DrawerLeftAndRight> {
       },
       drawers: [
         SideDrawer(
-          percentage: 0.6,
-          menu: menu,
+          peekMenu: true,
+          percentage: 1,
+          menu: menuWithIcon,
           direction: Direction.left,
           animation: true,
           color: Theme.of(context).primaryColor,
@@ -52,8 +53,6 @@ class _DrawerLeftAndRightState extends State<DrawerLeftAndRight> {
         ),
         SideDrawer(
           menu: menu,
-          percentage: 0.7,
-          // elevation: 0,
           direction: Direction.right,
           animation: true,
           selectorColor: Colors.white,

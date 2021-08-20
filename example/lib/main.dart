@@ -6,6 +6,8 @@ import 'package:drawerbehavior_example/pages/drawer_scale_left_3d_right_slide_.d
 import 'package:drawerbehavior_example/pages/drawer_scale_left_right.dart';
 import 'package:drawerbehavior_example/pages/drawer_scale_left_right_inverse.dart';
 import 'package:drawerbehavior_example/pages/drawer_scale_no_animation.dart';
+import 'package:drawerbehavior_example/pages/drawer_scale_peek_left.dart';
+import 'package:drawerbehavior_example/pages/drawer_scale_peek_right.dart';
 import 'package:drawerbehavior_example/pages/drawer_scale_right.dart';
 import 'package:drawerbehavior_example/pages/drawer_slide.dart';
 import 'package:drawerbehavior_example/pages/drawer_slide_custom_appbar.dart';
@@ -105,6 +107,17 @@ class _MyAppState extends State<MyApp> {
                     navigate: "/duo/right",
                     color: Theme.of(context).accentColor),
                 Divider(height: 16, color: Theme.of(context).dividerColor),
+                Text("Peek"),
+                Divider(height: 16, color: Theme.of(context).dividerColor),
+                createButton(context,
+                    text: "Peek Left",
+                    navigate: "/peek/duo/left",
+                    color: Theme.of(context).accentColor),
+                createButton(context,
+                    text: "Peek Right",
+                    navigate: "/peek/duo/right",
+                    color: Theme.of(context).accentColor),
+                Divider(height: 16, color: Theme.of(context).dividerColor),
                 Text("Customize"),
                 Divider(height: 16, color: Theme.of(context).dividerColor),
                 createButton(context,
@@ -146,6 +159,8 @@ class _MyAppState extends State<MyApp> {
         "/duo/left3dandrightslide": (context) =>
             createPage(DrawerLeft3DAndRightSlide()),
         "/drawer8": (context) => createPage(DrawerSlideWithFooter()),
+        "/peek/duo/left": (context) => createPage(DrawerPeekLeft()),
+        "/peek/duo/right": (context) => createPage(DrawerPeekRight()),
         "/custom/appbar": (context) => createPage(DrawerSlideCustomAppBar()),
         "/custom/item": (context) => createPage(DrawerCustomItem()),
         "/custom/withchild": (context) => createPage(DrawerWithChild()),

@@ -16,6 +16,29 @@ https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
 
 ---
 
+
+## Table of contents
+- [Drawer Behavior - Flutter](#drawer-behavior---flutter)
+  - [Usage](#usage)
+  - [Example](#example)
+  - [## Migration (Null-safety Release)](#-migration-null-safety-release)
+    - [mainDrawer (DrawerScaffold) -> defaultDirection (DrawerScaffold)](#maindrawer-drawerscaffold---defaultdirection-drawerscaffold)
+  - [## Migration](#-migration)
+    - [contentView (Screen) -> builder (ScreenBuilder)](#contentview-screen---builder-screenbuilder)
+    - [menuView (MenuView) -> drawers (List\<SideDrawer>)](#menuview-menuview---drawers-listsidedrawer)
+    - [percentage (DrawerScaffold) -> drawers (List\<SideDrawer>))](#percentage-drawerscaffold---drawers-listsidedrawer)
+  - [Preview](#preview)
+    - [Scale Effect](#scale-effect)
+    - [Right Drawer](#right-drawer)
+    - [3D Effect](#3d-effect)
+    - [Drawer with Header](#drawer-with-header)
+    - [Drawer with Footer](#drawer-with-footer)
+    - [Drawer with Header and Custom Builder](#drawer-with-header-and-custom-builder)
+    - [Peek Drawer](#peek-drawer)
+  - [Customize](#customize)
+  - [Contributor](#contributor)
+
+
 ### Todo : https://github.com/shiburagi/Drawer-Behavior-Flutter/projects/1
 
 
@@ -23,6 +46,7 @@ https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
 ---
 **Version 2.0**
 - Sound null-safety
+- Peek Menu
 ---
 **Version 1.0**
 - Elevation Config
@@ -36,15 +60,6 @@ https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
 - Extended body
 - AndroidX support  
 ---
-
-## Table of contents
-- [Usage](#usage)
-- [Example](#example)
-- [Migration (Null-safety Release)](#migration-null-safety-release)
-- [Migration](#migration)
-- [Preview](#preview)
-- [Customize](#customize)
-- [Contributor](#contributor)
 
 
 ## Usage
@@ -231,6 +246,8 @@ DrawerScaffold(
 
 ## Preview
 
+### Scale Effect
+
 <img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-1.png?raw=true" width="400px"/>
 
 ```dart
@@ -245,6 +262,8 @@ new DrawerScaffold(
 );
 ```
 ---
+
+### Right Drawer
 
 <img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview_ios_scale_right.png?raw=true" width="400px"/>
 
@@ -261,6 +280,8 @@ new DrawerScaffold(
 ```
 ---
 
+### 3D Effect
+
 <img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview_ios_3d.png?raw=true" width="400px"/>
 
 ```dart
@@ -276,6 +297,8 @@ new DrawerScaffold(
 ```
 ---
 
+### Drawer with Header
+
 <img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-2.png?raw=true" width="400px"/>
 
 ```dart
@@ -286,6 +309,8 @@ new DrawerScaffold(
 ```
 ---
 
+### Drawer with Footer
+
 <img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-4.png?raw=true" width="400px"/>
 
 ```dart
@@ -295,6 +320,8 @@ new DrawerScaffold(
 );
 ```
 ---
+
+### Drawer with Header and Custom Builder
 
 <img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-5.png?raw=true" width="400px"/>
 
@@ -317,6 +344,26 @@ new DrawerScaffold(
             ),
           );
         }
+      )
+  ],
+  ...
+);
+```
+---
+
+### Peek Drawer
+
+<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-6.png?raw=true" width="400px"/>
+
+```dart
+new DrawerScaffold(
+  headerView: headerView(context),
+  drawers: [
+      SideDrawer(
+        peekMenu: true,
+        percentage: 1,
+        menu: menuWithIcon,
+        direction: Direction.left,
       )
   ],
   ...
@@ -360,6 +407,7 @@ double percentage; // default: 0.8
 double elevation; // default: 4
 double cornerRadius;
 double degree; // 15-45 degree
+double peekSize; // 56px
 Menu menu;
 String selectedItemId;
 Direction direction;
@@ -367,6 +415,8 @@ Duration duration;
 Curve curve;
 bool animation; //default: false
 bool slide; //default: false
+bool peekMenu; //default: false
+bool hideOnItemPressed; //default: true
 Function(String) onMenuItemSelected;
 Widget headerView;
 Widget footerView;
