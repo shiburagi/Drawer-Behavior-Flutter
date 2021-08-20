@@ -52,7 +52,7 @@ class _DrawerSlideWithFooterState extends State<DrawerSlideWithFooter> {
                         "test123@gmail.com",
                         style: Theme.of(context)
                             .textTheme
-                            .subtitle
+                            .subtitle2
                             ?.copyWith(color: Colors.white.withAlpha(200)),
                       )
                     ],
