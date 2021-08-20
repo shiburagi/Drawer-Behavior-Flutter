@@ -228,7 +228,9 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
       margin: EdgeInsets.only(
           left: widget.direction == Direction.left
               ? 0
-              : MediaQuery.of(context).size.width - maxSlideAmount),
+              : MediaQuery.of(context).size.width -
+                  maxSlideAmount -
+                  (widget.peekMenu ? widget.peekSize : 0)),
       child: SingleChildScrollView(
         child: Container(
           child: Column(
@@ -384,35 +386,45 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
               shouldRenderSelector = false;
             }
           }
-
+          MenuController controller = DrawerScaffold.currentController(context);
+          debugPrint("width: ${widget.drawerWidth + controller.slideAmount}");
           return Container(
             // padding: widget.direction == Direction.right
             //     ? const EdgeInsets.only(left: 24)
             //     : const EdgeInsets.only(right: 24),
             width: double.infinity,
             height: double.infinity,
+
             decoration: BoxDecoration(
               image: widget.background,
               color: widget.color,
             ),
-            child: Center(
-              child: Material(
-                color: Colors.transparent,
-                child: Stack(
-                  children: [
-                    createDrawer(menuController),
-                    useAnimation && shouldRenderSelector
-                        ? ItemSelector(
-                            left: widget.direction == Direction.right
-                                ? MediaQuery.of(context).size.width -
-                                    maxSlideAmount
-                                : 0,
-                            selectorColor: selectorColor,
-                            top: actualSelectorYTop,
-                            bottom: actualSelectorYBottom,
-                            opacity: selectorOpacity)
-                        : Container(),
-                  ],
+            child: Transform.translate(
+              offset: widget.direction == Direction.left || !widget.peekMenu
+                  ? Offset.zero
+                  : Offset(
+                      (widget.drawerWidth + controller.slideAmount)
+                          .clamp(0, widget.drawerWidth),
+                      0),
+              child: Center(
+                child: Material(
+                  color: Colors.transparent,
+                  child: Stack(
+                    children: [
+                      createDrawer(menuController),
+                      useAnimation && shouldRenderSelector
+                          ? ItemSelector(
+                              left: widget.direction == Direction.right
+                                  ? MediaQuery.of(context).size.width -
+                                      maxSlideAmount
+                                  : 0,
+                              selectorColor: selectorColor,
+                              top: actualSelectorYTop,
+                              bottom: actualSelectorYBottom,
+                              opacity: selectorOpacity)
+                          : Container(),
+                    ],
+                  ),
                 ),
               ),
             ),

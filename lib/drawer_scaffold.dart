@@ -424,7 +424,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
                 })));
   }
 
-  zoomAndSlideContent(Widget content) {
+  zoomAndSlideContent(Widget content, [bool isDrawer = false]) {
     MenuController menuController = this.menuControllers![focusDrawerIndex];
     debugPrint("${menuController.state}");
 
@@ -470,10 +470,12 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
               : null,
       alignment: Alignment.centerLeft,
       child: Card(
-        margin: defaultElavation == null
-            ? EdgeInsets.symmetric(horizontal: elevation)
-            : EdgeInsets.fromLTRB(_getPeekSize(Direction.left), 0,
-                _getPeekSize(Direction.right), 0),
+        margin: isDrawer
+            ? EdgeInsets.zero
+            : defaultElavation == null
+                ? EdgeInsets.symmetric(horizontal: elevation)
+                : EdgeInsets.fromLTRB(_getPeekSize(Direction.left), 0,
+                    _getPeekSize(Direction.right), 0),
         elevation: elevation,
         clipBehavior: Clip.antiAliasWithSaveLayer,
         shape: RoundedRectangleBorder(
@@ -485,14 +487,20 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
 
   @override
   Widget build(BuildContext context) {
-    if (menuControllers?[focusDrawerIndex].state == MenuState.closed) {
-      focusDrawerIndex = drawerFrom(widget.defaultDirection);
-    }
+    // if (menuControllers?[focusDrawerIndex].state == MenuState.closed) {
+    //   focusDrawerIndex = drawerFrom(widget.defaultDirection);
+    // }
     focusDrawerIndex = min(widget.drawers!.length - 1, focusDrawerIndex);
 
     return Stack(
       children: [
+        // widget.drawers![i],
         focusDrawerIndex >= 0 ? widget.drawers![focusDrawerIndex] : Container(),
+
+        for (var i = 0; i < (widget.drawers?.length ?? 0); i++)
+          if (widget.drawers![i].peekMenu && i != focusDrawerIndex)
+            zoomAndSlideContent(widget.drawers![i], true),
+
         createContentDisplay(),
       ],
     );
