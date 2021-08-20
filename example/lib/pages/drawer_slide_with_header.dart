@@ -48,7 +48,7 @@ class _DrawerSlideWithHeaderState extends State<DrawerSlideWithHeader> {
                         "test123@gmail.com",
                         style: Theme.of(context)
                             .textTheme
-                            .subtitle
+                            .subtitle2
                             ?.copyWith(color: Colors.white.withAlpha(200)),
                       )
                     ],
