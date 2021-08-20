@@ -19,7 +19,15 @@ https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
 
 ## Table of contents
 - [Drawer Behavior - Flutter](#drawer-behavior---flutter)
+  - [Table of contents](#table-of-contents)
+    - [Todo : https://github.com/shiburagi/Drawer-Behavior-Flutter/projects/1](#todo--httpsgithubcomshiburagidrawer-behavior-flutterprojects1)
+  - [### NEW UPDATES](#-new-updates)
+  - [- ClassName.identifier: **SideDrawer.count()**, **SideDrawer.child()** and **SideDrawer.custom()**](#--classnameidentifier-sidedrawercount-sidedrawerchild-and-sidedrawercustom)
+  - [- Sound null-safety](#--sound-null-safety)
+  - [- Right Drawer](#--right-drawer)
+  - [- AndroidX support](#--androidx-support)
   - [Usage](#usage)
+  - [### For **Android** : Drawer-Behavior](#-for-android--drawer-behavior)
   - [Example](#example)
   - [## Migration (Null-safety Release)](#-migration-null-safety-release)
     - [mainDrawer (DrawerScaffold) -> defaultDirection (DrawerScaffold)](#maindrawer-drawerscaffold---defaultdirection-drawerscaffold)
@@ -44,9 +52,12 @@ https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
 
 ### NEW UPDATES
 ---
+**Version 2.3**
+- Peek Menu
+- ClassName.identifier: **SideDrawer.count()**, **SideDrawer.child()** and **SideDrawer.custom()**
+---
 **Version 2.0**
 - Sound null-safety
-- Peek Menu
 ---
 **Version 1.0**
 - Elevation Config
