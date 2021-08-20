@@ -73,7 +73,7 @@ class _DrawerCustomItemByCountState extends State<DrawerCustomItemByCount> {
       controller: controller,
       cornerRadius: 0,
       appBar: AppBar(
-          title: Text("Drawer - Custom Item by Item"),
+          title: Text("Drawer - Custom Item by Count"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       drawers: [
         SideDrawer.count(

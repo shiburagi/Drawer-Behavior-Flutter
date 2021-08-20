@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:drawerbehavior_example/pages/drawer_3d.dart';
 import 'package:drawerbehavior_example/pages/drawer_custom_item.dart';
 import 'package:drawerbehavior_example/pages/drawer_custom_item_by_count.dart';
@@ -28,19 +30,25 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   Widget createButton(context, {text, navigate, Color? color}) {
     Color buttonColor = color ?? Theme.of(context).primaryColor;
-    return SizedBox(
-        width: double.infinity,
-        child: ElevatedButton(
-            child: Text(text),
-            style: ElevatedButton.styleFrom(primary: buttonColor).copyWith(
-                foregroundColor: MaterialStateProperty.all(
-                    ThemeData.estimateBrightnessForColor(buttonColor) ==
-                            Brightness.light
-                        ? Colors.black
-                        : Colors.white)),
-            onPressed: () {
-              Navigator.pushNamed(context, navigate);
-            }));
+    return Container(
+      margin: EdgeInsets.fromLTRB(12, 0, 12, 12),
+      child: SizedBox(
+          width: min(240, MediaQuery.of(context).size.width - 48),
+          child: ElevatedButton(
+              child: Text(
+                text,
+                textAlign: TextAlign.center,
+              ),
+              style: ElevatedButton.styleFrom(primary: buttonColor).copyWith(
+                  foregroundColor: MaterialStateProperty.all(
+                      ThemeData.estimateBrightnessForColor(buttonColor) ==
+                              Brightness.light
+                          ? Colors.black
+                          : Colors.white)),
+              onPressed: () {
+                Navigator.pushNamed(context, navigate);
+              })),
+    );
   }
 
   Widget home(context) {
@@ -51,7 +59,8 @@ class _MyAppState extends State<MyApp> {
       body: SingleChildScrollView(
         child: Container(
             padding: EdgeInsets.all(16.0),
-            child: Column(
+            child: Wrap(
+              alignment: WrapAlignment.center,
               children: <Widget>[
                 createButton(context,
                     text: "Scale",
