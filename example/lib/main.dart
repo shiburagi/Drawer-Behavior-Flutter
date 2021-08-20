@@ -1,5 +1,6 @@
 import 'package:drawerbehavior_example/pages/drawer_3d.dart';
 import 'package:drawerbehavior_example/pages/drawer_custom_item.dart';
+import 'package:drawerbehavior_example/pages/drawer_custom_item_by_count.dart';
 import 'package:drawerbehavior_example/pages/drawer_scale.dart';
 import 'package:drawerbehavior_example/pages/drawer_scale_icon.dart';
 import 'package:drawerbehavior_example/pages/drawer_scale_left_3d_right_slide_.dart';
@@ -125,6 +126,10 @@ class _MyAppState extends State<MyApp> {
                     navigate: "/custom/item",
                     color: Theme.of(context).accentColor),
                 createButton(context,
+                    text: "Customize Item by Count",
+                    navigate: "/custom/item/count",
+                    color: Theme.of(context).accentColor),
+                createButton(context,
                     text: "Custom AppBar",
                     navigate: "/custom/appbar",
                     color: Theme.of(context).accentColor),
@@ -163,6 +168,8 @@ class _MyAppState extends State<MyApp> {
         "/peek/duo/right": (context) => createPage(DrawerPeekRight()),
         "/custom/appbar": (context) => createPage(DrawerSlideCustomAppBar()),
         "/custom/item": (context) => createPage(DrawerCustomItem()),
+        "/custom/item/count": (context) =>
+            createPage(DrawerCustomItemByCount()),
         "/custom/withchild": (context) => createPage(DrawerWithChild()),
       },
     );

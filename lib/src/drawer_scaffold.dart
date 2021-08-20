@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'menu_screen.dart';
-import 'utils.dart';
+import 'side_drawer.dart';
+import '../src/utils.dart';
 
 typedef Widget DrawerScaffoldBuilder(
     BuildContext context, MenuController menuController);

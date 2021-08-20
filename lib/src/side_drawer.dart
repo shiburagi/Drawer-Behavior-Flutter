@@ -1,6 +1,8 @@
 import 'dart:math';
 
-import 'package:drawerbehavior/drawer_scaffold.dart';
+import 'package:drawerbehavior/src/builder.dart';
+import 'package:drawerbehavior/src/drawer_scaffold.dart';
+import 'package:drawerbehavior/src/menu_item.dart';
 import 'package:flutter/material.dart';
 
 // final menuScreenKey = GlobalKey(debugLabel: 'MenuScreen');
@@ -9,8 +11,6 @@ enum Direction {
   left,
   right,
 }
-
-typedef SideDrawerItemBuilder = Function(BuildContext, MenuItem, bool);
 
 class SideDrawer<T> extends StatefulWidget {
   SideDrawer({
@@ -35,7 +35,7 @@ class SideDrawer<T> extends StatefulWidget {
     this.textStyle,
     EdgeInsets? padding,
     this.alignment = Alignment.centerLeft,
-    this.itemBuilder,
+    SideDrawerItemBuilder? itemBuilder,
     this.elevation = 16,
     this.cornerRadius,
     this.withSafeAre = true,
@@ -52,6 +52,53 @@ class SideDrawer<T> extends StatefulWidget {
                         .isEmpty ==
                     true,
             "\n\nFor peek menu,\nplease provide prefix or icon in MenuItem\n"),
+        this.itemBuilder = menu != null
+            ? MenuSideDrawerBuilder(menu, itemBuilder)
+            : WidgetSideDrawerBuilder(child ?? SizedBox()) as SideDrawerBuilder,
+        this.percentage = percentage ?? 0.8,
+        this.degree = degree == null ? null : max(min(45, degree), 15),
+        this.scaleDownCurve =
+            Interval(0.0, 0.3, curve: curve ?? Curves.easeOut),
+        this.scaleUpCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        this.slideOutCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        this.slideInCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        this.padding = padding ??
+            (peekMenu
+                ? const EdgeInsets.only(left: 16.0, top: 15.0, bottom: 15.0)
+                : const EdgeInsets.only(left: 40.0, top: 15.0, bottom: 15.0)),
+        super(key: key);
+
+  SideDrawer.builder({
+    required int itemCount,
+    required SideDrawerIndexBuilder builder,
+    this.headerView,
+    this.footerView,
+    this.selectedItemId,
+    this.slide = false,
+    double? percentage,
+    double? degree,
+    this.onMenuItemSelected,
+    this.color = Colors.white,
+    this.background,
+    this.animation = false,
+    this.direction = Direction.left,
+    this.selectorColor,
+    this.drawerWidth = 300,
+    this.peekSize = 56,
+    this.duration,
+    this.curve,
+    this.textStyle,
+    EdgeInsets? padding,
+    this.alignment = Alignment.centerLeft,
+    this.elevation = 16,
+    this.cornerRadius,
+    this.withSafeAre = true,
+    Key? key,
+    this.peekMenu = false,
+    this.hideOnItemPressed = true,
+  })  : menu = null,
+        child = null,
+        itemBuilder = CountSideDrawerBuilder(itemCount, builder),
         this.percentage = percentage ?? 0.8,
         this.degree = degree == null ? null : max(min(45, degree), 15),
         this.scaleDownCurve =
@@ -128,7 +175,7 @@ class SideDrawer<T> extends StatefulWidget {
   final Widget? footerView;
 
   /// Custom builder for menu item
-  final SideDrawerItemBuilder? itemBuilder;
+  final SideDrawerBuilder itemBuilder;
 
   /// Widget for side drawer
   final Widget? child;
@@ -205,30 +252,8 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
   }
 
   Widget createMenuItems(MenuController menuController) {
-    final List<Widget> listItems = [];
-
-    if (widget.child != null) {
-      listItems.add(widget.child ?? SizedBox());
-    } else {
-      final animationIntervalDuration = 0.5;
-      final perListItemDelay =
-          menuController.state != MenuState.closing ? 0.15 : 0.0;
-      final millis = menuController.state != MenuState.closing
-          ? 150 * widget.menu!.items.length
-          : 600;
-
-      final maxDuration = (widget.menu!.items.length - 1) * perListItemDelay +
-          animationIntervalDuration;
-
-      for (var i = 0; i < widget.menu!.items.length; ++i) {
-        final animationIntervalStart = i * perListItemDelay;
-        final animationIntervalEnd =
-            animationIntervalStart + animationIntervalDuration;
-        MenuItem item = widget.menu!.items[i];
-        listItems.add(buildListItem(menuController, item,
-            animationIntervalStart, animationIntervalEnd, millis, maxDuration));
-      }
-    }
+    final List<Widget> listItems =
+        widget.itemBuilder.build(context, widget, menuController);
 
     return Container(
       alignment: widget.alignment,
@@ -248,63 +273,6 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
         ),
       ),
     );
-  }
-
-  bool get useAnimation => widget.animation && !widget.peekMenu;
-  buildListItem(
-    MenuController menuController,
-    MenuItem item,
-    double animationIntervalStart,
-    double animationIntervalEnd,
-    int millis,
-    double maxDuration,
-  ) {
-    final isSelected = item.id == widget.selectedItemId;
-
-    Function onTap = () {
-      widget.onMenuItemSelected?.call(item.id);
-      if (widget.hideOnItemPressed) menuController.close();
-    };
-    Widget listItem = widget.itemBuilder == null
-        ? _MenuListItem(
-            padding: widget.peekMenu
-                ? EdgeInsets.zero
-                : const EdgeInsets.only(left: 32.0),
-            direction: widget.direction,
-            title: item.title,
-            isSelected: isSelected,
-            selectorColor: selectorColor,
-            textStyle: item.textStyle ?? textStyle,
-            menuView: widget,
-            width: maxSlideAmount,
-            icon: item.icon == null ? item.prefix : Icon(item.icon),
-            suffix: item.suffix,
-            onTap: onTap as dynamic Function()?,
-            drawBorder: !useAnimation)
-        : InkWell(
-            child: Container(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                child: widget.itemBuilder!(context, item, isSelected),
-                width: maxSlideAmount,
-              ),
-            ),
-            onTap: onTap as void Function()?,
-          );
-
-    if (useAnimation)
-      return AnimatedMenuListItem(
-        menuState: menuController.state,
-        isSelected: isSelected,
-        duration: Duration(milliseconds: millis),
-        curve: Interval(animationIntervalStart / maxDuration,
-            animationIntervalEnd / maxDuration,
-            curve: Curves.easeOut),
-        menuListItem: listItem,
-      );
-    else {
-      return listItem;
-    }
   }
 
   Widget createDrawer(MenuController menuController) {
@@ -423,7 +391,8 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
                   child: Stack(
                     children: [
                       createDrawer(menuController),
-                      useAnimation && shouldRenderSelector
+                      (widget.animation && !widget.peekMenu) &&
+                              shouldRenderSelector
                           ? ItemSelector(
                               right: widget.direction == Direction.right
                                   ? maxSlideAmount - 10
@@ -598,152 +567,6 @@ class _AnimatedMenuListItemState
         ),
         child: widget.menuListItem,
       ),
-    );
-  }
-}
-
-class _MenuListItem extends StatelessWidget {
-  final String title;
-  final bool? isSelected;
-  final bool drawBorder;
-  final Function()? onTap;
-  final Color? selectorColor;
-  final TextStyle? textStyle;
-  final SideDrawer? menuView;
-  final Widget? icon;
-  final Widget? suffix;
-  final Direction direction;
-  final double? width;
-  final EdgeInsets? padding;
-
-  _MenuListItem({
-    required this.title,
-    this.isSelected,
-    this.onTap,
-    this.menuView,
-    required this.textStyle,
-    required this.selectorColor,
-    this.icon,
-    this.drawBorder = false,
-    this.direction = Direction.right,
-    this.width,
-    this.padding,
-    this.suffix,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    TextStyle _textStyle = textStyle!
-        .copyWith(color: isSelected! ? selectorColor : textStyle!.color);
-
-    List<Widget> children = [];
-    if (icon != null)
-      children.add(Padding(
-        padding: EdgeInsets.only(right: 16),
-        child: IconTheme(
-            data: IconThemeData(color: _textStyle.color), child: icon!),
-      ));
-    children.add(
-      Expanded(
-        child: Container(
-          child: Text(
-            title,
-            style: _textStyle,
-          ),
-        ),
-        flex: 1,
-      ),
-    );
-    if (suffix != null)
-      children.add(Padding(
-        padding: EdgeInsets.only(right: 12),
-        child: IconTheme(
-            data: IconThemeData(color: _textStyle.color), child: suffix!),
-      ));
-    return InkWell(
-      onTap: isSelected! ? null : onTap,
-      child: Stack(
-        children: [
-          if (drawBorder)
-            Positioned(
-              top: 0,
-              bottom: 0,
-              child: Container(
-                width: 4,
-                color: isSelected == true ? selectorColor! : Colors.transparent,
-              ),
-            ),
-          Container(
-            width: width,
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: menuView?.padding ?? EdgeInsets.zero,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: children,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class Menu {
-  final List<MenuItem> items;
-
-  const Menu({
-    required this.items,
-  });
-}
-
-class MenuItem<T> {
-  final T? id;
-  final String title;
-
-  /// set icon from [MenuItem], if the icon is not null, the prefix must be null
-  final IconData? icon;
-
-  /// set prefix widget from [MenuItem], if the prefix is not null, the icon must be null
-  final Widget? prefix;
-
-  /// set prefix widget from [MenuItem]
-  final Widget? suffix;
-
-  /// set independent text style for title
-  final TextStyle? textStyle;
-
-  /// append data with [MenuItem], then can be use on itemBuilder
-  final dynamic data;
-
-  MenuItem({
-    this.id,
-    required this.title,
-    this.icon,
-    this.prefix,
-    this.suffix,
-    this.textStyle,
-    this.data,
-  }) : assert(prefix == null || icon == null);
-
-  MenuItem<T> copyWith({
-    T? id,
-    String? title,
-    IconData? icon,
-    Widget? prefix,
-    Widget? suffix,
-    TextStyle? textStyle,
-    dynamic data,
-  }) {
-    return MenuItem<T>(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      icon: icon,
-      prefix: prefix,
-      suffix: suffix,
-      textStyle: textStyle ?? this.textStyle,
-      data: data ?? this.data,
     );
   }
 }
