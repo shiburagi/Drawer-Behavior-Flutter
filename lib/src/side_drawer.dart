@@ -68,7 +68,7 @@ class SideDrawer<T> extends StatefulWidget {
                 : const EdgeInsets.only(left: 40.0, top: 15.0, bottom: 15.0)),
         super(key: key);
 
-  SideDrawer.builder({
+  SideDrawer.count({
     required int itemCount,
     required SideDrawerIndexBuilder builder,
     this.headerView,
@@ -99,6 +99,96 @@ class SideDrawer<T> extends StatefulWidget {
   })  : menu = null,
         child = null,
         itemBuilder = CountSideDrawerBuilder(itemCount, builder),
+        this.percentage = percentage ?? 0.8,
+        this.degree = degree == null ? null : max(min(45, degree), 15),
+        this.scaleDownCurve =
+            new Interval(0.0, 0.3, curve: curve ?? Curves.easeOut),
+        this.scaleUpCurve =
+            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        this.slideOutCurve =
+            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        this.slideInCurve =
+            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        this.padding = padding ??
+            (peekMenu
+                ? const EdgeInsets.only(left: 16.0, top: 15.0, bottom: 15.0)
+                : const EdgeInsets.only(left: 40.0, top: 15.0, bottom: 15.0)),
+        super(key: key);
+
+  SideDrawer.child({
+    required this.child,
+    this.headerView,
+    this.footerView,
+    this.slide = false,
+    double? percentage,
+    double? degree,
+    this.color = Colors.white,
+    this.background,
+    this.animation = false,
+    this.direction = Direction.left,
+    this.selectorColor,
+    this.drawerWidth = 300,
+    this.peekSize = 56,
+    this.duration,
+    this.curve,
+    this.textStyle,
+    EdgeInsets? padding,
+    this.alignment = Alignment.centerLeft,
+    this.elevation = 16,
+    this.cornerRadius,
+    this.withSafeAre = true,
+    Key? key,
+    this.peekMenu = false,
+    this.hideOnItemPressed = true,
+  })  : menu = null,
+        selectedItemId = null,
+        onMenuItemSelected = null,
+        itemBuilder = WidgetSideDrawerBuilder(child ?? SizedBox()),
+        this.percentage = percentage ?? 0.8,
+        this.degree = degree == null ? null : max(min(45, degree), 15),
+        this.scaleDownCurve =
+            new Interval(0.0, 0.3, curve: curve ?? Curves.easeOut),
+        this.scaleUpCurve =
+            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        this.slideOutCurve =
+            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        this.slideInCurve =
+            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        this.padding = padding ??
+            (peekMenu
+                ? const EdgeInsets.only(left: 16.0, top: 15.0, bottom: 15.0)
+                : const EdgeInsets.only(left: 40.0, top: 15.0, bottom: 15.0)),
+        super(key: key);
+
+  SideDrawer.custom({
+    required this.itemBuilder,
+    this.headerView,
+    this.footerView,
+    this.slide = false,
+    double? percentage,
+    double? degree,
+    this.color = Colors.white,
+    this.background,
+    this.animation = false,
+    this.direction = Direction.left,
+    this.selectorColor,
+    this.drawerWidth = 300,
+    this.peekSize = 56,
+    this.duration,
+    this.curve,
+    this.textStyle,
+    EdgeInsets? padding,
+    this.alignment = Alignment.centerLeft,
+    this.elevation = 16,
+    this.cornerRadius,
+    this.withSafeAre = true,
+    Key? key,
+    this.peekMenu = false,
+    this.hideOnItemPressed = true,
+  })  : menu = null,
+        selectedItemId = null,
+        onMenuItemSelected = null,
+        child = null,
         this.percentage = percentage ?? 0.8,
         this.degree = degree == null ? null : max(min(45, degree), 15),
         this.scaleDownCurve =
@@ -252,9 +342,6 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
   }
 
   Widget createMenuItems(MenuController menuController) {
-    final List<Widget> listItems =
-        widget.itemBuilder.build(context, widget, menuController);
-
     return Container(
       alignment: widget.alignment,
       margin: EdgeInsets.only(
@@ -265,11 +352,7 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
                   (widget.peekMenu ? widget.peekSize : 0)),
       child: SingleChildScrollView(
         child: Container(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: listItems,
-          ),
+          child: widget.itemBuilder.build(context, widget, menuController),
         ),
       ),
     );

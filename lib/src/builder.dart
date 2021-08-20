@@ -10,7 +10,7 @@ typedef SideDrawerIndexBuilder = Function(
     BuildContext context, int index, bool selected);
 
 abstract class SideDrawerBuilder<T> {
-  List<Widget> build(
+  Widget build(
       BuildContext context, SideDrawer drawer, MenuController menuController);
   Widget buildItem(BuildContext context, T t, bool selected);
 }
@@ -94,7 +94,7 @@ class MenuSideDrawerBuilder extends SideDrawerBuilder<MenuItem> {
   }
 
   @override
-  List<Widget> build(
+  Widget build(
       BuildContext context, SideDrawer drawer, MenuController menuController) {
     final animationIntervalDuration = 0.5;
     final perListItemDelay =
@@ -107,7 +107,7 @@ class MenuSideDrawerBuilder extends SideDrawerBuilder<MenuItem> {
         (menu.items.length - 1) * perListItemDelay + animationIntervalDuration;
 
     int i = 0;
-    return menu.items.map((e) {
+    final items = menu.items.map((e) {
       final animationIntervalStart = i * perListItemDelay;
       final animationIntervalEnd =
           animationIntervalStart + animationIntervalDuration;
@@ -116,6 +116,12 @@ class MenuSideDrawerBuilder extends SideDrawerBuilder<MenuItem> {
       return buildListItem(context, drawer, menuController, item,
           animationIntervalStart, animationIntervalEnd, millis, maxDuration);
     }).toList();
+
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: items,
+    );
   }
 }
 
@@ -133,9 +139,9 @@ class CountSideDrawerBuilder extends SideDrawerBuilder<int> {
   }
 
   @override
-  List<Widget> build(
+  Widget build(
       BuildContext context, SideDrawer drawer, MenuController menuController) {
-    return List.generate(itemCount, (e) {
+    final items = List.generate(itemCount, (e) {
       final onTap = () {
         drawer.onMenuItemSelected?.call(e);
         if (drawer.hideOnItemPressed) menuController.close();
@@ -151,6 +157,12 @@ class CountSideDrawerBuilder extends SideDrawerBuilder<int> {
         onTap: onTap,
       );
     });
+
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: items,
+    );
   }
 }
 
@@ -166,8 +178,12 @@ class WidgetSideDrawerBuilder extends SideDrawerBuilder {
   }
 
   @override
-  List<Widget> build(
+  Widget build(
       BuildContext context, SideDrawer drawer, MenuController menuController) {
-    return [buildItem(context, null, false)];
+    return Container(
+      alignment: Alignment.topLeft,
+      width: drawer.maxSlideAmount(context),
+      child: buildItem(context, null, false),
+    );
   }
 }

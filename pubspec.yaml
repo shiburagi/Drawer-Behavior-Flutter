@@ -1,6 +1,6 @@
 name: drawerbehavior
 description: Drawer behavior is a library that provide an extra behavior on drawer, such as, move view or scaling view's height while drawer on slide..
-version: 2.3.0-dev
+version: 2.3.0-dev.1
 # author: Shiburagi <tr32010@gmail.com>
 homepage: https://github.com/shiburagi/Drawer-Behavior-Flutter
 
@@ -15,6 +15,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   pedantic: ^1.10.0
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec

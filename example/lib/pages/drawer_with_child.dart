@@ -72,19 +72,13 @@ class _DrawerWithChildState extends State<DrawerWithChild> {
           title: Text("Drawer - Custom  Item"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       drawers: [
-        SideDrawer(
+        SideDrawer.child(
           percentage: 1,
           headerView: headerView(context),
           animation: false,
           alignment: Alignment.topLeft,
           color: Theme.of(context).primaryColor,
-          selectedItemId: selectedMenuItemId,
           child: Icon(Icons.ac_unit),
-          onMenuItemSelected: (itemId) {
-            setState(() {
-              selectedMenuItemId = itemId;
-            });
-          },
         )
       ],
       builder: (context, id) => IndexedStack(

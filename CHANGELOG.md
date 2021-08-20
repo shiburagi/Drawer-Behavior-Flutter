@@ -1,6 +1,9 @@
+# 2.3.0-dev.1
+* new ClassName.identifier: **SideDrawer.count()**, **SideDrawer.child()** and **SideDrawer.custom()**
+
 # 2.3.0-dev
 * peek menu
-* hideOnItemPressed 
+* hideOnItemPressed
 
 # 2.2.1
 * withSafeArea attribute

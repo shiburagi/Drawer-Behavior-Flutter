@@ -76,7 +76,7 @@ class _DrawerCustomItemByCountState extends State<DrawerCustomItemByCount> {
           title: Text("Drawer - Custom Item by Item"),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       drawers: [
-        SideDrawer.builder(
+        SideDrawer.count(
           itemCount: itemCount,
           percentage: 1,
           headerView: headerView(context),

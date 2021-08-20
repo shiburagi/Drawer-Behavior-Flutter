@@ -20,14 +20,11 @@ https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
 ## Table of contents
 - [Drawer Behavior - Flutter](#drawer-behavior---flutter)
   - [Table of contents](#table-of-contents)
-    - [Todo : https://github.com/shiburagi/Drawer-Behavior-Flutter/projects/1](#todo--httpsgithubcomshiburagidrawer-behavior-flutterprojects1)
-  - [### NEW UPDATES](#-new-updates)
-  - [- ClassName.identifier: **SideDrawer.count()**, **SideDrawer.child()** and **SideDrawer.custom()**](#--classnameidentifier-sidedrawercount-sidedrawerchild-and-sidedrawercustom)
-  - [- Sound null-safety](#--sound-null-safety)
-  - [- Right Drawer](#--right-drawer)
-  - [- AndroidX support](#--androidx-support)
+    - [Todo](#todo)
+    - [NEW UPDATES](#new-updates)
   - [Usage](#usage)
-  - [### For **Android** : Drawer-Behavior](#-for-android--drawer-behavior)
+    - [Android Native](#android-native)
+  - [Drawer-Behavior](#drawer-behavior)
   - [Example](#example)
   - [## Migration (Null-safety Release)](#-migration-null-safety-release)
     - [mainDrawer (DrawerScaffold) -> defaultDirection (DrawerScaffold)](#maindrawer-drawerscaffold---defaultdirection-drawerscaffold)
@@ -47,30 +44,30 @@ https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
   - [Contributor](#contributor)
 
 
-### Todo : https://github.com/shiburagi/Drawer-Behavior-Flutter/projects/1
+### Todo 
+ https://github.com/shiburagi/Drawer-Behavior-Flutter/projects/1
 
 
 ### NEW UPDATES
----
+
 **Version 2.3**
 - Peek Menu
 - ClassName.identifier: **SideDrawer.count()**, **SideDrawer.child()** and **SideDrawer.custom()**
----
+
 **Version 2.0**
 - Sound null-safety
----
+
 **Version 1.0**
 - Elevation Config
 - 3D effect
 - Multi-Drawer
 - Right Drawer
----
+
 **Version 0.0**
 - Floating action button with location and animator
 - Bottom navigation bar
 - Extended body
 - AndroidX support  
----
 
 
 ## Usage
@@ -103,10 +100,10 @@ Now in your Dart code, you can use:
 ```dart
 import 'package:drawerbehavior/drawerbehavior.dart';
 ```
-
----
-### For **Android** : [Drawer-Behavior](https://github.com/shiburagi/Drawer-Behavior)
----
+--- <!-- no toc -->
+### Android Native
+[Drawer-Behavior](https://github.com/shiburagi/Drawer-Behavior)
+--- <!-- no toc -->
 
 
 ## Example
@@ -162,7 +159,7 @@ class _DrawerScaleState extends State<DrawerScale> {
 
 ```
 ## Migration (Null-safety Release)
----
+--- <!-- no toc -->
 ### mainDrawer (DrawerScaffold) -> defaultDirection (DrawerScaffold)
 ```dart
 new DrawerScaffold(
@@ -177,10 +174,10 @@ new DrawerScaffold(
   ...
 );
 ```
----
+--- <!-- no toc -->
 
 ## Migration
----
+--- <!-- no toc -->
 ### contentView (Screen) -> builder (ScreenBuilder)
 ```dart
 contentView: Screen(
@@ -192,7 +189,7 @@ contentView: Screen(
 ```dart
 builder: (context, id) => Center(child: _widget),
 ```
----
+--- <!-- no toc -->
 ### menuView (MenuView) -> drawers (List\<SideDrawer>)
 ```dart
 menuView: new MenuView(
