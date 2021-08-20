@@ -45,7 +45,7 @@ class _DrawerSlideWithFooterState extends State<DrawerSlideWithFooter> {
                         "John Witch",
                         style: Theme.of(context)
                             .textTheme
-                            .subhead
+                            .subtitle1
                             ?.copyWith(color: Colors.white),
                       ),
                       Text(

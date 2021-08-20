@@ -41,7 +41,7 @@ class _DrawerSlideWithHeaderState extends State<DrawerSlideWithHeader> {
                         "John Witch",
                         style: Theme.of(context)
                             .textTheme
-                            .subhead
+                            .subtitle1
                             ?.copyWith(color: Colors.white),
                       ),
                       Text(
