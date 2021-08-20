@@ -52,6 +52,8 @@ class _DrawerLeftAndRightState extends State<DrawerLeftAndRight> {
         ),
         SideDrawer(
           menu: menu,
+          percentage: 0.7,
+          // elevation: 0,
           direction: Direction.right,
           animation: true,
           selectorColor: Colors.white,

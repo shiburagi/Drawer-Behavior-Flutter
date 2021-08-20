@@ -44,6 +44,14 @@ class SideDrawer<T> extends StatefulWidget {
     this.hideOnItemPressed = true,
   })  : assert((child != null && menu == null && itemBuilder == null) ||
             (child == null && menu != null)),
+        assert(
+            !peekMenu ||
+                menu?.items
+                        .where((element) =>
+                            element.prefix == null && element.icon == null)
+                        .isEmpty ==
+                    true,
+            "\n\nFor peek menu,\nplease provide prefix or icon in MenuItem\n"),
         this.percentage = percentage ?? 0.8,
         this.degree = degree == null ? null : max(min(45, degree), 15),
         this.scaleDownCurve =
@@ -73,7 +81,7 @@ class SideDrawer<T> extends StatefulWidget {
   /// Degree of rotation : 15->45 degree
   final double? degree;
 
-  /// peekSize
+  /// peekSize, default = 56
   final double peekSize;
 
   /// Drawer's width in Pixel,
@@ -158,8 +166,7 @@ class SideDrawer<T> extends StatefulWidget {
   /// to enable/disable [SafeArea] for headerView & footerView, default = true
   final bool withSafeAre;
 
-  double maxSlideAmount(context) =>
-      drawerWidth; // ?? MediaQuery.of(context).size.width * percentage;
+  double maxSlideAmount(context) => drawerWidth - (peekMenu ? peekSize : 0);
 
   @override
   _SideDrawerState createState() => _SideDrawerState();
@@ -386,8 +393,10 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
               shouldRenderSelector = false;
             }
           }
-          MenuController controller = DrawerScaffold.currentController(context);
-          debugPrint("width: ${widget.drawerWidth + controller.slideAmount}");
+
+          MenuController? controller =
+              DrawerScaffold.getControllerFor(context, this.widget);
+
           return Container(
             // padding: widget.direction == Direction.right
             //     ? const EdgeInsets.only(left: 24)
@@ -403,7 +412,9 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
               offset: widget.direction == Direction.left || !widget.peekMenu
                   ? Offset.zero
                   : Offset(
-                      (widget.drawerWidth + controller.slideAmount)
+                      (widget.drawerWidth +
+                              (controller?.slideAmount ?? 0) -
+                              widget.peekSize)
                           .clamp(0, widget.drawerWidth),
                       0),
               child: Center(
@@ -414,13 +425,12 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
                       createDrawer(menuController),
                       useAnimation && shouldRenderSelector
                           ? ItemSelector(
-                              left: widget.direction == Direction.right
-                                  ? MediaQuery.of(context).size.width -
-                                      maxSlideAmount
-                                  : 0,
+                              right: widget.direction == Direction.right
+                                  ? maxSlideAmount - 10
+                                  : null,
                               selectorColor: selectorColor,
-                              top: actualSelectorYTop,
-                              bottom: actualSelectorYBottom,
+                              top: actualSelectorYTop ?? 0,
+                              bottom: actualSelectorYBottom ?? 0,
                               opacity: selectorOpacity)
                           : Container(),
                     ],
@@ -445,17 +455,17 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
 }
 
 class ItemSelector extends ImplicitlyAnimatedWidget {
-  final double? top;
-  final double? bottom;
-  final double? left;
+  final double top;
+  final double bottom;
+  final double? right;
   final double? opacity;
 
   final Color? selectorColor;
 
   ItemSelector({
-    this.left,
-    this.top,
-    this.bottom,
+    this.right,
+    required this.top,
+    required this.bottom,
     this.opacity,
     this.selectorColor,
   }) : super(duration: const Duration(milliseconds: 250));
@@ -473,17 +483,17 @@ class _ItemSelectorState extends AnimatedWidgetBaseState<ItemSelector> {
   void forEachTween(visitor) {
     _topY = visitor(
       _topY,
-      widget.top!,
+      widget.top,
       (dynamic value) => Tween<double>(begin: value),
     ) as Tween<double?>?;
     _bottomY = visitor(
       _bottomY,
-      widget.bottom!,
+      widget.bottom,
       (dynamic value) => Tween<double>(begin: value),
     ) as Tween<double?>?;
     _opacity = visitor(
       _opacity,
-      widget.opacity!,
+      widget.opacity,
       (dynamic value) => Tween<double>(begin: value),
     ) as Tween<double?>?;
   }
@@ -491,10 +501,10 @@ class _ItemSelectorState extends AnimatedWidgetBaseState<ItemSelector> {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      top: _topY!.evaluate(animation),
-      left: widget.left,
+      top: _topY?.evaluate(animation),
+      right: widget.right,
       child: Opacity(
-        opacity: _opacity!.evaluate(animation)!,
+        opacity: _opacity?.evaluate(animation) ?? 0,
         child: Container(
           width: 5.0,
           height: _bottomY!.evaluate(animation)! - _topY!.evaluate(animation)!,

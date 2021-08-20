@@ -21,7 +21,7 @@ class _DrawerPeekRightState extends State<DrawerPeekRight> {
     return DrawerScaffold(
       controller: controller,
       defaultDirection: Direction.right,
-      appBar: AppBar(title: Text("Drawer - Peek Left"), actions: [
+      appBar: AppBar(title: Text("Drawer - Peek Right"), actions: [
         IconButton(
             icon: Icon(Icons.notifications_none),
             onPressed: () {
