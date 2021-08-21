@@ -6,7 +6,7 @@ import 'package:drawerbehavior/src/menu_item.dart';
 import 'package:flutter/material.dart';
 
 // final menuScreenKey = GlobalKey(debugLabel: 'MenuScreen');
-
+typedef MenuItemSelected<T> = Null Function(T);
 enum Direction {
   left,
   right,
@@ -53,8 +53,9 @@ class SideDrawer<T> extends StatefulWidget {
                     true,
             "\n\nFor peek menu,\nplease provide prefix or icon in MenuItem\n"),
         this.itemBuilder = menu != null
-            ? MenuSideDrawerBuilder(menu, itemBuilder)
-            : WidgetSideDrawerBuilder(child ?? SizedBox()) as SideDrawerBuilder,
+            ? MenuSideDrawerBuilder<T>(menu, itemBuilder)
+            : WidgetSideDrawerBuilder<T>(child ?? SizedBox())
+                as SideDrawerBuilder,
         this.percentage = percentage ?? 0.8,
         this.degree = degree == null ? null : max(min(45, degree), 15),
         this.scaleDownCurve =
@@ -62,53 +63,6 @@ class SideDrawer<T> extends StatefulWidget {
         this.scaleUpCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
         this.slideOutCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
         this.slideInCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
-        this.padding = padding ??
-            (peekMenu
-                ? const EdgeInsets.only(left: 16.0, top: 15.0, bottom: 15.0)
-                : const EdgeInsets.only(left: 40.0, top: 15.0, bottom: 15.0)),
-        super(key: key);
-
-  SideDrawer.count({
-    required int itemCount,
-    required SideDrawerIndexBuilder builder,
-    this.headerView,
-    this.footerView,
-    this.selectedItemId,
-    this.slide = false,
-    double? percentage,
-    double? degree,
-    this.onMenuItemSelected,
-    this.color = Colors.white,
-    this.background,
-    this.animation = false,
-    this.direction = Direction.left,
-    this.selectorColor,
-    this.drawerWidth = 300,
-    this.peekSize = 56,
-    this.duration,
-    this.curve,
-    this.textStyle,
-    EdgeInsets? padding,
-    this.alignment = Alignment.centerLeft,
-    this.elevation = 16,
-    this.cornerRadius,
-    this.withSafeAre = true,
-    Key? key,
-    this.peekMenu = false,
-    this.hideOnItemPressed = true,
-  })  : menu = null,
-        child = null,
-        itemBuilder = CountSideDrawerBuilder(itemCount, builder),
-        this.percentage = percentage ?? 0.8,
-        this.degree = degree == null ? null : max(min(45, degree), 15),
-        this.scaleDownCurve =
-            new Interval(0.0, 0.3, curve: curve ?? Curves.easeOut),
-        this.scaleUpCurve =
-            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
-        this.slideOutCurve =
-            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
-        this.slideInCurve =
-            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
         this.padding = padding ??
             (peekMenu
                 ? const EdgeInsets.only(left: 16.0, top: 15.0, bottom: 15.0)
@@ -205,6 +159,110 @@ class SideDrawer<T> extends StatefulWidget {
                 : const EdgeInsets.only(left: 40.0, top: 15.0, bottom: 15.0)),
         super(key: key);
 
+  SideDrawer._({
+    required this.itemBuilder,
+    this.selectedItemId,
+    this.onMenuItemSelected,
+    this.headerView,
+    this.footerView,
+    this.slide = false,
+    double? percentage,
+    double? degree,
+    this.color = Colors.white,
+    this.background,
+    this.animation = false,
+    this.direction = Direction.left,
+    this.selectorColor,
+    this.drawerWidth = 300,
+    this.peekSize = 56,
+    this.duration,
+    this.curve,
+    this.textStyle,
+    EdgeInsets? padding,
+    this.alignment = Alignment.centerLeft,
+    this.elevation = 16,
+    this.cornerRadius,
+    this.withSafeAre = true,
+    Key? key,
+    this.peekMenu = false,
+    this.hideOnItemPressed = true,
+  })  : menu = null,
+        child = null,
+        this.percentage = percentage ?? 0.8,
+        this.degree = degree == null ? null : max(min(45, degree), 15),
+        this.scaleDownCurve =
+            new Interval(0.0, 0.3, curve: curve ?? Curves.easeOut),
+        this.scaleUpCurve =
+            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        this.slideOutCurve =
+            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        this.slideInCurve =
+            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        this.padding = padding ??
+            (peekMenu
+                ? const EdgeInsets.only(left: 16.0, top: 15.0, bottom: 15.0)
+                : const EdgeInsets.only(left: 40.0, top: 15.0, bottom: 15.0)),
+        super(key: key);
+
+  static SideDrawer<int> count({
+    required int itemCount,
+    required SideDrawerIndexBuilder builder,
+    Widget? headerView,
+    Widget? footerView,
+    int? selectedItemId,
+    bool slide = false,
+    double? percentage,
+    double? degree,
+    MenuItemSelected<int>? onMenuItemSelected,
+    Color color = Colors.white,
+    DecorationImage? background,
+    bool animation = false,
+    Direction direction = Direction.left,
+    Color? selectorColor,
+    double drawerWidth = 300,
+    double peekSize = 56,
+    Duration? duration,
+    Curve? curve,
+    TextStyle? textStyle,
+    EdgeInsets? padding,
+    Alignment alignment = Alignment.centerLeft,
+    double elevation = 16,
+    double? cornerRadius,
+    bool withSafeAre = true,
+    Key? key,
+    bool peekMenu = false,
+    bool hideOnItemPressed = true,
+  }) {
+    return SideDrawer<int>._(
+      itemBuilder: CountSideDrawerBuilder(itemCount, builder),
+      alignment: alignment,
+      animation: animation,
+      background: background,
+      color: color,
+      cornerRadius: cornerRadius,
+      curve: curve,
+      degree: degree,
+      direction: direction,
+      drawerWidth: drawerWidth,
+      duration: duration,
+      elevation: elevation,
+      footerView: footerView,
+      headerView: headerView,
+      hideOnItemPressed: hideOnItemPressed,
+      key: key,
+      onMenuItemSelected: onMenuItemSelected,
+      padding: padding,
+      peekMenu: peekMenu,
+      peekSize: peekSize,
+      percentage: percentage,
+      selectedItemId: selectedItemId,
+      selectorColor: selectorColor,
+      slide: slide,
+      textStyle: textStyle,
+      withSafeAre: withSafeAre,
+    );
+  }
+
   /// Scaling Percentage base on width and height
   final double percentage;
 
@@ -238,7 +296,7 @@ class SideDrawer<T> extends StatefulWidget {
   final Duration? duration;
 
   /// [Menu] for drawer
-  final Menu? menu;
+  final Menu<T>? menu;
 
   /// Current selected ID
   final T? selectedItemId;
@@ -256,7 +314,7 @@ class SideDrawer<T> extends StatefulWidget {
   final bool slide;
 
   /// listen to menu selected
-  final Function(T)? onMenuItemSelected;
+  final MenuItemSelected<T>? onMenuItemSelected;
 
   /// [Widget] for header on drawer
   final Widget? headerView;

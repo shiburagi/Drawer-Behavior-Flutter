@@ -8,7 +8,7 @@ class DrawerPeekRight extends StatefulWidget {
 }
 
 class _DrawerPeekRightState extends State<DrawerPeekRight> {
-  late int selectedMenuItemId;
+  int? selectedMenuItemId;
   DrawerScaffoldController controller = DrawerScaffoldController();
   @override
   void initState() {

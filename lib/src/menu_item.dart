@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class Menu {
-  final List<MenuItem> items;
+class Menu<T> {
+  final List<MenuItem<T>> items;
 
   const Menu({
     required this.items,

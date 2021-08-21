@@ -8,7 +8,7 @@ class DrawerRight extends StatefulWidget {
 }
 
 class _DrawerRightState extends State<DrawerRight> {
-  late int selectedMenuItemId;
+  int? selectedMenuItemId;
   DrawerScaffoldController controller = DrawerScaffoldController();
   @override
   void initState() {

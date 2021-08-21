@@ -9,7 +9,7 @@ class DrawerCustomItemByCount extends StatefulWidget {
 }
 
 class _DrawerCustomItemByCountState extends State<DrawerCustomItemByCount> {
-  late int selectedMenuItemId;
+  int? selectedMenuItemId;
   final DrawerScaffoldController controller = DrawerScaffoldController();
   @override
   void initState() {

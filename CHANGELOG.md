@@ -1,3 +1,6 @@
+# 2.3.0-dev.2
+* Fix function type mismatch
+
 # 2.3.0-dev.1
 * new ClassName.identifier: **SideDrawer.count()**, **SideDrawer.child()** and **SideDrawer.custom()**
 

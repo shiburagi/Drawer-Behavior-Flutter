@@ -1,7 +1,7 @@
 import 'package:drawerbehavior/drawerbehavior.dart';
 import 'package:flutter/material.dart';
 
-List<MenuItem> items = [
+List<MenuItem<int>> items = [
   new MenuItem<int>(
     id: 0,
     title: 'THE PADDOCK',
@@ -27,6 +27,6 @@ final menu = Menu(
   items: items.map((e) => e.copyWith(prefix: null)).toList(),
 );
 
-final menuWithIcon = Menu(
+final menuWithIcon = Menu<int>(
   items: items,
 );

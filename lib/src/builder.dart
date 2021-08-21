@@ -9,15 +9,15 @@ typedef SideDrawerItemBuilder = Function(
 typedef SideDrawerIndexBuilder = Function(
     BuildContext context, int index, bool selected);
 
-abstract class SideDrawerBuilder<T> {
-  Widget build(
-      BuildContext context, SideDrawer drawer, MenuController menuController);
+abstract class SideDrawerBuilder<T, Type> {
+  Widget build(BuildContext context, SideDrawer<Type> drawer,
+      MenuController menuController);
   Widget buildItem(BuildContext context, T t, bool selected);
 }
 
-class MenuSideDrawerBuilder extends SideDrawerBuilder<MenuItem> {
+class MenuSideDrawerBuilder<Type> extends SideDrawerBuilder<MenuItem, Type> {
   final SideDrawerItemBuilder? builder;
-  final Menu menu;
+  final Menu<Type> menu;
 
   MenuSideDrawerBuilder(
     this.menu,
@@ -30,7 +30,7 @@ class MenuSideDrawerBuilder extends SideDrawerBuilder<MenuItem> {
 
   Widget buildListItem(
     BuildContext context,
-    SideDrawer widget,
+    SideDrawer<Type> widget,
     MenuController menuController,
     MenuItem item,
     double animationIntervalStart,
@@ -46,10 +46,6 @@ class MenuSideDrawerBuilder extends SideDrawerBuilder<MenuItem> {
             color: widget.color.computeLuminance() < 0.5
                 ? Colors.white
                 : Colors.black);
-    final onTap = () {
-      widget.onMenuItemSelected?.call(item.id);
-      if (widget.hideOnItemPressed) menuController.close();
-    };
     bool useAnimation = widget.animation && !widget.peekMenu;
 
     Widget listItem = InkWell(
@@ -75,7 +71,10 @@ class MenuSideDrawerBuilder extends SideDrawerBuilder<MenuItem> {
                 width: widget.maxSlideAmount(context),
               ),
             ),
-      onTap: onTap,
+      onTap: () {
+        widget.onMenuItemSelected?.call(item.id);
+        if (widget.hideOnItemPressed) menuController.close();
+      },
     );
 
     if (useAnimation)
@@ -94,8 +93,8 @@ class MenuSideDrawerBuilder extends SideDrawerBuilder<MenuItem> {
   }
 
   @override
-  Widget build(
-      BuildContext context, SideDrawer drawer, MenuController menuController) {
+  Widget build(BuildContext context, SideDrawer<Type> drawer,
+      MenuController menuController) {
     final animationIntervalDuration = 0.5;
     final perListItemDelay =
         menuController.state != MenuState.closing ? 0.15 : 0.0;
@@ -125,7 +124,7 @@ class MenuSideDrawerBuilder extends SideDrawerBuilder<MenuItem> {
   }
 }
 
-class CountSideDrawerBuilder extends SideDrawerBuilder<int> {
+class CountSideDrawerBuilder extends SideDrawerBuilder<int, int> {
   final SideDrawerIndexBuilder builder;
   final int itemCount;
 
@@ -139,8 +138,8 @@ class CountSideDrawerBuilder extends SideDrawerBuilder<int> {
   }
 
   @override
-  Widget build(
-      BuildContext context, SideDrawer drawer, MenuController menuController) {
+  Widget build(BuildContext context, SideDrawer<int> drawer,
+      MenuController menuController) {
     final items = List.generate(itemCount, (e) {
       final onTap = () {
         drawer.onMenuItemSelected?.call(e);
@@ -166,7 +165,7 @@ class CountSideDrawerBuilder extends SideDrawerBuilder<int> {
   }
 }
 
-class WidgetSideDrawerBuilder extends SideDrawerBuilder {
+class WidgetSideDrawerBuilder<T> extends SideDrawerBuilder<Null, T> {
   final Widget child;
 
   WidgetSideDrawerBuilder(

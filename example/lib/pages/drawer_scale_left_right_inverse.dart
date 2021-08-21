@@ -9,7 +9,7 @@ class DrawerLeftAndRightInverse extends StatefulWidget {
 }
 
 class _DrawerLeftAndRightInverseState extends State<DrawerLeftAndRightInverse> {
-  late int selectedMenuItemId;
+  int? selectedMenuItemId;
   DrawerScaffoldController controller = DrawerScaffoldController();
   @override
   void initState() {

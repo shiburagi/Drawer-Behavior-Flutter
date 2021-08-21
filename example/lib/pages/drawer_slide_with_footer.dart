@@ -8,7 +8,7 @@ class DrawerSlideWithFooter extends StatefulWidget {
 }
 
 class _DrawerSlideWithFooterState extends State<DrawerSlideWithFooter> {
-  late int selectedMenuItemId;
+  int? selectedMenuItemId;
 
   @override
   void initState() {

@@ -8,7 +8,7 @@ class DrawerSlideWithHeader extends StatefulWidget {
 }
 
 class _DrawerSlideWithHeaderState extends State<DrawerSlideWithHeader> {
-  late int selectedMenuItemId;
+  int? selectedMenuItemId;
 
   @override
   void initState() {

@@ -9,7 +9,7 @@ class DrawerSlideCustomAppBar extends StatefulWidget {
 }
 
 class _DrawerSlideCustomAppBarState extends State<DrawerSlideCustomAppBar> {
-  late int selectedMenuItemId;
+  int? selectedMenuItemId;
 
   @override
   void initState() {

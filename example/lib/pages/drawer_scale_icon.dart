@@ -8,7 +8,7 @@ class DrawerScaleIcon extends StatefulWidget {
 }
 
 class _DrawerScaleIconState extends State<DrawerScaleIcon> {
-  late int selectedMenuItemId;
+  int? selectedMenuItemId;
 
   @override
   void initState() {
