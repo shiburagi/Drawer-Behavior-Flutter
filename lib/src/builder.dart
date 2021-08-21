@@ -18,14 +18,14 @@ abstract class SideDrawerBuilder<ItemType, IdType> {
   SideDrawer<IdType>? get drawer => _drawer;
 
   onSelected(IdType id) {
-    menuController?.value = id;
+    menuController?.updateValue(id);
     drawer?.onMenuItemSelected?.call(id);
     if (drawer?.hideOnItemPressed == true) menuController?.close();
   }
 
   IdType? get selectedId => menuController?.value;
 
-  set(SideDrawer<IdType> drawer, MenuController menuController) {
+  set(SideDrawer<IdType> drawer, MenuController? menuController) {
     this._menuController = menuController;
     this._drawer = drawer;
   }

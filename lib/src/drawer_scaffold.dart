@@ -4,7 +4,7 @@ import 'side_drawer.dart';
 import '../src/utils.dart';
 
 typedef Widget DrawerScaffoldBuilder(
-    BuildContext context, MenuController menuController);
+    BuildContext context, MenuController? menuController);
 
 /// a Scaffold wrapper
 class DrawerScaffold extends StatefulWidget {
@@ -133,8 +133,9 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
 
   int get mainDrawerIndex => max(
       0,
-      widget.drawers!.indexWhere(
-          (element) => element.direction == widget.defaultDirection));
+      widget.drawers?.indexWhere(
+              (element) => element.direction == widget.defaultDirection) ??
+          0);
   @override
   void initState() {
     super.initState();
@@ -213,19 +214,22 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
 
   assignContoller() {
     if (menuControllers == null)
-      menuControllers ??= widget.drawers!.map(createController).toList();
+      menuControllers ??= widget.drawers?.map(createController).toList();
     else
       for (var i = 0;
-          i < widget.drawers!.length && i < menuControllers!.length;
+          i < (widget.drawers?.length ?? 0) &&
+              i < (menuControllers?.length ?? 0);
           i++) {
         menuControllers![i]._drawer = widget.drawers![i];
       }
-    for (var i = menuControllers!.length; i < widget.drawers!.length; i++) {
+    for (var i = menuControllers?.length ?? 0;
+        i < (widget.drawers?.length ?? 0);
+        i++) {
       menuControllers!.add(createController(widget.drawers![i]));
     }
     if (widget.controller != null) {
-      widget.controller!._menuControllers = menuControllers;
-      widget.controller!._setFocus = (index) {
+      widget.controller?._menuControllers = menuControllers;
+      widget.controller?._setFocus = (index) {
         focusDrawerIndex = index;
       };
     }
@@ -233,13 +237,13 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
 
   void updateDrawerState() {
     if (widget.controller != null) {
-      if (widget.controller!._open != null)
-        menuControllers!
-            .firstWhere((element) =>
+      if (widget.controller?._open != null)
+        menuControllers
+            ?.firstWhere((element) =>
                 element._drawer.direction == widget.controller!._open)
             .open();
       else
-        menuControllers!.forEach((element) {
+        menuControllers?.forEach((element) {
           element.close();
         });
     }
@@ -298,13 +302,15 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
 
   T? selectedItemId;
   bool isDrawerOpen() {
-    return menuControllers!.where((element) => element.isOpen()).isNotEmpty;
+    return menuControllers?.where((element) => element.isOpen()).isNotEmpty ==
+        true;
   }
 
   int drawerFrom(Direction direction) {
-    return menuControllers!.indexWhere((element) {
-      return element._drawer.direction == direction;
-    });
+    return menuControllers?.indexWhere((element) {
+          return element._drawer.direction == direction;
+        }) ??
+        -1;
   }
 
   createContentDisplay() {
@@ -341,7 +347,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
                 absorbing: isDrawerOpen() && widget.appBar != null,
                 child: _scaffoldWidget),
             onTap: () {
-              menuControllers!.forEach((element) {
+              menuControllers?.forEach((element) {
                 if (element.isOpen()) element.close();
               });
             },
@@ -405,7 +411,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
             },
             onHorizontalDragEnd: (details) {
               if (startDx == -1) return;
-              menuControllers!.forEach((menuController) {
+              menuControllers?.forEach((menuController) {
                 if (percentage < 0.5) {
                   menuController.close();
                 } else {
@@ -429,7 +435,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
                 onWillPop: () {
                   return Future(() {
                     if (isDrawerOpen()) {
-                      menuControllers!.forEach((element) {
+                      menuControllers?.forEach((element) {
                         element.close();
                       });
                       return false;
@@ -508,7 +514,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
     // if (menuControllers?[focusDrawerIndex].state == MenuState.closed) {
     //   focusDrawerIndex = drawerFrom(widget.defaultDirection);
     // }
-    focusDrawerIndex = min(widget.drawers!.length - 1, focusDrawerIndex);
+    focusDrawerIndex = min((widget.drawers?.length ?? 1) - 1, focusDrawerIndex);
 
     return Stack(
       children: [
@@ -555,7 +561,7 @@ class DrawerScaffoldMenuControllerState
     super.initState();
 
     menuController = getMenuController(context, widget.direction);
-    menuController!.addListener(_onMenuControllerChange);
+    menuController?.addListener(_onMenuControllerChange);
   }
 
   @override
@@ -569,18 +575,21 @@ class DrawerScaffoldMenuControllerState
 
   @override
   void dispose() {
-    menuController!.removeListener(_onMenuControllerChange);
+    menuController?.removeListener(_onMenuControllerChange);
     super.dispose();
   }
 
-  MenuController getMenuController(BuildContext context,
+  MenuController? getMenuController(BuildContext context,
       [Direction? direction = Direction.left]) {
     final scaffoldState =
         context.findAncestorStateOfType<_DrawerScaffoldState>()!;
-    return scaffoldState.menuControllers!.firstWhere(
-      (element) => element._drawer.direction == direction,
-      orElse: () => scaffoldState.menuControllers![0],
-    );
+    try {
+      return scaffoldState.menuControllers?.firstWhere(
+        (element) => element._drawer.direction == direction,
+      );
+    } catch (e) {
+      return null;
+    }
   }
 
   _onMenuControllerChange() {
@@ -624,6 +633,10 @@ class MenuController extends ChangeNotifier {
   dynamic _value;
   dynamic get value => _value;
   set value(dynamic value) {
+    this._value = value;
+  }
+
+  updateValue(dynamic value) {
     this._value = value;
     notifyListeners();
   }
@@ -766,10 +779,12 @@ class DrawerScaffoldController {
 
   ValueChanged<bool>? onToggle;
 
-  bool isOpen([Direction direction = Direction.left]) => _menuControllers!
-      .where((element) =>
-          element._drawer.direction == direction && element.isOpen())
-      .isNotEmpty;
+  bool isOpen([Direction direction = Direction.left]) =>
+      _menuControllers
+          ?.where((element) =>
+              element._drawer.direction == direction && element.isOpen())
+          .isNotEmpty ==
+      true;
 }
 
 enum MenuState {

@@ -392,6 +392,9 @@ class _SideDrawerState<T> extends State<SideDrawer<T>>
 
   @override
   void initState() {
+    MenuController? controller =
+        DrawerScaffold.getControllerFor(context, this.widget);
+    controller?.value = widget.selectedItemId;
     super.initState();
   }
 
@@ -411,7 +414,7 @@ class _SideDrawerState<T> extends State<SideDrawer<T>>
     super.didUpdateWidget(oldWidget);
   }
 
-  Widget createMenuItems(MenuController menuController) {
+  Widget createMenuItems(MenuController? menuController) {
     widget.itemBuilder.set(widget, menuController);
     return Container(
       alignment: widget.alignment,
@@ -429,7 +432,7 @@ class _SideDrawerState<T> extends State<SideDrawer<T>>
     );
   }
 
-  Widget createDrawer(MenuController menuController) {
+  Widget createDrawer(MenuController? menuController) {
     List<Widget> widgets = [];
     if (widget.headerView != null) {
       widgets.add(Container(
@@ -494,14 +497,14 @@ class _SideDrawerState<T> extends State<SideDrawer<T>>
                 : Colors.black);
     return DrawerScaffoldMenuController(
         direction: widget.direction,
-        builder: (BuildContext context, MenuController menuController) {
+        builder: (context, menuController) {
           var shouldRenderSelector = true;
           var actualSelectorYTop = selectorYTop;
           var actualSelectorYBottom = selectorYBottom;
           var selectorOpacity = 1.0;
 
-          if (menuController.state == MenuState.closed ||
-              menuController.state == MenuState.closing ||
+          if (menuController?.state == MenuState.closed ||
+              menuController?.state == MenuState.closing ||
               selectorYTop == null) {
             final RenderBox? menuScreenRenderBox =
                 context.findRenderObject() as RenderBox?;
