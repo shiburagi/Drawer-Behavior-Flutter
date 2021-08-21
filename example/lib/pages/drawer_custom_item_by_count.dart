@@ -9,11 +9,9 @@ class DrawerCustomItemByCount extends StatefulWidget {
 }
 
 class _DrawerCustomItemByCountState extends State<DrawerCustomItemByCount> {
-  int? selectedMenuItemId;
   final DrawerScaffoldController controller = DrawerScaffoldController();
   @override
   void initState() {
-    selectedMenuItemId = menu.items[0].id;
     super.initState();
   }
 
@@ -77,12 +75,12 @@ class _DrawerCustomItemByCountState extends State<DrawerCustomItemByCount> {
           actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       drawers: [
         SideDrawer.count(
+          selectedItemId: 0,
           itemCount: itemCount,
           percentage: 1,
           headerView: headerView(context),
           alignment: Alignment.topLeft,
           color: Theme.of(context).primaryColor,
-          selectedItemId: selectedMenuItemId,
           builder: (BuildContext context, int index, bool isSelected) {
             return Container(
               color: isSelected
@@ -95,12 +93,6 @@ class _DrawerCustomItemByCountState extends State<DrawerCustomItemByCount> {
                     color: isSelected ? Colors.black87 : Colors.white70),
               ),
             );
-          },
-          onMenuItemSelected: (itemId) {
-            print("Selected: $itemId");
-            setState(() {
-              selectedMenuItemId = itemId;
-            });
           },
         )
       ],

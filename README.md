@@ -53,6 +53,7 @@ https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
 **Version 2.3**
 - Peek Menu
 - ClassName.identifier: **SideDrawer.count()**, **SideDrawer.child()** and **SideDrawer.custom()**
+- Uncontrol SideDrawer
 
 **Version 2.0**
 - Sound null-safety

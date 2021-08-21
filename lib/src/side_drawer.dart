@@ -364,10 +364,11 @@ class SideDrawer<T> extends StatefulWidget {
   double maxSlideAmount(context) => drawerWidth - (peekMenu ? peekSize : 0);
 
   @override
-  _SideDrawerState createState() => _SideDrawerState();
+  _SideDrawerState<T> createState() => _SideDrawerState<T>();
 }
 
-class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
+class _SideDrawerState<T> extends State<SideDrawer<T>>
+    with TickerProviderStateMixin {
   double? selectorYTop;
   double? selectorYBottom;
 
@@ -399,7 +400,19 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
     super.dispose();
   }
 
+  @override
+  void didUpdateWidget(SideDrawer<T> oldWidget) {
+    if (oldWidget.selectedItemId != widget.selectedItemId) {
+      MenuController? controller =
+          DrawerScaffold.getControllerFor(context, this.widget);
+      controller?.value = widget.selectedItemId;
+    }
+
+    super.didUpdateWidget(oldWidget);
+  }
+
   Widget createMenuItems(MenuController menuController) {
+    widget.itemBuilder.set(widget, menuController);
     return Container(
       alignment: widget.alignment,
       margin: EdgeInsets.only(
@@ -410,7 +423,7 @@ class _SideDrawerState extends State<SideDrawer> with TickerProviderStateMixin {
                   (widget.peekMenu ? widget.peekSize : 0)),
       child: SingleChildScrollView(
         child: Container(
-          child: widget.itemBuilder.build(context, widget, menuController),
+          child: widget.itemBuilder.build(context),
         ),
       ),
     );

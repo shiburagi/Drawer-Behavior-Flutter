@@ -161,7 +161,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
     super.didUpdateWidget(oldWidget as DrawerScaffold);
   }
 
-  MenuController createController(SideDrawer d) {
+  MenuController createController<T>(SideDrawer<T> d) {
     MenuController controller = dcreateController(
       context,
       d,
@@ -199,7 +199,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
     }
   }
 
-  MenuController dcreateController(BuildContext context, SideDrawer d,
+  MenuController dcreateController<T>(BuildContext context, SideDrawer<T> d,
       TickerProvider vsync, Function(double) onAnimated) {
     MenuController controller = MenuController(
       d,
@@ -589,8 +589,9 @@ class DrawerScaffoldMenuControllerState
 
   @override
   Widget build(BuildContext context) {
-    return widget.builder!(
-        context, getMenuController(context, widget.direction));
+    return widget.builder
+            ?.call(context, getMenuController(context, widget.direction)) ??
+        SizedBox();
   }
 }
 
@@ -620,6 +621,13 @@ class MenuController extends ChangeNotifier {
   final TickerProvider vsync;
   final AnimationController _animationController;
   final Function(double) onAnimated;
+  dynamic _value;
+  dynamic get value => _value;
+  set value(dynamic value) {
+    this._value = value;
+    notifyListeners();
+  }
+
   Duration duration;
   MenuState state = MenuState.closed;
   double _slidePercent = 0, _scalePercent = 0;

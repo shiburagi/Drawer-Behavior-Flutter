@@ -1,3 +1,7 @@
+# 2.3.0-dev.3
+* Make **SideDrawer.count()** as **static method**
+* Uncontrol SideDrawer
+
 # 2.3.0-dev.2
 * Fix function type mismatch
 

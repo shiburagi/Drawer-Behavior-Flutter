@@ -9,15 +9,35 @@ typedef SideDrawerItemBuilder = Function(
 typedef SideDrawerIndexBuilder = Function(
     BuildContext context, int index, bool selected);
 
-abstract class SideDrawerBuilder<T, Type> {
-  Widget build(BuildContext context, SideDrawer<Type> drawer,
-      MenuController menuController);
-  Widget buildItem(BuildContext context, T t, bool selected);
+abstract class SideDrawerBuilder<ItemType, IdType> {
+  MenuController? _menuController;
+  SideDrawer<IdType>? _drawer;
+
+  MenuController? get menuController => _menuController;
+
+  SideDrawer<IdType>? get drawer => _drawer;
+
+  onSelected(IdType id) {
+    menuController?.value = id;
+    drawer?.onMenuItemSelected?.call(id);
+    if (drawer?.hideOnItemPressed == true) menuController?.close();
+  }
+
+  IdType? get selectedId => menuController?.value;
+
+  set(SideDrawer<IdType> drawer, MenuController menuController) {
+    this._menuController = menuController;
+    this._drawer = drawer;
+  }
+
+  Widget build(BuildContext context);
+  Widget buildItem(BuildContext context, ItemType t, bool selected);
 }
 
-class MenuSideDrawerBuilder<Type> extends SideDrawerBuilder<MenuItem, Type> {
+class MenuSideDrawerBuilder<IdType>
+    extends SideDrawerBuilder<MenuItem, IdType> {
   final SideDrawerItemBuilder? builder;
-  final Menu<Type> menu;
+  final Menu<IdType> menu;
 
   MenuSideDrawerBuilder(
     this.menu,
@@ -28,39 +48,39 @@ class MenuSideDrawerBuilder<Type> extends SideDrawerBuilder<MenuItem, Type> {
     return builder?.call(context, t, selected);
   }
 
+  bool get useAnimation =>
+      drawer?.animation == true && drawer?.peekMenu != true;
+
   Widget buildListItem(
     BuildContext context,
-    SideDrawer<Type> widget,
-    MenuController menuController,
     MenuItem item,
     double animationIntervalStart,
     double animationIntervalEnd,
     int millis,
     double maxDuration,
   ) {
-    final isSelected = item.id == widget.selectedItemId;
+    final isSelected = item.id == selectedId;
     Color selectorColor =
-        widget.selectorColor ?? Theme.of(context).indicatorColor;
-    TextStyle? textStyle = widget.textStyle ??
+        drawer?.selectorColor ?? Theme.of(context).indicatorColor;
+    TextStyle? textStyle = drawer?.textStyle ??
         Theme.of(context).textTheme.subtitle1?.copyWith(
-            color: widget.color.computeLuminance() < 0.5
+            color: (drawer?.color.computeLuminance() ?? 0) < 0.5
                 ? Colors.white
                 : Colors.black);
-    bool useAnimation = widget.animation && !widget.peekMenu;
 
     Widget listItem = InkWell(
       child: builder == null
           ? MenuListItem(
-              padding: widget.peekMenu
+              padding: drawer?.peekMenu == true
                   ? EdgeInsets.zero
                   : const EdgeInsets.only(left: 32.0),
-              direction: widget.direction,
+              direction: drawer?.direction ?? Direction.left,
               title: item.title,
               isSelected: isSelected,
               selectorColor: selectorColor,
               textStyle: item.textStyle ?? textStyle,
-              menuView: widget,
-              width: widget.maxSlideAmount(context),
+              menuView: drawer,
+              width: drawer?.maxSlideAmount(context),
               icon: item.icon == null ? item.prefix : Icon(item.icon),
               suffix: item.suffix,
               drawBorder: !useAnimation)
@@ -68,18 +88,15 @@ class MenuSideDrawerBuilder<Type> extends SideDrawerBuilder<MenuItem, Type> {
               alignment: Alignment.centerLeft,
               child: Container(
                 child: buildItem(context, item, isSelected),
-                width: widget.maxSlideAmount(context),
+                width: drawer?.maxSlideAmount(context),
               ),
             ),
-      onTap: () {
-        widget.onMenuItemSelected?.call(item.id);
-        if (widget.hideOnItemPressed) menuController.close();
-      },
+      onTap: () => onSelected(item.id),
     );
 
     if (useAnimation)
       return AnimatedMenuListItem(
-        menuState: menuController.state,
+        menuState: menuController?.state,
         isSelected: isSelected,
         duration: Duration(milliseconds: millis),
         curve: Interval(animationIntervalStart / maxDuration,
@@ -93,12 +110,12 @@ class MenuSideDrawerBuilder<Type> extends SideDrawerBuilder<MenuItem, Type> {
   }
 
   @override
-  Widget build(BuildContext context, SideDrawer<Type> drawer,
-      MenuController menuController) {
+  Widget build(BuildContext context) {
     final animationIntervalDuration = 0.5;
+    print(menuController);
     final perListItemDelay =
-        menuController.state != MenuState.closing ? 0.15 : 0.0;
-    final millis = menuController.state != MenuState.closing
+        menuController?.state != MenuState.closing ? 0.15 : 0.0;
+    final millis = menuController?.state != MenuState.closing
         ? 150 * menu.items.length
         : 600;
 
@@ -112,8 +129,8 @@ class MenuSideDrawerBuilder<Type> extends SideDrawerBuilder<MenuItem, Type> {
           animationIntervalStart + animationIntervalDuration;
       MenuItem item = menu.items[i];
       i++;
-      return buildListItem(context, drawer, menuController, item,
-          animationIntervalStart, animationIntervalEnd, millis, maxDuration);
+      return buildListItem(context, item, animationIntervalStart,
+          animationIntervalEnd, millis, maxDuration);
     }).toList();
 
     return Column(
@@ -138,22 +155,17 @@ class CountSideDrawerBuilder extends SideDrawerBuilder<int, int> {
   }
 
   @override
-  Widget build(BuildContext context, SideDrawer<int> drawer,
-      MenuController menuController) {
+  Widget build(BuildContext context) {
     final items = List.generate(itemCount, (e) {
-      final onTap = () {
-        drawer.onMenuItemSelected?.call(e);
-        if (drawer.hideOnItemPressed) menuController.close();
-      };
       return InkWell(
         child: Container(
           alignment: Alignment.centerLeft,
           child: Container(
-            child: buildItem(context, e, drawer.selectedItemId == e),
-            width: drawer.maxSlideAmount(context),
+            child: buildItem(context, e, selectedId == e),
+            width: drawer?.maxSlideAmount(context),
           ),
         ),
-        onTap: onTap,
+        onTap: () => onSelected(e),
       );
     });
 
@@ -177,11 +189,10 @@ class WidgetSideDrawerBuilder<T> extends SideDrawerBuilder<Null, T> {
   }
 
   @override
-  Widget build(
-      BuildContext context, SideDrawer drawer, MenuController menuController) {
+  Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.topLeft,
-      width: drawer.maxSlideAmount(context),
+      width: drawer?.maxSlideAmount(context),
       child: buildItem(context, null, false),
     );
   }
