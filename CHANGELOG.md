@@ -1,3 +1,6 @@
+# 2.3.0-dev.6
+* DrawerScaffold body attribute
+
 # 2.3.0-dev.5
 * Fix State
 
