@@ -10,6 +10,7 @@ typedef Widget DrawerScaffoldBuilder(
 class DrawerScaffold extends StatefulWidget {
   DrawerScaffold({
     this.appBar,
+    this.body,
     this.contentShadow = const [
       BoxShadow(
         color: const Color(0x44000000),
@@ -39,13 +40,17 @@ class DrawerScaffold extends StatefulWidget {
     this.onOpened,
     this.onClosed,
     this.backgroundColor,
-  }) : super(key: key);
+  })  : assert(body == null || builder == null, "Use either child or builder"),
+        super(key: key);
 
   /// List of drawers
   final List<SideDrawer>? drawers;
 
   /// Screen Builder => Widget ScreenBuilder<T>(BuildContext context, T? id)
   final ScreenBuilder? builder;
+
+  /// Screen child
+  final Widget? body;
 
   /// Appbar for Scaffold
   final PreferredSizeWidget? appBar;
@@ -272,7 +277,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
     if (selectedItemId != widget.drawers![listenDrawerIndex].selectedItemId ||
         body == null) {
       selectedItemId = widget.drawers![listenDrawerIndex].selectedItemId;
-      body = widget.builder?.call(context, selectedItemId);
+      body = widget.body ?? widget.builder?.call(context, selectedItemId);
     }
     Widget _scaffoldWidget = new Scaffold(
       backgroundColor: Colors.transparent,
