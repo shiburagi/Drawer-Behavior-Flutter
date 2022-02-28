@@ -1,3 +1,6 @@
+# 2.2.2
+* ScaffoldDrawer body attribute
+
 # 2.2.1
 * withSafeArea attribute
 

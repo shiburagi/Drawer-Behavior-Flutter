@@ -45,14 +45,14 @@ class _DrawerSlideWithFooterState extends State<DrawerSlideWithFooter> {
                         "John Witch",
                         style: Theme.of(context)
                             .textTheme
-                            .subhead
+                            .subtitle1
                             ?.copyWith(color: Colors.white),
                       ),
                       Text(
                         "test123@gmail.com",
                         style: Theme.of(context)
                             .textTheme
-                            .subtitle
+                            .subtitle2
                             ?.copyWith(color: Colors.white.withAlpha(200)),
                       )
                     ],
