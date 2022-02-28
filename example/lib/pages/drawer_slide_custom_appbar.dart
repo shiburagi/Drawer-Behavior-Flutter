@@ -49,7 +49,11 @@ class _DrawerSlideCustomAppBarState extends State<DrawerSlideCustomAppBar> {
                         "test123@gmail.com",
                         style: Theme.of(context)
                             .textTheme
+<<<<<<< Updated upstream
                             .subtitle2
+=======
+                            .subtitle1
+>>>>>>> Stashed changes
                             ?.copyWith(color: Colors.white.withAlpha(200)),
                       )
                     ],
