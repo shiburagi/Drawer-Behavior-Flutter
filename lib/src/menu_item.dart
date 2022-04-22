@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide MenuItem;
 
 class Menu<T> {
   final List<MenuItem<T>> items;
