@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:drawerbehavior/src/builder.dart';
 import 'package:drawerbehavior/src/drawer_scaffold.dart';
 import 'package:drawerbehavior/src/menu_item.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide MenuController;
 
 // final menuScreenKey = GlobalKey(debugLabel: 'MenuScreen');
 typedef MenuItemSelected<T> = Null Function(T);
