@@ -1,7 +1,7 @@
 import 'package:drawerbehavior/drawerbehavior.dart';
 import 'package:drawerbehavior/src/menu_item.dart';
 import 'package:drawerbehavior/src/menu_list.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide MenuItem, MenuController;
 
 typedef SideDrawerItemBuilder = Function(
     BuildContext context, MenuItem menuItem, bool selected);
