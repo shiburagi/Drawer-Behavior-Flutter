@@ -1,3 +1,6 @@
+# 2.3.1-dev.1
+* Fix MenuController
+
 # 2.3.0-dev.6
 * DrawerScaffold body attribute
 
