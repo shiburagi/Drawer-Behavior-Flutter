@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:drawerbehavior/drawer_scaffold.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide MenuController;
 
 // final menuScreenKey = GlobalKey(debugLabel: 'MenuScreen');
 
