@@ -59,7 +59,7 @@ class MenuSideDrawerBuilder<IdType> extends SideDrawerBuilder<MenuItem, IdType> 
     TextStyle? textStyle = drawer?.textStyle ??
         Theme.of(context)
             .textTheme
-            .subtitle1
+            .titleMedium
             ?.copyWith(color: (drawer?.color.computeLuminance() ?? 0) < 0.5 ? Colors.white : Colors.black);
 
     Widget listItem = InkWell(
@@ -86,7 +86,7 @@ class MenuSideDrawerBuilder<IdType> extends SideDrawerBuilder<MenuItem, IdType> 
       onTap: () => onSelected(item.id),
     );
 
-    if (useAnimation)
+    if (useAnimation) {
       return AnimatedMenuListItem(
         menuState: menuController?.state,
         isSelected: isSelected,
@@ -95,7 +95,7 @@ class MenuSideDrawerBuilder<IdType> extends SideDrawerBuilder<MenuItem, IdType> 
             Interval(animationIntervalStart / maxDuration, animationIntervalEnd / maxDuration, curve: Curves.easeOut),
         menuListItem: listItem,
       );
-    else {
+    } else {
       return listItem;
     }
   }

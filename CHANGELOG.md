@@ -1,3 +1,6 @@
+# 2.4.1
+* fix static analysis
+  
 # 2.4.0
 * Upgrade flutter sdk
 * remove/replace deprecated methods and attributes
