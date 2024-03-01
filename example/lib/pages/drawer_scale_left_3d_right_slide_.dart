@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 
 class DrawerLeft3DAndRightSlide extends StatefulWidget {
   @override
-  _DrawerLeft3DAndRightSlideState createState() =>
-      _DrawerLeft3DAndRightSlideState();
+  _DrawerLeft3DAndRightSlideState createState() => _DrawerLeft3DAndRightSlideState();
 }
 
 class _DrawerLeft3DAndRightSlideState extends State<DrawerLeft3DAndRightSlide> {
@@ -50,7 +49,7 @@ class _DrawerLeft3DAndRightSlideState extends State<DrawerLeft3DAndRightSlide> {
           direction: Direction.right,
           animation: true,
           selectorColor: Colors.white,
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).colorScheme.secondary,
           selectedItemId: selectedMenuItemId,
           onMenuItemSelected: (itemId) {
             setState(() {

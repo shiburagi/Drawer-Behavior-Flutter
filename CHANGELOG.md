@@ -1,3 +1,7 @@
+# 2.4.0
+* Upgrade flutter sdk
+* remove/replace deprecated methods and attributes
+
 # 2.3.1-dev.1
 * Fix MenuController
 

@@ -56,7 +56,7 @@ class _DrawerPeekLeftState extends State<DrawerPeekLeft> {
           direction: Direction.right,
           animation: true,
           selectorColor: Colors.white,
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).colorScheme.secondary,
           selectedItemId: selectedMenuItemId,
           onMenuItemSelected: (itemId) {
             setState(() {

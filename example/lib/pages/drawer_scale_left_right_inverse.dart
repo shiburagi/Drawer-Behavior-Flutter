@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 
 class DrawerLeftAndRightInverse extends StatefulWidget {
   @override
-  _DrawerLeftAndRightInverseState createState() =>
-      _DrawerLeftAndRightInverseState();
+  _DrawerLeftAndRightInverseState createState() => _DrawerLeftAndRightInverseState();
 }
 
 class _DrawerLeftAndRightInverseState extends State<DrawerLeftAndRightInverse> {
@@ -48,7 +47,7 @@ class _DrawerLeftAndRightInverseState extends State<DrawerLeftAndRightInverse> {
           direction: Direction.right,
           animation: true,
           selectorColor: Colors.white,
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).colorScheme.secondary,
           selectedItemId: selectedMenuItemId,
           onMenuItemSelected: (itemId) {
             setState(() {

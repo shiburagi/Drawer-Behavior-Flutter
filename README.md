@@ -343,7 +343,7 @@ new DrawerScaffold(
             (BuildContext context, MenuItem menuItem, bool isSelected) {
           return Container(
             color: isSelected
-                ? Theme.of(context).accentColor.withOpacity(0.7)
+                ? Theme.of(context).colorScheme.secondary.withOpacity(0.7)
                 : Colors.transparent,
             padding: EdgeInsets.fromLTRB(24, 16, 24, 16),
             child: Text(

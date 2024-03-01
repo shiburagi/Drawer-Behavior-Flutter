@@ -10,3 +10,4 @@ build/
 \.idea/
 
 example/ios/Runner\.xcworkspace/xcshareddata/WorkspaceSettings\.xcsettings
+example/analysis_options.yaml

@@ -29,9 +29,7 @@ class _DrawerCustomItemState extends State<DrawerCustomItem> {
                   height: 48.0,
                   decoration: new BoxDecoration(
                       shape: BoxShape.circle,
-                      image: new DecorationImage(
-                          fit: BoxFit.fill,
-                          image: AssetImage("assets/user1.jpg")))),
+                      image: new DecorationImage(fit: BoxFit.fill, image: AssetImage("assets/user1.jpg")))),
               Container(
                   margin: EdgeInsets.only(left: 16),
                   child: Column(
@@ -40,17 +38,11 @@ class _DrawerCustomItemState extends State<DrawerCustomItem> {
                     children: <Widget>[
                       Text(
                         "John Witch",
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle1
-                            ?.copyWith(color: Colors.white),
+                        style: Theme.of(context).textTheme.subtitle1?.copyWith(color: Colors.white),
                       ),
                       Text(
                         "test123@gmail.com",
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle2
-                            ?.copyWith(color: Colors.white.withAlpha(200)),
+                        style: Theme.of(context).textTheme.subtitle2?.copyWith(color: Colors.white.withAlpha(200)),
                       )
                     ],
                   ))
@@ -70,9 +62,8 @@ class _DrawerCustomItemState extends State<DrawerCustomItem> {
     return DrawerScaffold(
       controller: controller,
       cornerRadius: 0,
-      appBar: AppBar(
-          title: Text("Drawer - Custom  Item"),
-          actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
+      appBar:
+          AppBar(title: Text("Drawer - Custom  Item"), actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       drawers: [
         SideDrawer(
           percentage: 1,
@@ -81,17 +72,16 @@ class _DrawerCustomItemState extends State<DrawerCustomItem> {
           alignment: Alignment.topLeft,
           color: Theme.of(context).primaryColor,
           selectedItemId: selectedMenuItemId,
-          itemBuilder:
-              (BuildContext context, MenuItem menuItem, bool isSelected) {
+          itemBuilder: (BuildContext context, MenuItem menuItem, bool isSelected) {
             return Container(
-              color: isSelected
-                  ? Theme.of(context).accentColor.withOpacity(0.7)
-                  : Colors.transparent,
+              color: isSelected ? Theme.of(context).colorScheme.secondary.withOpacity(0.7) : Colors.transparent,
               padding: EdgeInsets.fromLTRB(24, 16, 24, 16),
               child: Text(
                 menuItem.title,
-                style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                    color: isSelected ? Colors.black87 : Colors.white70),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(color: isSelected ? Colors.black87 : Colors.white70),
               ),
             );
           },

@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 
 class DrawerCustomItemByCount extends StatefulWidget {
   @override
-  _DrawerCustomItemByCountState createState() =>
-      _DrawerCustomItemByCountState();
+  _DrawerCustomItemByCountState createState() => _DrawerCustomItemByCountState();
 }
 
 class _DrawerCustomItemByCountState extends State<DrawerCustomItemByCount> {
@@ -28,9 +27,7 @@ class _DrawerCustomItemByCountState extends State<DrawerCustomItemByCount> {
                   height: 48.0,
                   decoration: new BoxDecoration(
                       shape: BoxShape.circle,
-                      image: new DecorationImage(
-                          fit: BoxFit.fill,
-                          image: AssetImage("assets/user1.jpg")))),
+                      image: new DecorationImage(fit: BoxFit.fill, image: AssetImage("assets/user1.jpg")))),
               Container(
                   margin: EdgeInsets.only(left: 16),
                   child: Column(
@@ -39,17 +36,11 @@ class _DrawerCustomItemByCountState extends State<DrawerCustomItemByCount> {
                     children: <Widget>[
                       Text(
                         "John Witch",
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle1
-                            ?.copyWith(color: Colors.white),
+                        style: Theme.of(context).textTheme.subtitle1?.copyWith(color: Colors.white),
                       ),
                       Text(
                         "test123@gmail.com",
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle2
-                            ?.copyWith(color: Colors.white.withAlpha(200)),
+                        style: Theme.of(context).textTheme.subtitle2?.copyWith(color: Colors.white.withAlpha(200)),
                       )
                     ],
                   ))
@@ -71,8 +62,7 @@ class _DrawerCustomItemByCountState extends State<DrawerCustomItemByCount> {
       controller: controller,
       cornerRadius: 0,
       appBar: AppBar(
-          title: Text("Drawer - Custom Item by Count"),
-          actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
+          title: Text("Drawer - Custom Item by Count"), actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
       drawers: [
         SideDrawer.count(
           selectedItemId: 0,
@@ -83,14 +73,14 @@ class _DrawerCustomItemByCountState extends State<DrawerCustomItemByCount> {
           color: Theme.of(context).primaryColor,
           builder: (BuildContext context, int index, bool isSelected) {
             return Container(
-              color: isSelected
-                  ? Theme.of(context).accentColor.withOpacity(0.7)
-                  : Colors.transparent,
+              color: isSelected ? Theme.of(context).colorScheme.secondary.withOpacity(0.7) : Colors.transparent,
               padding: EdgeInsets.fromLTRB(24, 16, 24, 16),
               child: Text(
                 "Item $index",
-                style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                    color: isSelected ? Colors.black87 : Colors.white70),
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle1
+                    ?.copyWith(color: isSelected ? Colors.black87 : Colors.white70),
               ),
             );
           },
