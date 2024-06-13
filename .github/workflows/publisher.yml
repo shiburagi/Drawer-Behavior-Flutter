@@ -15,16 +15,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      # Note: This workflow uses the latest stable version of the Dart SDK.
-      # You can specify other versions if desired, see documentation here:
-      # https://github.com/dart-lang/setup-dart/blob/main/README.md
-      # - uses: dart-lang/setup-dart@v1
-      - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
-
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.0'
       - name: Install dependencies
         run: flutter pub get
-
       - name: Publish
         uses: sakebook/actions-flutter-pub-publisher@v1.4.1
         with:
