@@ -1,0 +1,26 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "commitType": "docs",
+  "commitConvention": "angular",
+  "contributors": [
+    {
+      "login": "vladaman",
+      "name": "Vladimir Vlach",
+      "avatar_url": "https://avatars.githubusercontent.com/u/907206?v=4",
+      "profile": "https://github.com/vladaman",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "skipCi": true,
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "projectName": "Drawer-Behavior-Flutter",
+  "projectOwner": "shiburagi"
+}
