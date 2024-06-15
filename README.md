@@ -101,11 +101,6 @@ Now in your Dart code, you can use:
 ```dart
 import 'package:drawerbehavior/drawerbehavior.dart';
 ```
---- <!-- no toc -->
-### Android Native
-[Drawer-Behavior](https://github.com/shiburagi/Drawer-Behavior)
---- <!-- no toc -->
-
 
 ## Example
 ```dart
@@ -446,6 +441,13 @@ String title;
 IconData icon;
 ```
 
-## Contributor
-- [Vladimir Vlach](https://github.com/vladaman)
-- [trademunch](https://github.com/trademunch)
+## Contributors
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
