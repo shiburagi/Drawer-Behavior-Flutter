@@ -1,4 +1,7 @@
 [![pub package](https://img.shields.io/pub/v/drawerbehavior.svg)](https://pub.dartlang.org/packages/drawerbehavior)
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 ![fdsfd](https://github.com/shiburagi/Drawer-Behavior-Flutter/workflows/Dart%20CI/badge.svg)
 
 
@@ -444,6 +447,20 @@ IconData icon;
 ## Contributors
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/vladaman"><img src="https://avatars.githubusercontent.com/u/907206?v=4?s=100" width="100px;" alt="Vladimir Vlach"/><br /><sub><b>Vladimir Vlach</b></sub></a><br /><a href="https://github.com/shiburagi/Drawer-Behavior-Flutter/commits?author=vladaman" title="Code">💻</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
 
