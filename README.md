@@ -453,6 +453,7 @@ IconData icon;
   <tbody>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/anjarnaufals"><img src="https://avatars.githubusercontent.com/u/50995060?v=4?s=100" width="100px;" alt="anjarnaufals"/><br /><sub><b>anjarnaufals</b></sub></a><br /><a href="https://github.com/shiburagi/Drawer-Behavior-Flutter/commits?author=anjarnaufals" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/vladaman"><img src="https://avatars.githubusercontent.com/u/907206?v=4?s=100" width="100px;" alt="Vladimir Vlach"/><br /><sub><b>Vladimir Vlach</b></sub></a><br /><a href="https://github.com/shiburagi/Drawer-Behavior-Flutter/commits?author=vladaman" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
