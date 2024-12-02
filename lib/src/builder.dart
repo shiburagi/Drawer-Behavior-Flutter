@@ -102,8 +102,7 @@ class MenuSideDrawerBuilder<IdType> extends SideDrawerBuilder<MenuItem, IdType> 
 
   @override
   Widget build(BuildContext context) {
-    final animationIntervalDuration = 0.5;
-    print(menuController);
+    final animationIntervalDuration = 0.5;    
     final perListItemDelay = menuController?.state != MenuState.closing ? 0.15 : 0.0;
     final millis = menuController?.state != MenuState.closing ? 150 * menu.items.length : 600;
 
