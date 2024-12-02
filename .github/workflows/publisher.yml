@@ -19,7 +19,6 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable # or: beta, master (or main)
-          flutter-version: 3.22.0
       - name: Install dependencies
         run: flutter pub get
       - name: Dart and Flutter Package Publisher
