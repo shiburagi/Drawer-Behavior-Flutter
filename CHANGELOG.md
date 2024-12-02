@@ -1,3 +1,7 @@
+# 3.0.1
+* Remove unnecessary print
+* upgrade dependencies
+
 # 3.0.0
 * Make API Changes compatible with Flutter 3.22.0
 * BREAKING CHANGE: Add flutter version constraint to be >=3.22.0. This will break for lower versions of Flutter.

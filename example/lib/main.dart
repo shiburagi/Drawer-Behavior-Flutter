@@ -39,13 +39,11 @@ class _MyAppState extends State<MyApp> {
                 text,
                 textAlign: TextAlign.center,
               ),
-              style: ElevatedButton.styleFrom(backgroundColor: buttonColor)
-                  .copyWith(
-                      foregroundColor: WidgetStateProperty.all(
-                          ThemeData.estimateBrightnessForColor(buttonColor) ==
-                                  Brightness.light
-                              ? Colors.black
-                              : Colors.white)),
+              style: ElevatedButton.styleFrom(backgroundColor: buttonColor).copyWith(
+                  foregroundColor: MaterialStateProperty.all(
+                      ThemeData.estimateBrightnessForColor(buttonColor) == Brightness.light
+                          ? Colors.black
+                          : Colors.white)),
               onPressed: () {
                 Navigator.pushNamed(context, navigate);
               })),
@@ -64,9 +62,7 @@ class _MyAppState extends State<MyApp> {
               alignment: WrapAlignment.center,
               children: <Widget>[
                 createButton(context,
-                    text: "Scale",
-                    navigate: "/scale",
-                    color: Theme.of(context).colorScheme.secondary),
+                    text: "Scale", navigate: "/scale", color: Theme.of(context).colorScheme.secondary),
                 createButton(context,
                     text: "Scale - with Icon",
                     navigate: "/slide/scaleicon",
@@ -75,17 +71,12 @@ class _MyAppState extends State<MyApp> {
                     text: "Scale - no animation",
                     navigate: "/scale/noanimation",
                     color: Theme.of(context).colorScheme.secondary),
-                createButton(context,
-                    text: "3D",
-                    navigate: "/3d",
-                    color: Theme.of(context).colorScheme.secondary),
+                createButton(context, text: "3D", navigate: "/3d", color: Theme.of(context).colorScheme.secondary),
                 Divider(height: 16, color: Theme.of(context).dividerColor),
                 Text("Align Top"),
                 Divider(height: 16, color: Theme.of(context).dividerColor),
                 createButton(context,
-                    text: "Slide ",
-                    navigate: "/slide",
-                    color: Theme.of(context).colorScheme.secondary),
+                    text: "Slide ", navigate: "/slide", color: Theme.of(context).colorScheme.secondary),
                 createButton(context,
                     text: "Slide - Menu Slide ",
                     navigate: "/slide/menuslide",
@@ -114,39 +105,27 @@ class _MyAppState extends State<MyApp> {
                     navigate: "/duo/left3dandrightslide",
                     color: Theme.of(context).colorScheme.secondary),
                 createButton(context,
-                    text: "Right",
-                    navigate: "/duo/right",
-                    color: Theme.of(context).colorScheme.secondary),
+                    text: "Right", navigate: "/duo/right", color: Theme.of(context).colorScheme.secondary),
                 Divider(height: 16, color: Theme.of(context).dividerColor),
                 Text("Peek"),
                 Divider(height: 16, color: Theme.of(context).dividerColor),
                 createButton(context,
-                    text: "Peek Left",
-                    navigate: "/peek/duo/left",
-                    color: Theme.of(context).colorScheme.secondary),
+                    text: "Peek Left", navigate: "/peek/duo/left", color: Theme.of(context).colorScheme.secondary),
                 createButton(context,
-                    text: "Peek Right",
-                    navigate: "/peek/duo/right",
-                    color: Theme.of(context).colorScheme.secondary),
+                    text: "Peek Right", navigate: "/peek/duo/right", color: Theme.of(context).colorScheme.secondary),
                 Divider(height: 16, color: Theme.of(context).dividerColor),
                 Text("Customize"),
                 Divider(height: 16, color: Theme.of(context).dividerColor),
                 createButton(context,
-                    text: "Customize Item",
-                    navigate: "/custom/item",
-                    color: Theme.of(context).colorScheme.secondary),
+                    text: "Customize Item", navigate: "/custom/item", color: Theme.of(context).colorScheme.secondary),
                 createButton(context,
                     text: "Customize Item by Count",
                     navigate: "/custom/item/count",
                     color: Theme.of(context).colorScheme.secondary),
                 createButton(context,
-                    text: "Custom AppBar",
-                    navigate: "/custom/appbar",
-                    color: Theme.of(context).colorScheme.secondary),
+                    text: "Custom AppBar", navigate: "/custom/appbar", color: Theme.of(context).colorScheme.secondary),
                 createButton(context,
-                    text: "Using child",
-                    navigate: "/custom/withchild",
-                    color: Theme.of(context).colorScheme.secondary),
+                    text: "Using child", navigate: "/custom/withchild", color: Theme.of(context).colorScheme.secondary),
               ],
             )),
       ),
@@ -157,9 +136,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     final theme = ThemeData(primarySwatch: Colors.teal);
     return MaterialApp(
-      theme: theme.copyWith(
-          colorScheme:
-              theme.colorScheme.copyWith(secondary: Colors.amberAccent)),
+      theme: theme.copyWith(colorScheme: theme.colorScheme.copyWith(secondary: Colors.amberAccent)),
       routes: {
         "/": home,
         "/scale": (context) => createPage(DrawerScale()),
@@ -170,18 +147,15 @@ class _MyAppState extends State<MyApp> {
         "/slide/scaleicon": (context) => createPage(DrawerScaleIcon()),
         "/duo/leftandright": (context) => createPage(DrawerLeftAndRight()),
         "/duo/right": (context) => createPage(DrawerRight()),
-        "/duo/leftandright/inverse": (context) =>
-            createPage(DrawerLeftAndRightInverse()),
+        "/duo/leftandright/inverse": (context) => createPage(DrawerLeftAndRightInverse()),
         "/3d": (context) => createPage(Drawer3d()),
-        "/duo/left3dandrightslide": (context) =>
-            createPage(DrawerLeft3DAndRightSlide()),
+        "/duo/left3dandrightslide": (context) => createPage(DrawerLeft3DAndRightSlide()),
         "/drawer8": (context) => createPage(DrawerSlideWithFooter()),
         "/peek/duo/left": (context) => createPage(DrawerPeekLeft()),
         "/peek/duo/right": (context) => createPage(DrawerPeekRight()),
         "/custom/appbar": (context) => createPage(DrawerSlideCustomAppBar()),
         "/custom/item": (context) => createPage(DrawerCustomItem()),
-        "/custom/item/count": (context) =>
-            createPage(DrawerCustomItemByCount()),
+        "/custom/item/count": (context) => createPage(DrawerCustomItemByCount()),
         "/custom/withchild": (context) => createPage(DrawerWithChild()),
       },
     );

@@ -11,3 +11,6 @@ build/
 
 example/ios/Runner\.xcworkspace/xcshareddata/WorkspaceSettings\.xcsettings
 example/analysis_options.yaml
+
+# FVM Version Cache
+.fvm/
