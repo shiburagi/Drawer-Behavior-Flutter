@@ -30,7 +30,7 @@ jobs:
       - name: Publish Dart/Flutter package
         # You may pin to the exact commit or the version.
         # uses: sakebook/actions-flutter-pub-publisher@ccd9fbba502ea7ef33ea2479e0cdac5a2a9766e1
-        uses: sakebook/actions-flutter-pub-publisher@v1.4.1
+        uses: afonsocraposo/actions-flutter-pub-publisher@v1.4.1
         with:
           credential: ${{ secrets.CREDENTIAL_JSON }}
           skip_test: true
