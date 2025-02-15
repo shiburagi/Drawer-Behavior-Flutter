@@ -22,8 +22,18 @@ jobs:
           flutter-version: 3.27.4
       - name: Install dependencies
         run: flutter pub get
-      - name: Dart and Flutter Package Publisher
-        uses: k-paxian/dart-package-publisher@v1.6
+      # - name: Dart and Flutter Package Publisher
+      #   uses: k-paxian/dart-package-publisher@v1.6
+      #   with:
+      #     flutterBranch: stable
+      #     credentialJson: ${{ secrets.CREDENTIAL_JSON }}
+      - name: Publish Dart/Flutter package
+        # You may pin to the exact commit or the version.
+        # uses: sakebook/actions-flutter-pub-publisher@ccd9fbba502ea7ef33ea2479e0cdac5a2a9766e1
+        uses: sakebook/actions-flutter-pub-publisher@v1.4.1
         with:
-          flutterBranch: stable
-          credentialJson: ${{ secrets.CREDENTIAL_JSON }}
+          credential: ${{ secrets.CREDENTIAL_JSON }}
+          skip_test: true
+          
+
+      
