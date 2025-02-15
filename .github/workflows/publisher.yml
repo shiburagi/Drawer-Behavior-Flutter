@@ -19,9 +19,11 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable # or: beta, master (or main)
+          flutter-version: 3.27.4
       - name: Install dependencies
         run: flutter pub get
       - name: Dart and Flutter Package Publisher
         uses: k-paxian/dart-package-publisher@v1.6
         with:
+          flutterVersion: 3.27.4
           credentialJson: ${{ secrets.CREDENTIAL_JSON }}
