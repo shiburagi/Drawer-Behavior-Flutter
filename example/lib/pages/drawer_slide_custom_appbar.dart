@@ -3,8 +3,10 @@ import 'package:drawerbehavior_example/menus/main.dart';
 import 'package:flutter/material.dart';
 
 class DrawerSlideCustomAppBar extends StatefulWidget {
+  const DrawerSlideCustomAppBar({Key? key}) : super(key: key);
+
   @override
-  _DrawerSlideCustomAppBarState createState() =>
+  State<DrawerSlideCustomAppBar> createState() =>
       _DrawerSlideCustomAppBarState();
 }
 
@@ -24,12 +26,12 @@ class _DrawerSlideCustomAppBarState extends State<DrawerSlideCustomAppBar> {
           padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
           child: Row(
             children: <Widget>[
-              new Container(
+              Container(
                   width: 48.0,
                   height: 48.0,
-                  decoration: new BoxDecoration(
+                  decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      image: new DecorationImage(
+                      image: DecorationImage(
                           fit: BoxFit.fill,
                           image: AssetImage("assets/user1.jpg")))),
               Container(
@@ -93,8 +95,8 @@ class _DrawerSlideCustomAppBarState extends State<DrawerSlideCustomAppBar> {
       builder: (context, id) => Scaffold(
         appBar: AppBar(
           title: Text("Drawer - Slide with Custom AppBar"),
-          leading: new IconButton(
-              icon: new Icon(Icons.menu),
+          leading: IconButton(
+              icon: Icon(Icons.menu),
               onPressed: () {
                 controller.toggle();
               }),

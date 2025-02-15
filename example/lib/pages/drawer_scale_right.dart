@@ -3,8 +3,10 @@ import 'package:drawerbehavior_example/menus/main.dart';
 import 'package:flutter/material.dart';
 
 class DrawerRight extends StatefulWidget {
+  const DrawerRight({Key? key}) : super(key: key);
+
   @override
-  _DrawerRightState createState() => _DrawerRightState();
+  State<DrawerRight> createState() => _DrawerRightState();
 }
 
 class _DrawerRightState extends State<DrawerRight> {

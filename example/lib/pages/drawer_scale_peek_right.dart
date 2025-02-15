@@ -3,8 +3,10 @@ import 'package:drawerbehavior_example/menus/main.dart';
 import 'package:flutter/material.dart';
 
 class DrawerPeekRight extends StatefulWidget {
+  const DrawerPeekRight({Key? key}) : super(key: key);
+
   @override
-  _DrawerPeekRightState createState() => _DrawerPeekRightState();
+  State<DrawerPeekRight> createState() => _DrawerPeekRightState();
 }
 
 class _DrawerPeekRightState extends State<DrawerPeekRight> {

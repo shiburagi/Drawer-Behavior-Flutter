@@ -24,15 +24,13 @@ https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
     - [Todo](#todo)
     - [NEW UPDATES](#new-updates)
   - [Usage](#usage)
-    - [Android Native](#android-native)
-  - [Drawer-Behavior](#drawer-behavior)
   - [Example](#example)
-  - [## Migration (Null-safety Release)](#-migration-null-safety-release)
-    - [mainDrawer (DrawerScaffold) -> defaultDirection (DrawerScaffold)](#maindrawer-drawerscaffold---defaultdirection-drawerscaffold)
-  - [## Migration](#-migration)
-    - [contentView (Screen) -> builder (ScreenBuilder)](#contentview-screen---builder-screenbuilder)
-    - [menuView (MenuView) -> drawers (List\<SideDrawer>)](#menuview-menuview---drawers-listsidedrawer)
-    - [percentage (DrawerScaffold) -> drawers (List\<SideDrawer>))](#percentage-drawerscaffold---drawers-listsidedrawer)
+  - [Migration (Null-safety Release)](#migration-null-safety-release)
+    - [mainDrawer (DrawerScaffold) -\> defaultDirection (DrawerScaffold)](#maindrawer-drawerscaffold---defaultdirection-drawerscaffold)
+  - [Migration](#migration)
+    - [contentView (Screen) -\> builder (ScreenBuilder)](#contentview-screen---builder-screenbuilder)
+    - [menuView (MenuView) -\> drawers (List\<SideDrawer\>)](#menuview-menuview---drawers-listsidedrawer)
+    - [percentage (DrawerScaffold) -\> drawers (List\<SideDrawer\>))](#percentage-drawerscaffold---drawers-listsidedrawer)
   - [Preview](#preview)
     - [Scale Effect](#scale-effect)
     - [Right Drawer](#right-drawer)
@@ -42,7 +40,7 @@ https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
     - [Drawer with Header and Custom Builder](#drawer-with-header-and-custom-builder)
     - [Peek Drawer](#peek-drawer)
   - [Customize](#customize)
-  - [Contributor](#contributor)
+  - [Contributors](#contributors)
 
 
 ### Todo 
@@ -380,8 +378,8 @@ new DrawerScaffold(
 
 *DrawerScaffold*
 ```dart
+List<SideDrawer> drawers; //required
 DrawerScaffoldController controller;
-List<SideDrawer> drawers;
 ScreenBuilder builder;
 bool enableGestures; // default: true
 PreferredSizeWidget appBar;
@@ -393,6 +391,7 @@ FloatingActionButtonLocation floatingActionButtonLocation;
 FloatingActionButtonAnimator floatingActionButtonAnimator;
 List<BoxShadow> contentShadow;
 Widget bottomSheet;
+bool closeOnPopInvoked; // [IOS] default: true
 bool extendBodyBehindAppBar;
 List<Widget> persistentFooterButtons;
 bool primary;

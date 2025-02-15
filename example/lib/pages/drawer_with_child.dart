@@ -3,8 +3,10 @@ import 'package:drawerbehavior_example/menus/main.dart';
 import 'package:flutter/material.dart';
 
 class DrawerWithChild extends StatefulWidget {
+  const DrawerWithChild({Key? key}) : super(key: key);
+
   @override
-  _DrawerWithChildState createState() => _DrawerWithChildState();
+  State<DrawerWithChild> createState() => _DrawerWithChildState();
 }
 
 class _DrawerWithChildState extends State<DrawerWithChild> {
@@ -23,12 +25,12 @@ class _DrawerWithChildState extends State<DrawerWithChild> {
           padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
           child: Row(
             children: <Widget>[
-              new Container(
+              Container(
                   width: 48.0,
                   height: 48.0,
-                  decoration: new BoxDecoration(
+                  decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      image: new DecorationImage(
+                      image: DecorationImage(
                           fit: BoxFit.fill,
                           image: AssetImage("assets/user1.jpg")))),
               Container(

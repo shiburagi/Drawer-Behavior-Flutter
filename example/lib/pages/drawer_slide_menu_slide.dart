@@ -3,8 +3,10 @@ import 'package:drawerbehavior_example/menus/main.dart';
 import 'package:flutter/material.dart';
 
 class DrawerSlideMenuSlide extends StatefulWidget {
+  const DrawerSlideMenuSlide({Key? key}) : super(key: key);
+
   @override
-  _DrawerSlideMenuSlideState createState() => _DrawerSlideMenuSlideState();
+  State<DrawerSlideMenuSlide> createState() => _DrawerSlideMenuSlideState();
 }
 
 class _DrawerSlideMenuSlideState extends State<DrawerSlideMenuSlide> {

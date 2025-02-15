@@ -3,8 +3,11 @@ import 'package:drawerbehavior_example/menus/main.dart';
 import 'package:flutter/material.dart';
 
 class DrawerLeftAndRightInverse extends StatefulWidget {
+  const DrawerLeftAndRightInverse({Key? key}) : super(key: key);
+
   @override
-  _DrawerLeftAndRightInverseState createState() => _DrawerLeftAndRightInverseState();
+  State<DrawerLeftAndRightInverse> createState() =>
+      _DrawerLeftAndRightInverseState();
 }
 
 class _DrawerLeftAndRightInverseState extends State<DrawerLeftAndRightInverse> {

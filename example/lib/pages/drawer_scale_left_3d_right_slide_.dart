@@ -3,8 +3,11 @@ import 'package:drawerbehavior_example/menus/main.dart';
 import 'package:flutter/material.dart';
 
 class DrawerLeft3DAndRightSlide extends StatefulWidget {
+  const DrawerLeft3DAndRightSlide({Key? key}) : super(key: key);
+
   @override
-  _DrawerLeft3DAndRightSlideState createState() => _DrawerLeft3DAndRightSlideState();
+  State<DrawerLeft3DAndRightSlide> createState() =>
+      _DrawerLeft3DAndRightSlideState();
 }
 
 class _DrawerLeft3DAndRightSlideState extends State<DrawerLeft3DAndRightSlide> {
