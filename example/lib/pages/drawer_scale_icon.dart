@@ -3,8 +3,10 @@ import 'package:drawerbehavior_example/menus/main.dart';
 import 'package:flutter/material.dart';
 
 class DrawerScaleIcon extends StatefulWidget {
+  const DrawerScaleIcon({Key? key}) : super(key: key);
+
   @override
-  _DrawerScaleIconState createState() => _DrawerScaleIconState();
+  State<DrawerScaleIcon> createState() => _DrawerScaleIconState();
 }
 
 class _DrawerScaleIconState extends State<DrawerScaleIcon> {

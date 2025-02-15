@@ -102,13 +102,10 @@ class SideDrawer<T> extends StatefulWidget {
         this.percentage = percentage ?? 0.8,
         this.degree = degree == null ? null : max(min(45, degree), 15),
         this.scaleDownCurve =
-            new Interval(0.0, 0.3, curve: curve ?? Curves.easeOut),
-        this.scaleUpCurve =
-            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
-        this.slideOutCurve =
-            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
-        this.slideInCurve =
-            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+            Interval(0.0, 0.3, curve: curve ?? Curves.easeOut),
+        this.scaleUpCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        this.slideOutCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        this.slideInCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
         this.padding = padding ??
             (peekMenu
                 ? const EdgeInsets.only(left: 16.0, top: 15.0, bottom: 15.0)
@@ -147,13 +144,10 @@ class SideDrawer<T> extends StatefulWidget {
         this.percentage = percentage ?? 0.8,
         this.degree = degree == null ? null : max(min(45, degree), 15),
         this.scaleDownCurve =
-            new Interval(0.0, 0.3, curve: curve ?? Curves.easeOut),
-        this.scaleUpCurve =
-            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
-        this.slideOutCurve =
-            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
-        this.slideInCurve =
-            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+            Interval(0.0, 0.3, curve: curve ?? Curves.easeOut),
+        this.scaleUpCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        this.slideOutCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        this.slideInCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
         this.padding = padding ??
             (peekMenu
                 ? const EdgeInsets.only(left: 16.0, top: 15.0, bottom: 15.0)
@@ -192,13 +186,10 @@ class SideDrawer<T> extends StatefulWidget {
         this.percentage = percentage ?? 0.8,
         this.degree = degree == null ? null : max(min(45, degree), 15),
         this.scaleDownCurve =
-            new Interval(0.0, 0.3, curve: curve ?? Curves.easeOut),
-        this.scaleUpCurve =
-            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
-        this.slideOutCurve =
-            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
-        this.slideInCurve =
-            new Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+            Interval(0.0, 0.3, curve: curve ?? Curves.easeOut),
+        this.scaleUpCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        this.slideOutCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        this.slideInCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
         this.padding = padding ??
             (peekMenu
                 ? const EdgeInsets.only(left: 16.0, top: 15.0, bottom: 15.0)
@@ -368,8 +359,7 @@ class SideDrawer<T> extends StatefulWidget {
   _SideDrawerState<T> createState() => _SideDrawerState<T>();
 }
 
-class _SideDrawerState<T> extends State<SideDrawer<T>>
-    with TickerProviderStateMixin {
+class _SideDrawerState<T> extends State<SideDrawer<T>> {
   double? selectorYTop;
   double? selectorYBottom;
 
@@ -397,11 +387,6 @@ class _SideDrawerState<T> extends State<SideDrawer<T>>
         DrawerScaffold.getControllerFor(context, this.widget);
     controller?.value = widget.selectedItemId;
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
@@ -475,13 +460,16 @@ class _SideDrawerState<T> extends State<SideDrawer<T>>
         0,
         0.0,
       ),
-      child: SafeArea(
-        top: widget.withSafeAre || widget.headerView == null,
-        bottom: widget.withSafeAre || widget.footerView == null,
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            children: widgets,
+      child: Opacity(
+        opacity: controller.slidePercent == 0 ? 0 : 1,
+        child: SafeArea(
+          top: widget.withSafeAre || widget.headerView == null,
+          bottom: widget.withSafeAre || widget.footerView == null,
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              children: widgets,
+            ),
           ),
         ),
       ),

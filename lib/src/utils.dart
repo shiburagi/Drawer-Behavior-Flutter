@@ -6,3 +6,7 @@ class Utils {
     return (value * fac).round() / fac;
   }
 }
+
+extension ListExt<T> on List<T> {
+  T? getOrNull(int index) => index < length ? this[index] : null;
+}

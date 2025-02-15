@@ -2,8 +2,10 @@ import 'package:drawerbehavior/drawerbehavior.dart';
 import 'package:flutter/material.dart';
 
 class DrawerCustomItemByCount extends StatefulWidget {
+  const DrawerCustomItemByCount({Key? key}) : super(key: key);
+
   @override
-  _DrawerCustomItemByCountState createState() =>
+  State<DrawerCustomItemByCount> createState() =>
       _DrawerCustomItemByCountState();
 }
 
@@ -22,12 +24,12 @@ class _DrawerCustomItemByCountState extends State<DrawerCustomItemByCount> {
           padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
           child: Row(
             children: <Widget>[
-              new Container(
+              Container(
                   width: 48.0,
                   height: 48.0,
-                  decoration: new BoxDecoration(
+                  decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      image: new DecorationImage(
+                      image: DecorationImage(
                           fit: BoxFit.fill,
                           image: AssetImage("assets/user1.jpg")))),
               Container(
@@ -83,7 +85,10 @@ class _DrawerCustomItemByCountState extends State<DrawerCustomItemByCount> {
           builder: (BuildContext context, int index, bool isSelected) {
             return Container(
               color: isSelected
-                  ? Theme.of(context).colorScheme.secondary.withOpacity(0.7)
+                  ? Theme.of(context)
+                      .colorScheme
+                      .secondary
+                      .withAlpha((255 * 0.7).toInt())
                   : Colors.transparent,
               padding: EdgeInsets.fromLTRB(24, 16, 24, 16),
               child: Text(

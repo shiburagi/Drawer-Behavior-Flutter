@@ -1,3 +1,9 @@
+# 3.0.2
+* Dispose drawer animation when DrawerScaffold call dispose()
+* make `drawers` required.
+* add `closeOnPopInvoked` parameter to auto close drawer for ios
+* optimized code and logic
+
 # 3.0.1
 * Remove unnecessary print
 * upgrade dependencies

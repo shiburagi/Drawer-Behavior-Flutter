@@ -3,8 +3,10 @@ import 'package:drawerbehavior_example/menus/main.dart';
 import 'package:flutter/material.dart';
 
 class DrawerScaleNoAnimation extends StatefulWidget {
+  const DrawerScaleNoAnimation({Key? key}) : super(key: key);
+
   @override
-  _DrawerScaleNoAnimationState createState() => _DrawerScaleNoAnimationState();
+  State<DrawerScaleNoAnimation> createState() => _DrawerScaleNoAnimationState();
 }
 
 class _DrawerScaleNoAnimationState extends State<DrawerScaleNoAnimation> {

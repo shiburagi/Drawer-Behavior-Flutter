@@ -3,8 +3,10 @@ import 'package:drawerbehavior_example/menus/main.dart';
 import 'package:flutter/material.dart';
 
 class DrawerCustomItem extends StatefulWidget {
+  const DrawerCustomItem({Key? key}) : super(key: key);
+
   @override
-  _DrawerCustomItemState createState() => _DrawerCustomItemState();
+  State<DrawerCustomItem> createState() => _DrawerCustomItemState();
 }
 
 class _DrawerCustomItemState extends State<DrawerCustomItem> {
@@ -24,12 +26,12 @@ class _DrawerCustomItemState extends State<DrawerCustomItem> {
           padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
           child: Row(
             children: <Widget>[
-              new Container(
+              Container(
                   width: 48.0,
                   height: 48.0,
-                  decoration: new BoxDecoration(
+                  decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      image: new DecorationImage(
+                      image: DecorationImage(
                           fit: BoxFit.fill,
                           image: AssetImage("assets/user1.jpg")))),
               Container(
@@ -85,7 +87,10 @@ class _DrawerCustomItemState extends State<DrawerCustomItem> {
               (BuildContext context, MenuItem menuItem, bool isSelected) {
             return Container(
               color: isSelected
-                  ? Theme.of(context).colorScheme.secondary.withOpacity(0.7)
+                  ? Theme.of(context)
+                      .colorScheme
+                      .secondary
+                      .withAlpha((255 * 0.7).toInt())
                   : Colors.transparent,
               padding: EdgeInsets.fromLTRB(24, 16, 24, 16),
               child: Text(

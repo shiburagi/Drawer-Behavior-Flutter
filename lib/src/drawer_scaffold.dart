@@ -1,14 +1,15 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'side_drawer.dart';
-import '../src/utils.dart';
+import 'package:drawerbehavior/src/utils.dart';
 
-typedef Widget DrawerScaffoldBuilder(
+typedef DrawerScaffoldBuilder = Widget Function(
     BuildContext context, MenuController? menuController);
 
 /// a Scaffold wrapper
 class DrawerScaffold extends StatefulWidget {
   DrawerScaffold({
+    required this.drawers,
     this.appBar,
     this.body,
     this.contentShadow = const [
@@ -19,9 +20,9 @@ class DrawerScaffold extends StatefulWidget {
         spreadRadius: 10.0,
       ),
     ],
-    this.drawers,
     this.cornerRadius = 16.0,
     this.controller,
+    this.closeOnPopInvoked = true,
     this.extendedBody = false,
     this.bottomNavigationBar,
     this.floatingActionButtonLocation,
@@ -40,15 +41,15 @@ class DrawerScaffold extends StatefulWidget {
     this.onOpened,
     this.onClosed,
     this.backgroundColor,
-  })  : assert((drawers?.where((element) => element.peekMenu).length ?? 0) < 2,
+  })  : assert((drawers.where((element) => element.peekMenu).length) < 2,
             "\n\nOnly can have one SideDrawer with peek menu\n"),
         assert(body == null || builder == null, "Use either child or builder"),
         super(key: key);
 
   /// List of drawers
-  final List<SideDrawer>? drawers;
+  final List<SideDrawer> drawers;
 
-  /// Screen Builder => Widget ScreenBuilder<T>(BuildContext context, T? id)
+  /// Screen Builder => Widget ScreenBuilder(BuildContext context, T? id)
   final ScreenBuilder? builder;
 
   /// Screen child
@@ -68,6 +69,9 @@ class DrawerScaffold extends StatefulWidget {
 
   /// set background color for [DrawerScaffold], default: [Theme.of(context).scaffoldBackgroundColor]
   final Color? backgroundColor;
+
+  /// [IOS] to close drawer when pop even trigger and drawer still open, when true it will disable gesture close
+  final bool closeOnPopInvoked;
 
   final bool extendedBody;
   final bool? enableGestures;
@@ -92,7 +96,7 @@ class DrawerScaffold extends StatefulWidget {
   final Function(SideDrawer)? onClosed;
 
   @override
-  _DrawerScaffoldState createState() => new _DrawerScaffoldState();
+  _DrawerScaffoldState createState() => _DrawerScaffoldState();
 
   static MenuController currentController(BuildContext context,
       {bool nullOk = true}) {
@@ -124,32 +128,31 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
     with TickerProviderStateMixin {
   List<MenuController>? menuControllers;
 
-  Curve defaultScaleDownCurve = new Interval(0.0, 0.3, curve: Curves.easeOut);
-  Curve defaultScaleUpCurve = new Interval(0.0, 1.0, curve: Curves.easeOut);
-  Curve defaultSlideOutCurve = new Interval(0.0, 1.0, curve: Curves.easeOut);
-  Curve defaultSlideInCurve = new Interval(0.0, 1.0, curve: Curves.easeOut);
+  Curve defaultScaleDownCurve = Interval(0.0, 0.3, curve: Curves.easeOut);
+  Curve defaultScaleUpCurve = Interval(0.0, 1.0, curve: Curves.easeOut);
+  Curve defaultSlideOutCurve = Interval(0.0, 1.0, curve: Curves.easeOut);
+  Curve defaultSlideInCurve = Interval(0.0, 1.0, curve: Curves.easeOut);
 
   Curve get scaleDownCurve =>
-      widget.drawers?[focusDrawerIndex].scaleDownCurve ?? defaultScaleDownCurve;
-  Curve get scaleUpCurve =>
-      widget.drawers?[focusDrawerIndex].scaleUpCurve ?? defaultScaleUpCurve;
-  Curve get slideOutCurve =>
-      widget.drawers?[focusDrawerIndex].slideOutCurve ?? defaultSlideOutCurve;
-  Curve get slideInCurve =>
-      widget.drawers?[focusDrawerIndex].slideInCurve ?? defaultSlideInCurve;
+      focusDrawer?.scaleDownCurve ?? defaultScaleDownCurve;
+  Curve get scaleUpCurve => focusDrawer?.scaleUpCurve ?? defaultScaleUpCurve;
+  Curve get slideOutCurve => focusDrawer?.slideOutCurve ?? defaultSlideOutCurve;
+  Curve get slideInCurve => focusDrawer?.slideInCurve ?? defaultSlideInCurve;
 
   int listenDrawerIndex = 0;
   int focusDrawerIndex = 0;
 
+  SideDrawer? get focusDrawer => widget.drawers.getOrNull(focusDrawerIndex);
+  SideDrawer? get listenDrawer => widget.drawers.getOrNull(listenDrawerIndex);
+
   int get mainDrawerIndex => max(
       0,
-      widget.drawers?.indexWhere(
-              (element) => element.direction == widget.defaultDirection) ??
-          0);
+      widget.drawers.indexWhere(
+          (element) => element.direction == widget.defaultDirection));
   @override
   void initState() {
     super.initState();
-    selectedItemId = widget.drawers![listenDrawerIndex].selectedItemId;
+    selectedItemId = listenDrawer?.selectedItemId;
 
     assignContoller();
 
@@ -163,6 +166,12 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
 
   @override
   void dispose() {
+    menuControllers?.forEach(
+      (element) {
+        element._animationController.dispose();
+      },
+    );
+
     super.dispose();
   }
 
@@ -173,7 +182,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
   }
 
   MenuController createController<T>(SideDrawer<T> d) {
-    MenuController controller = dcreateController(
+    MenuController controller = _createController(
       context,
       d,
       this,
@@ -191,10 +200,9 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
   double _getPeekSize(Direction direction) {
     try {
       return widget.drawers
-              ?.firstWhere((element) =>
-                  element.peekMenu && direction == element.direction)
-              .peekSize ??
-          0;
+          .firstWhere(
+              (element) => element.peekMenu && direction == element.direction)
+          .peekSize;
     } catch (e) {
       return 0;
     }
@@ -202,15 +210,13 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
 
   double? _getDefaultElevation() {
     try {
-      return widget.drawers
-          ?.firstWhere((element) => element.peekMenu)
-          .elevation;
+      return widget.drawers.firstWhere((element) => element.peekMenu).elevation;
     } catch (e) {
       return null;
     }
   }
 
-  MenuController dcreateController<T>(BuildContext context, SideDrawer<T> d,
+  MenuController _createController<T>(BuildContext context, SideDrawer<T> d,
       TickerProvider vsync, Function(double) onAnimated) {
     MenuController controller = MenuController(
       d,
@@ -224,18 +230,15 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
 
   assignContoller() {
     if (menuControllers == null)
-      menuControllers ??= widget.drawers?.map(createController).toList();
+      menuControllers ??= widget.drawers.map(createController).toList();
     else
       for (var i = 0;
-          i < (widget.drawers?.length ?? 0) &&
-              i < (menuControllers?.length ?? 0);
+          i < min(widget.drawers.length, menuControllers?.length ?? 0);
           i++) {
-        menuControllers![i]._drawer = widget.drawers![i];
+        menuControllers?[i]._drawer = widget.drawers[i];
       }
-    for (var i = menuControllers?.length ?? 0;
-        i < (widget.drawers?.length ?? 0);
-        i++) {
-      menuControllers!.add(createController(widget.drawers![i]));
+    for (var i = menuControllers?.length ?? 0; i < widget.drawers.length; i++) {
+      menuControllers!.add(createController(widget.drawers[i]));
     }
     if (widget.controller != null) {
       widget.controller?._menuControllers = menuControllers;
@@ -270,7 +273,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
           key: appBar.key,
           backgroundColor: appBar.backgroundColor,
           leading: appBar.leading ??
-              new IconButton(
+              IconButton(
                   icon: Icon(Icons.menu),
                   onPressed: () {
                     focusDrawerIndex = mainDrawerIndex;
@@ -327,9 +330,9 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
   }
 
   createContentDisplay() {
-    if (selectedItemId != widget.drawers![listenDrawerIndex].selectedItemId ||
-        body == null) {
-      selectedItemId = widget.drawers![listenDrawerIndex].selectedItemId;
+    final drawer = listenDrawer;
+    if (selectedItemId != drawer?.selectedItemId || body == null) {
+      selectedItemId = drawer?.selectedItemId;
       body = widget.body ?? widget.builder?.call(context, selectedItemId);
     }
     Widget _scaffoldWidget = Container(
@@ -351,8 +354,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
       ),
     );
 
-    double maxSlideAmount =
-        widget.drawers![focusDrawerIndex].maxSlideAmount(context);
+    double maxSlideAmount = focusDrawer?.maxSlideAmount(context) ?? 0;
     Widget content = !widget.enableGestures!
         ? _scaffoldWidget
         : GestureDetector(
@@ -435,17 +437,17 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
     bool isIOS = Theme.of(context).platform == TargetPlatform.iOS;
 
     return zoomAndSlideContent(
-      new Container(
-        decoration: new BoxDecoration(
+      Container(
+        decoration: BoxDecoration(
           color: widget.backgroundColor ??
               Theme.of(context).scaffoldBackgroundColor,
         ),
-        child: isIOS
+        child: isIOS && !widget.closeOnPopInvoked
             ? content
             : PopScope(
                 child: content,
                 canPop: false,
-                onPopInvoked: (didPop) async {
+                onPopInvokedWithResult: (didPop, result) async {
                   if (didPop) {
                     return;
                   }
@@ -466,7 +468,9 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
   zoomAndSlideContent(Widget content, [bool isDrawer = false]) {
     MenuController menuController = this.menuControllers![focusDrawerIndex];
 
-    SideDrawer drawer = widget.drawers![focusDrawerIndex];
+    SideDrawer? drawer = focusDrawer;
+
+    if (drawer == null) return;
 
     double slidePercent = menuController._slidePercent;
     double contentScale = menuController.contentScale;
@@ -499,7 +503,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
 
     final defaultElavation = _getDefaultElevation();
     double elevation = defaultElavation ?? drawer.elevation * slidePercent;
-    return new Transform(
+    return Transform(
       transform: perspective,
       origin: drawer.degree != null
           ? Offset(MediaQuery.of(context).size.width / 2, 0.0)
@@ -532,16 +536,16 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
     // if (menuControllers?[focusDrawerIndex].state == MenuState.closed) {
     //   focusDrawerIndex = drawerFrom(widget.defaultDirection);
     // }
-    focusDrawerIndex = min((widget.drawers?.length ?? 1) - 1, focusDrawerIndex);
+    focusDrawerIndex = min((widget.drawers.length) - 1, focusDrawerIndex);
 
     return Stack(
       children: [
         // widget.drawers![i],
-        focusDrawerIndex >= 0 ? widget.drawers![focusDrawerIndex] : Container(),
+        focusDrawerIndex >= 0 ? focusDrawer ?? SizedBox() : SizedBox(),
 
-        for (var i = 0; i < (widget.drawers?.length ?? 0); i++)
-          if (widget.drawers![i].peekMenu && i != focusDrawerIndex)
-            zoomAndSlideContent(widget.drawers![i], true),
+        for (var i = 0; i < widget.drawers.length; i++)
+          if (widget.drawers[i].peekMenu && i != focusDrawerIndex)
+            zoomAndSlideContent(widget.drawers[i], true),
 
         createContentDisplay(),
       ],
@@ -550,8 +554,8 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
 
   MenuController get _controller => menuControllers![focusDrawerIndex];
   MenuController? _getControllerFor(SideDrawer drawer) {
-    final index = widget.drawers?.indexOf(drawer);
-    if (index != null && index >= 0) return menuControllers?[index];
+    final index = widget.drawers.indexOf(drawer);
+    if (index >= 0) return menuControllers?[index];
     return null;
   }
 }
@@ -566,7 +570,7 @@ class DrawerScaffoldMenuController extends StatefulWidget {
 
   @override
   DrawerScaffoldMenuControllerState createState() {
-    return new DrawerScaffoldMenuControllerState();
+    return DrawerScaffoldMenuControllerState();
   }
 }
 
@@ -671,7 +675,7 @@ class MenuController extends ChangeNotifier {
   MenuController(this._drawer, this.onAnimated,
       {required this.vsync, BuildContext? context})
       : this.duration = _drawer.duration ?? const Duration(milliseconds: 250),
-        _animationController = new AnimationController(vsync: vsync) {
+        _animationController = AnimationController(vsync: vsync) {
     _animationController
       ..duration = duration
       ..addListener(() {

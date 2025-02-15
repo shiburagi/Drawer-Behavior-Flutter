@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:drawerbehavior/drawerbehavior.dart';
 
 class DrawerSlideWithHeader extends StatefulWidget {
+  const DrawerSlideWithHeader({Key? key}) : super(key: key);
+
   @override
-  _DrawerSlideWithHeaderState createState() => _DrawerSlideWithHeaderState();
+  State<DrawerSlideWithHeader> createState() => _DrawerSlideWithHeaderState();
 }
 
 class _DrawerSlideWithHeaderState extends State<DrawerSlideWithHeader> {
@@ -23,12 +25,12 @@ class _DrawerSlideWithHeaderState extends State<DrawerSlideWithHeader> {
           padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
           child: Row(
             children: <Widget>[
-              new Container(
+              Container(
                   width: 48.0,
                   height: 48.0,
-                  decoration: new BoxDecoration(
+                  decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      image: new DecorationImage(
+                      image: DecorationImage(
                           fit: BoxFit.fill,
                           image: AssetImage("assets/user1.jpg")))),
               Container(
@@ -66,7 +68,7 @@ class _DrawerSlideWithHeaderState extends State<DrawerSlideWithHeader> {
 
   @override
   Widget build(BuildContext context) {
-    return new DrawerScaffold(
+    return DrawerScaffold(
       cornerRadius: 0,
       appBar: AppBar(
           title: Text("Drawer - with Header"),

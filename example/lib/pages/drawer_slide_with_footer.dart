@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:drawerbehavior/drawerbehavior.dart';
 
 class DrawerSlideWithFooter extends StatefulWidget {
+  const DrawerSlideWithFooter({Key? key}) : super(key: key);
+
   @override
-  _DrawerSlideWithFooterState createState() => _DrawerSlideWithFooterState();
+  State<DrawerSlideWithFooter> createState() => _DrawerSlideWithFooterState();
 }
 
 class _DrawerSlideWithFooterState extends State<DrawerSlideWithFooter> {
@@ -27,12 +29,12 @@ class _DrawerSlideWithFooterState extends State<DrawerSlideWithFooter> {
           padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
           child: Row(
             children: <Widget>[
-              new Container(
+              Container(
                   width: 48.0,
                   height: 48.0,
-                  decoration: new BoxDecoration(
+                  decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      image: new DecorationImage(
+                      image: DecorationImage(
                           fit: BoxFit.fill,
                           image: AssetImage("assets/user1.jpg")))),
               Container(

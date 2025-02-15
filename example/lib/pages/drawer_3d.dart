@@ -3,8 +3,10 @@ import 'package:drawerbehavior_example/menus/main.dart';
 import 'package:flutter/material.dart';
 
 class Drawer3d extends StatefulWidget {
+  const Drawer3d({Key? key}) : super(key: key);
+
   @override
-  _Drawer3dState createState() => _Drawer3dState();
+  State<Drawer3d> createState() => _Drawer3dState();
 }
 
 class _Drawer3dState extends State<Drawer3d> {
