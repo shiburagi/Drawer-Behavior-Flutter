@@ -25,5 +25,5 @@ jobs:
       - name: Dart and Flutter Package Publisher
         uses: k-paxian/dart-package-publisher@v1.6
         with:
-          flutterVersion: 3.27.4
+          flutterBranch: stable
           credentialJson: ${{ secrets.CREDENTIAL_JSON }}
