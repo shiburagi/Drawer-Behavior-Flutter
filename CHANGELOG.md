@@ -1,4 +1,7 @@
 # 3.0.2
+* Add custom pop handler
+
+# 3.0.2
 * Dispose drawer animation when DrawerScaffold call dispose()
 * make `drawers` required.
 * add `closeOnPopInvoked` parameter to auto close drawer for ios
