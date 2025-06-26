@@ -1,3 +1,6 @@
+# 3.0.4
+* close app on last page
+
 # 3.0.3
 * Add custom pop handler
 

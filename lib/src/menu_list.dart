@@ -14,7 +14,8 @@ class MenuListItem extends StatelessWidget {
   final double? width;
   final EdgeInsets? padding;
 
-  MenuListItem({
+  const MenuListItem({
+    Key? key,
     required this.title,
     this.isSelected,
     this.menuView,
@@ -26,37 +27,38 @@ class MenuListItem extends StatelessWidget {
     this.width,
     this.padding,
     this.suffix,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    TextStyle _textStyle = textStyle!
-        .copyWith(color: isSelected! ? selectorColor : textStyle!.color);
+    TextStyle textStyle = this
+        .textStyle!
+        .copyWith(color: isSelected! ? selectorColor : this.textStyle!.color);
 
     List<Widget> children = [];
-    if (icon != null)
+    if (icon != null) {
       children.add(Padding(
         padding: EdgeInsets.only(right: 16),
         child: IconTheme(
-            data: IconThemeData(color: _textStyle.color), child: icon!),
+            data: IconThemeData(color: textStyle.color), child: icon!),
       ));
+    }
     children.add(
       Expanded(
-        child: Container(
-          child: Text(
-            title,
-            style: _textStyle,
-          ),
-        ),
         flex: 1,
+        child: Text(
+          title,
+          style: textStyle,
+        ),
       ),
     );
-    if (suffix != null)
+    if (suffix != null) {
       children.add(Padding(
         padding: EdgeInsets.only(right: 12),
         child: IconTheme(
-            data: IconThemeData(color: _textStyle.color), child: suffix!),
+            data: IconThemeData(color: textStyle.color), child: suffix!),
       ));
+    }
     return Stack(
       children: [
         if (drawBorder)
