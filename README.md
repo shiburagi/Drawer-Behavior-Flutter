@@ -39,7 +39,9 @@ https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
     - [Drawer with Footer](#drawer-with-footer)
     - [Drawer with Header and Custom Builder](#drawer-with-header-and-custom-builder)
     - [Peek Drawer](#peek-drawer)
-  - [Customize](#customize)
+  - [⚙️ Customization Options](#️-customization-options)
+    - [`DrawerScaffold` Parameters:](#drawerscaffold-parameters)
+    - [`SideDrawer` Parameters:](#sidedrawer-parameters)
   - [Contributors](#contributors)
 
 
@@ -372,74 +374,45 @@ new DrawerScaffold(
   ...
 );
 ```
+
 ---
+## ⚙️ Customization Options
 
-## Customize
+You can fine-tune the behavior and appearance of your drawers using various parameters available for both `DrawerScaffold` and `SideDrawer`.
 
-*DrawerScaffold*
-```dart
-List<SideDrawer> drawers; //required
-DrawerScaffoldController controller;
-ScreenBuilder builder;
-bool enableGestures; // default: true
-PreferredSizeWidget appBar;
-double cornerRadius; // default: 16
-double bacgroundColor; // default: Theme.of(context).scaffoldBackgroundColor
-Widget floatingActionButton;
-Widget bottomNavigationBar;
-FloatingActionButtonLocation floatingActionButtonLocation;
-FloatingActionButtonAnimator floatingActionButtonAnimator;
-List<BoxShadow> contentShadow;
-Widget bottomSheet;
-bool closeOnPopInvoked; // [IOS] default: true
-bool extendBodyBehindAppBar;
-List<Widget> persistentFooterButtons;
-bool primary;
-bool resizeToAvoidBottomInset;
-bool resizeToAvoidBottomPadding;
+### `DrawerScaffold` Parameters:
 
-/// Listen to offset value on slide event for which [SideDrawer]
-Function(SideDrawer, double) onSlide;
-/// Listen to which [SideDrawer] is opened (offset=1)
-Function(SideDrawer) onOpened;
-/// Listen to which [SideDrawer] is closed (offset=0)
-Function(SideDrawer) onClosed;
-```
-*SideDrawer*
-```dart
-double percentage; // default: 0.8
-double elevation; // default: 4
-double cornerRadius;
-double degree; // 15-45 degree
-double peekSize; // 56px
-Menu menu;
-String selectedItemId;
-Direction direction;
-Duration duration;
-Curve curve;
-bool animation; //default: false
-bool slide; //default: false
-bool peekMenu; //default: false
-bool hideOnItemPressed; //default: true
-Function(String) onMenuItemSelected;
-Widget headerView;
-Widget footerView;
-DecorationImage background;
-Color color;
-Color selectorColor;
-TextStyle textStyle;
-Alignment alignment;
-EdgeInsets padding;
-Function(BuildContext, MenuItem, bool) itemBuilder;
+* **`drawers`**: A list of `SideDrawer` widgets, allowing you to define multiple drawers (e.g., left and right).
+* **`appBar`**: Provides a custom `AppBar` for your main content.
+* **`body` / `builder`**: Defines the main content area of your application. You should use either `body` for static content or `builder` if your content needs to react to drawer states (e.g., selected menu item).
+* **`contentShadow`**: Controls the shadow cast by the main content panel when a drawer is open.
+* **`cornerRadius`**: Sets the corner radius for the main content panel, giving it rounded edges.
+* **`controller`**: An optional `DrawerScaffoldController` for programmatic control over opening, closing, and toggling drawers.
+* **`enableGestures`**: A boolean flag to enable or disable horizontal drag gestures for opening/closing drawers.
+* **`defaultDirection`**: Specifies the initial drawer direction (e.g., `Direction.left`) that will be primarily controlled by `toggle()`.
+* **`onSlide`, `onOpened`, `onClosed`**: Callbacks that fire when the drawer slides, fully opens, or fully closes, respectively.
+* **`backgroundColor`**: The background color of the scaffold that sits behind your main content and drawers.
 
-```
+### `SideDrawer` Parameters:
 
-*MenuItem*
-```dart
-String id;
-String title;
-IconData icon;
-```
+* **`menu`**: If you're building a menu-driven drawer, pass a `Menu` object containing your `MenuItem`s.
+* **`child`**: Alternatively, you can provide a single, fully custom `Widget` to be the content of the drawer.
+* **`itemBuilder`**: For highly customized or dynamically generated lists of items within the drawer, you can provide a `SideDrawerItemBuilder`.
+* **`direction`**: Determines whether the drawer slides from `Direction.left` or `Direction.right`.
+* **`drawerWidth`**: Sets the fixed width of the drawer in pixels.
+* **`peekSize`**: When `peekMenu` is enabled, this defines the visible width of the drawer when it's in its "peek" state.
+* **`percentage`**: If `slide` is true, this controls how much the main content scales down (e.g., `0.8` for 80% size) when the drawer opens.
+* **`degree`**: If a rotation animation is desired, this sets the degree of 3D rotation for the main content (clamped between 15 and 45 degrees).
+* **`slide`**: A boolean that, when true, makes the main content slide horizontally along with the drawer.
+* **`animation`**: Enables or disables subtle animation effects on individual menu items as the drawer opens.
+* **`peekMenu`**: If true, the drawer will remain partially visible (at `peekSize`) even when "closed."
+* **`hideOnItemPressed`**: When true, the drawer automatically closes after a menu item is tapped.
+* **`headerView`, `footerView`**: Custom widgets that can be placed at the top and bottom of the drawer content, respectively.
+* **`color`, `background`**: Control the background `Color` or `DecorationImage` of the drawer itself.
+* **`selectorColor`**: Sets the color of the visual indicator that highlights the currently selected menu item.
+* **`duration`, `curve`**: Define the `Duration` and `Curve` for the drawer's opening and closing animations.
+
+---
 
 ## Contributors
 
