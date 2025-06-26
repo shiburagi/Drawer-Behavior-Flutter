@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'side_drawer.dart';
 import 'package:drawerbehavior/src/utils.dart';
 
@@ -11,7 +12,11 @@ typedef DrawerScaffoldBuilder = Widget Function(
 /// Default function to be called when the pop gesture is invoked if no custom [onPop] is provided.
 /// It simply pops the current route off the navigator.
 void _defaultOnPop(BuildContext context) {
-  Navigator.pop(context);
+  if (Navigator.canPop(context)) {
+    Navigator.pop(context);
+  } else {
+    SystemNavigator.pop();
+  }
 }
 
 /// A Scaffold wrapper that provides custom drawer behavior, including
@@ -52,8 +57,8 @@ class DrawerScaffold extends StatefulWidget {
       this.body,
       this.contentShadow = const [
         BoxShadow(
-          color: const Color(0x44000000),
-          offset: const Offset(0.0, 5.0),
+          color: Color(0x44000000),
+          offset: Offset(0.0, 5.0),
           blurRadius: 20.0,
           spreadRadius: 10.0,
         ),
@@ -163,7 +168,7 @@ class DrawerScaffold extends StatefulWidget {
   final Function(BuildContext context) onPop;
 
   @override
-  _DrawerScaffoldState createState() => _DrawerScaffoldState();
+  State<DrawerScaffold> createState() => _DrawerScaffoldState();
 
   /// Retrieves the [MenuController] for the currently focused drawer from the nearest [DrawerScaffoldState].
   ///
@@ -473,7 +478,7 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
       body = widget.body ?? widget.builder?.call(context, selectedItemId);
     }
     // The main Scaffold that holds the app bar and body.
-    Widget _scaffoldWidget = Container(
+    Widget scaffoldWidget = SizedBox(
       width: MediaQuery.of(context).size.width -
           totalPeekSize, // Adjusts width for peek menus.
       child: Scaffold(
@@ -498,13 +503,13 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
     double maxSlideAmount = focusDrawer?.maxSlideAmount(context) ?? 0;
     // Wrap the Scaffold with GestureDetector for horizontal drag handling.
     Widget content = !widget.enableGestures!
-        ? _scaffoldWidget // If gestures are disabled, just return the scaffold.
+        ? scaffoldWidget // If gestures are disabled, just return the scaffold.
         : GestureDetector(
             child: AbsorbPointer(
                 absorbing: isDrawerOpen() &&
                     widget.appBar !=
                         null, // Absorb pointer events on content if drawer is open and app bar is present.
-                child: _scaffoldWidget),
+                child: scaffoldWidget),
             onTap: () {
               // Close any open drawers when tapping the content.
               menuControllers?.forEach((element) {
@@ -606,7 +611,6 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
             ? content // On iOS, if closeOnPopInvoked is false, don't use PopScope.
             : PopScope(
                 // PopScope handles back button/gesture behavior.
-                child: content,
                 canPop: false, // Prevents default pop behavior.
                 onPopInvokedWithResult: (didPop, result) async {
                   if (didPop) {
@@ -623,6 +627,8 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
                         context); // Otherwise, invoke the custom onPop callback.
                   }
                 },
+                // PopScope handles back button/gesture behavior.
+                child: content,
               ),
       ),
     );
@@ -634,9 +640,9 @@ class _DrawerScaffoldState<T> extends State<DrawerScaffold>
 
     SideDrawer? drawer = focusDrawer;
 
-    if (drawer == null)
+    if (drawer == null) {
       return content; // If no drawer is focused, return content as is.
-
+    }
     double slidePercent = menuController._slidePercent;
     double contentScale = menuController.contentScale;
     double slideAmount = menuController.slideAmount;
@@ -747,10 +753,11 @@ class DrawerScaffoldMenuController extends StatefulWidget {
 
   /// The direction of the drawer this controller should target.
   final Direction? direction;
-  DrawerScaffoldMenuController({
+  const DrawerScaffoldMenuController({
+    Key? key,
     this.builder,
     this.direction,
-  });
+  }) : super(key: key);
 
   @override
   DrawerScaffoldMenuControllerState createState() {
@@ -820,7 +827,7 @@ class DrawerScaffoldMenuControllerState
 }
 
 /// A typedef for a builder function that creates a widget based on a selected item ID.
-typedef Widget ScreenBuilder<T>(BuildContext context, T? id);
+typedef ScreenBuilder<T> = Widget Function(BuildContext context, T? id);
 
 /// Represents a "screen" or content item that can be selected from a drawer.
 class Screen {
@@ -864,19 +871,11 @@ class MenuController extends ChangeNotifier {
   final Function(double) onAnimated;
 
   /// The currently selected value or item ID associated with this drawer.
-  dynamic _value;
-
-  /// Getter for the selected value.
-  dynamic get value => _value;
-
-  /// Setter for the selected value, automatically calling `updateValue`.
-  set value(dynamic value) {
-    this._value = value;
-  }
+  dynamic value;
 
   /// Updates the selected value and notifies listeners.
   updateValue(dynamic value) {
-    this._value = value;
+    this.value = value;
     notifyListeners();
   }
 
@@ -904,7 +903,7 @@ class MenuController extends ChangeNotifier {
   /// Constructor for [MenuController].
   MenuController(this._drawer, this.onAnimated,
       {required this.vsync, BuildContext? context})
-      : this.duration = _drawer.duration ??
+      : duration = _drawer.duration ??
             const Duration(
                 milliseconds: 250), // Use drawer's duration or default.
         _animationController = AnimationController(vsync: vsync) {
@@ -1025,7 +1024,7 @@ class DrawerScaffoldController {
   DrawerScaffoldController({Direction? open}) : _open = open;
 
   /// The initial direction to open a drawer.
-  Direction? _open;
+  final Direction? _open;
 
   /// Toggles the specified drawer (opens if closed, closes if open).
   Future<void> toggle([Direction direction = Direction.left]) {

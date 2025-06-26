@@ -92,23 +92,21 @@ class SideDrawer<T> extends StatefulWidget {
                     true,
             "\n\nFor peek menu,\nplease provide prefix or icon in MenuItem\n"),
         // Initialize itemBuilder based on whether a menu or child is provided.
-        this.itemBuilder = menu != null
+        itemBuilder = menu != null
             ? MenuSideDrawerBuilder<T>(menu, itemBuilder)
             : WidgetSideDrawerBuilder<T>(child ?? SizedBox())
                 as SideDrawerBuilder,
-        this.percentage =
-            percentage ?? 0.8, // Default content scaling percentage.
-        this.degree = degree == null
+        percentage = percentage ?? 0.8, // Default content scaling percentage.
+        degree = degree == null
             ? null
             : max(min(45, degree), 15), // Clamp degree to a valid range.
         // Define animation curves for various transitions.
-        this.scaleDownCurve =
-            Interval(0.0, 0.3, curve: curve ?? Curves.easeOut),
-        this.scaleUpCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
-        this.slideOutCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
-        this.slideInCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        scaleDownCurve = Interval(0.0, 0.3, curve: curve ?? Curves.easeOut),
+        scaleUpCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        slideOutCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        slideInCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
         // Set default padding based on whether it's a peek menu.
-        this.padding = padding ??
+        padding = padding ??
             (peekMenu
                 ? const EdgeInsets.only(left: 16.0, top: 15.0, bottom: 15.0)
                 : const EdgeInsets.only(left: 40.0, top: 15.0, bottom: 15.0)),
@@ -145,14 +143,13 @@ class SideDrawer<T> extends StatefulWidget {
         onMenuItemSelected = null, // No menu item selection callback.
         itemBuilder = WidgetSideDrawerBuilder(
             child ?? SizedBox()), // Use WidgetSideDrawerBuilder for the child.
-        this.percentage = percentage ?? 0.8,
-        this.degree = degree == null ? null : max(min(45, degree), 15),
-        this.scaleDownCurve =
-            Interval(0.0, 0.3, curve: curve ?? Curves.easeOut),
-        this.scaleUpCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
-        this.slideOutCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
-        this.slideInCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
-        this.padding = padding ??
+        percentage = percentage ?? 0.8,
+        degree = degree == null ? null : max(min(45, degree), 15),
+        scaleDownCurve = Interval(0.0, 0.3, curve: curve ?? Curves.easeOut),
+        scaleUpCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        slideOutCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        slideInCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        padding = padding ??
             (peekMenu
                 ? const EdgeInsets.only(left: 16.0, top: 15.0, bottom: 15.0)
                 : const EdgeInsets.only(left: 40.0, top: 15.0, bottom: 15.0)),
@@ -188,14 +185,13 @@ class SideDrawer<T> extends StatefulWidget {
         selectedItemId = null, // No selected item ID as it's fully custom.
         onMenuItemSelected = null, // No default menu item selection callback.
         child = null, // No default child widget.
-        this.percentage = percentage ?? 0.8,
-        this.degree = degree == null ? null : max(min(45, degree), 15),
-        this.scaleDownCurve =
-            Interval(0.0, 0.3, curve: curve ?? Curves.easeOut),
-        this.scaleUpCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
-        this.slideOutCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
-        this.slideInCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
-        this.padding = padding ??
+        percentage = percentage ?? 0.8,
+        degree = degree == null ? null : max(min(45, degree), 15),
+        scaleDownCurve = Interval(0.0, 0.3, curve: curve ?? Curves.easeOut),
+        scaleUpCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        slideOutCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        slideInCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        padding = padding ??
             (peekMenu
                 ? const EdgeInsets.only(left: 16.0, top: 15.0, bottom: 15.0)
                 : const EdgeInsets.only(left: 40.0, top: 15.0, bottom: 15.0)),
@@ -231,14 +227,13 @@ class SideDrawer<T> extends StatefulWidget {
     this.hideOnItemPressed = true,
   })  : menu = null,
         child = null,
-        this.percentage = percentage ?? 0.8,
-        this.degree = degree == null ? null : max(min(45, degree), 15),
-        this.scaleDownCurve =
-            Interval(0.0, 0.3, curve: curve ?? Curves.easeOut),
-        this.scaleUpCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
-        this.slideOutCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
-        this.slideInCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
-        this.padding = padding ??
+        percentage = percentage ?? 0.8,
+        degree = degree == null ? null : max(min(45, degree), 15),
+        scaleDownCurve = Interval(0.0, 0.3, curve: curve ?? Curves.easeOut),
+        scaleUpCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        slideOutCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        slideInCurve = Interval(0.0, 1.0, curve: curve ?? Curves.easeOut),
+        padding = padding ??
             (peekMenu
                 ? const EdgeInsets.only(left: 16.0, top: 15.0, bottom: 15.0)
                 : const EdgeInsets.only(left: 40.0, top: 15.0, bottom: 15.0)),
@@ -411,7 +406,7 @@ class SideDrawer<T> extends StatefulWidget {
   double maxSlideAmount(context) => drawerWidth - (peekMenu ? peekSize : 0);
 
   @override
-  _SideDrawerState<T> createState() => _SideDrawerState<T>();
+  State<SideDrawer<T>> createState() => _SideDrawerState<T>();
 }
 
 /// The state class for `SideDrawer`, managing its internal UI properties and interactions.
@@ -452,7 +447,7 @@ class _SideDrawerState<T> extends State<SideDrawer<T>> {
     super.initState();
     // Get the MenuController for this specific drawer and set its initial value.
     MenuController? controller =
-        DrawerScaffold.getControllerFor(context, this.widget);
+        DrawerScaffold.getControllerFor(context, widget);
     controller?.value = widget.selectedItemId;
   }
 
@@ -461,7 +456,7 @@ class _SideDrawerState<T> extends State<SideDrawer<T>> {
     // If the selected item ID changes, update the MenuController's value.
     if (oldWidget.selectedItemId != widget.selectedItemId) {
       MenuController? controller =
-          DrawerScaffold.getControllerFor(context, this.widget);
+          DrawerScaffold.getControllerFor(context, widget);
       controller?.value = widget.selectedItemId;
     }
 
@@ -502,15 +497,16 @@ class _SideDrawerState<T> extends State<SideDrawer<T>> {
             left: widget.direction == Direction.left
                 ? 0
                 : MediaQuery.of(context).size.width - maxSlideAmount),
-        child: Container(
+        child: SizedBox(
             width: maxSlideAmount,
             child: widget.headerView), // Constrain header width.
       ));
     } else {}
     widgets.add(Expanded(
       // Menu items take up available space.
-      child: createMenuItems(menuController),
       flex: 1,
+      // Menu items take up available space.
+      child: createMenuItems(menuController),
     ));
 
     if (widget.footerView != null) {
@@ -522,11 +518,9 @@ class _SideDrawerState<T> extends State<SideDrawer<T>> {
                   : MediaQuery.of(context).size.width - maxSlideAmount),
           child: Container(
             width: maxSlideAmount,
-            child: widget.footerView,
-            margin: EdgeInsets.only(
-                bottom: MediaQuery.of(context)
-                    .padding
-                    .bottom), // Respect system insets.
+            margin:
+                EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+            child: widget.footerView, // Respect system insets.
           )));
     }
     // Get the global MenuController to apply slide transformations.
@@ -550,7 +544,7 @@ class _SideDrawerState<T> extends State<SideDrawer<T>> {
           // Apply SafeArea if specified.
           top: widget.withSafeAre || widget.headerView == null,
           bottom: widget.withSafeAre || widget.footerView == null,
-          child: Container(
+          child: SizedBox(
             height: MediaQuery.of(context)
                 .size
                 .height, // Drawer takes full screen height.
@@ -567,7 +561,8 @@ class _SideDrawerState<T> extends State<SideDrawer<T>> {
   @override
   Widget build(BuildContext context) {
     // Initialize selector and text styles, falling back to theme defaults.
-    selectorColor = widget.selectorColor ?? Theme.of(context).indicatorColor;
+    selectorColor =
+        widget.selectorColor ?? Theme.of(context).colorScheme.secondary;
     textStyle = widget.textStyle ??
         Theme.of(context).textTheme.titleMedium?.copyWith(
             color: widget.color.computeLuminance() <
@@ -603,7 +598,7 @@ class _SideDrawerState<T> extends State<SideDrawer<T>> {
           }
 
           MenuController? controller =
-              DrawerScaffold.getControllerFor(context, this.widget);
+              DrawerScaffold.getControllerFor(context, widget);
 
           return Container(
             width: double.infinity,
@@ -678,17 +673,20 @@ class ItemSelector extends ImplicitlyAnimatedWidget {
   final Color? selectorColor; // Color of the selector.
 
   /// Constructor for `ItemSelector`.
-  ItemSelector({
+  const ItemSelector({
+    Key? key,
     this.right,
     required this.top,
     required this.bottom,
     this.opacity,
     this.selectorColor,
   }) : super(
+            key: key,
             duration: const Duration(
                 milliseconds: 250)); // Default animation duration.
 
   @override
+  // ignore: library_private_types_in_public_api
   _ItemSelectorState createState() => _ItemSelectorState();
 }
 
@@ -743,14 +741,13 @@ class AnimatedMenuListItem extends ImplicitlyAnimatedWidget {
   final Widget? menuListItem; // The actual menu item widget.
   final MenuState? menuState; // Current state of the menu (e.g., closed, open).
   final bool? isSelected; // Whether this item is currently selected.
-  final Duration duration; // Animation duration.
 
   /// Constructor for `AnimatedMenuListItem`.
-  AnimatedMenuListItem({
+  const AnimatedMenuListItem({
     this.menuListItem,
     this.menuState,
     this.isSelected,
-    required this.duration,
+    required Duration duration,
     required Curve curve, // Animation curve.
     Key? key,
   }) : super(
@@ -760,7 +757,8 @@ class AnimatedMenuListItem extends ImplicitlyAnimatedWidget {
                 curve); // Pass duration and curve to ImplicitlyAnimatedWidget.
 
   @override
-  _AnimatedMenuListItemState createState() => _AnimatedMenuListItemState();
+  AnimatedWidgetBaseState<AnimatedMenuListItem> createState() =>
+      _AnimatedMenuListItemState();
 }
 
 /// The state for `AnimatedMenuListItem`, managing its implicit position and opacity animations.
@@ -787,7 +785,7 @@ class _AnimatedMenuListItemState
 
   @override
   void forEachTween(visitor) {
-    var slide, opacity;
+    double? slide, opacity;
 
     // Determine target slide and opacity based on the menu state.
     switch (widget.menuState) {

@@ -2,9 +2,11 @@ import 'package:drawerbehavior/drawerbehavior.dart';
 import 'package:drawerbehavior/src/menu_list.dart';
 import 'package:flutter/material.dart' hide MenuController;
 
-typedef SideDrawerItemBuilder = Function(BuildContext context, MenuItem menuItem, bool selected);
+typedef SideDrawerItemBuilder = Function(
+    BuildContext context, MenuItem menuItem, bool selected);
 
-typedef SideDrawerIndexBuilder = Function(BuildContext context, int index, bool selected);
+typedef SideDrawerIndexBuilder = Function(
+    BuildContext context, int index, bool selected);
 
 abstract class SideDrawerBuilder<ItemType, IdType> {
   MenuController? _menuController;
@@ -31,7 +33,8 @@ abstract class SideDrawerBuilder<ItemType, IdType> {
   Widget buildItem(BuildContext context, ItemType t, bool selected);
 }
 
-class MenuSideDrawerBuilder<IdType> extends SideDrawerBuilder<MenuItem, IdType> {
+class MenuSideDrawerBuilder<IdType>
+    extends SideDrawerBuilder<MenuItem, IdType> {
   final SideDrawerItemBuilder? builder;
   final Menu<IdType> menu;
 
@@ -44,7 +47,8 @@ class MenuSideDrawerBuilder<IdType> extends SideDrawerBuilder<MenuItem, IdType> 
     return builder?.call(context, t, selected);
   }
 
-  bool get useAnimation => drawer?.animation == true && drawer?.peekMenu != true;
+  bool get useAnimation =>
+      drawer?.animation == true && drawer?.peekMenu != true;
 
   Widget buildListItem(
     BuildContext context,
@@ -55,17 +59,20 @@ class MenuSideDrawerBuilder<IdType> extends SideDrawerBuilder<MenuItem, IdType> 
     double maxDuration,
   ) {
     final isSelected = item.id == selectedId;
-    Color selectorColor = drawer?.selectorColor ?? Theme.of(context).indicatorColor;
+    Color selectorColor =
+        drawer?.selectorColor ?? Theme.of(context).colorScheme.secondary;
     TextStyle? textStyle = drawer?.textStyle ??
-        Theme.of(context)
-            .textTheme
-            .titleMedium
-            ?.copyWith(color: (drawer?.color.computeLuminance() ?? 0) < 0.5 ? Colors.white : Colors.black);
+        Theme.of(context).textTheme.titleMedium?.copyWith(
+            color: (drawer?.color.computeLuminance() ?? 0) < 0.5
+                ? Colors.white
+                : Colors.black);
 
     Widget listItem = InkWell(
       child: builder == null
           ? MenuListItem(
-              padding: drawer?.peekMenu == true ? EdgeInsets.zero : const EdgeInsets.only(left: 32.0),
+              padding: drawer?.peekMenu == true
+                  ? EdgeInsets.zero
+                  : const EdgeInsets.only(left: 32.0),
               direction: drawer?.direction ?? Direction.left,
               title: item.title,
               isSelected: isSelected,
@@ -78,9 +85,9 @@ class MenuSideDrawerBuilder<IdType> extends SideDrawerBuilder<MenuItem, IdType> 
               drawBorder: !useAnimation)
           : Container(
               alignment: Alignment.centerLeft,
-              child: Container(
-                child: buildItem(context, item, isSelected),
+              child: SizedBox(
                 width: drawer?.maxSlideAmount(context),
+                child: buildItem(context, item, isSelected),
               ),
             ),
       onTap: () => onSelected(item.id),
@@ -91,8 +98,9 @@ class MenuSideDrawerBuilder<IdType> extends SideDrawerBuilder<MenuItem, IdType> 
         menuState: menuController?.state,
         isSelected: isSelected,
         duration: Duration(milliseconds: millis),
-        curve:
-            Interval(animationIntervalStart / maxDuration, animationIntervalEnd / maxDuration, curve: Curves.easeOut),
+        curve: Interval(animationIntervalStart / maxDuration,
+            animationIntervalEnd / maxDuration,
+            curve: Curves.easeOut),
         menuListItem: listItem,
       );
     } else {
@@ -102,19 +110,25 @@ class MenuSideDrawerBuilder<IdType> extends SideDrawerBuilder<MenuItem, IdType> 
 
   @override
   Widget build(BuildContext context) {
-    final animationIntervalDuration = 0.5;    
-    final perListItemDelay = menuController?.state != MenuState.closing ? 0.15 : 0.0;
-    final millis = menuController?.state != MenuState.closing ? 150 * menu.items.length : 600;
+    final animationIntervalDuration = 0.5;
+    final perListItemDelay =
+        menuController?.state != MenuState.closing ? 0.15 : 0.0;
+    final millis = menuController?.state != MenuState.closing
+        ? 150 * menu.items.length
+        : 600;
 
-    final maxDuration = (menu.items.length - 1) * perListItemDelay + animationIntervalDuration;
+    final maxDuration =
+        (menu.items.length - 1) * perListItemDelay + animationIntervalDuration;
 
     int i = 0;
     final items = menu.items.map((e) {
       final animationIntervalStart = i * perListItemDelay;
-      final animationIntervalEnd = animationIntervalStart + animationIntervalDuration;
+      final animationIntervalEnd =
+          animationIntervalStart + animationIntervalDuration;
       MenuItem item = menu.items[i];
       i++;
-      return buildListItem(context, item, animationIntervalStart, animationIntervalEnd, millis, maxDuration);
+      return buildListItem(context, item, animationIntervalStart,
+          animationIntervalEnd, millis, maxDuration);
     }).toList();
 
     return Column(
@@ -144,9 +158,9 @@ class CountSideDrawerBuilder extends SideDrawerBuilder<int, int> {
       return InkWell(
         child: Container(
           alignment: Alignment.centerLeft,
-          child: Container(
-            child: buildItem(context, e, selectedId == e),
+          child: SizedBox(
             width: drawer?.maxSlideAmount(context),
+            child: buildItem(context, e, selectedId == e),
           ),
         ),
         onTap: () => onSelected(e),
