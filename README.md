@@ -5,130 +5,84 @@
 
 # Drawer Behavior - Flutter
 
-Drawer behavior is a library that provide an extra behavior on drawer, such as, move view or scaling view's height while drawer on slide.
+**Drawer Behavior** is a Flutter library that provides advanced effects and behaviors for the side navigation drawer. Unlike the standard Flutter drawer, this package allows you to create immersive interactions such as moving the view, scaling the view's height, or adding 3D effects while the drawer slides.
 
 ![Alt Text](https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-gif.gif)
 
+## ✨ Features
 
----
+* **Scale Effect:** smoothly scales down the main content as the drawer opens.
 
-**Code Base & Credit :**
-https://github.com/matthew-carroll/flutter_ui_challenge_zoom_menu
+* **3D Effect:** Adds a rotation depth effect to the main content.
 
----
+* **Multi-Directional:** Supports both Left and Right side drawers.
 
+* **Peek Drawer:** Keep a portion of the drawer visible even when closed.
 
-## Table of contents
-- [Drawer Behavior - Flutter](#drawer-behavior---flutter)
-  - [Table of contents](#table-of-contents)
-    - [Todo](#todo)
-    - [NEW UPDATES](#new-updates)
-  - [Usage](#usage)
-  - [Example](#example)
-  - [Migration (Null-safety Release)](#migration-null-safety-release)
-    - [mainDrawer (DrawerScaffold) -\> defaultDirection (DrawerScaffold)](#maindrawer-drawerscaffold---defaultdirection-drawerscaffold)
-  - [Migration](#migration)
-    - [contentView (Screen) -\> builder (ScreenBuilder)](#contentview-screen---builder-screenbuilder)
-    - [menuView (MenuView) -\> drawers (List\<SideDrawer\>)](#menuview-menuview---drawers-listsidedrawer)
-    - [percentage (DrawerScaffold) -\> drawers (List\<SideDrawer\>))](#percentage-drawerscaffold---drawers-listsidedrawer)
-  - [Preview](#preview)
-    - [Scale Effect](#scale-effect)
-    - [Right Drawer](#right-drawer)
-    - [3D Effect](#3d-effect)
-    - [Drawer with Header](#drawer-with-header)
-    - [Drawer with Footer](#drawer-with-footer)
-    - [Drawer with Header and Custom Builder](#drawer-with-header-and-custom-builder)
-    - [Peek Drawer](#peek-drawer)
-  - [⚙️ Customization Options](#️-customization-options)
-    - [`DrawerScaffold` Parameters:](#drawerscaffold-parameters)
-    - [`SideDrawer` Parameters:](#sidedrawer-parameters)
-  - [Contributors](#contributors)
+* **Customization:** Full control over headers, footers, item builders, and animations.
 
+* **Null-Safety:** Fully supports Dart null-safety.
 
-### Todo 
- https://github.com/shiburagi/Drawer-Behavior-Flutter/projects/1
+## 📦 Installation
 
-
-### NEW UPDATES
-
-**Version 2.3**
-- Peek Menu
-- ClassName.identifier: **SideDrawer.count()**, **SideDrawer.child()** and **SideDrawer.custom()**
-- Uncontrol SideDrawer
-
-**Version 2.0**
-- Sound null-safety
-
-**Version 1.0**
-- Elevation Config
-- 3D effect
-- Multi-Drawer
-- Right Drawer
-
-**Version 0.0**
-- Floating action button with location and animator
-- Bottom navigation bar
-- Extended body
-- AndroidX support  
-
-
-## Usage
-
-1. **Depend on it**
-
-Add this to your package's pubspec.yaml file:
+Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  drawerbehavior: latest_version
+  drawerbehavior: ^3.0.0 # Check pub.dev for the latest version
 ```
 
-2. **Install it**
+Install it via command line:
 
-You can install packages from the command line:
-
-with Flutter:
-
-```
-$ flutter packages get
+```yaml
+flutter pub get
 ```
 
-Alternatively, your editor might support flutter packages get. Check the docs for your editor to learn more.
+## 🚀 Usage
 
-3. **Import it**
-
-Now in your Dart code, you can use:
+### 1. Import the package
 
 ```dart
 import 'package:drawerbehavior/drawerbehavior.dart';
 ```
 
-## Example
-```dart
+### 2. Basic Implementation
 
-class DrawerScale extends StatefulWidget {
+Replace your standard `Scaffold` with `DrawerScaffold`. Define your `drawers` using `SideDrawer` and your main content using the `builder`.
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:drawerbehavior/drawerbehavior.dart';
+
+class MyHomePage extends StatefulWidget {
   @override
-  _DrawerScaleState createState() => _DrawerScaleState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _DrawerScaleState extends State<DrawerScale> {
-  late int selectedMenuItemId;
+class _MyHomePageState extends State<MyHomePage> {
+  int selectedMenuItemId = 0;
 
-  @override
-  void initState() {
-    selectedMenuItemId = menu.items[0].id;
-    super.initState();
-  }
+  // Define your menu items
+  final Menu menu = Menu(
+    items: [
+      MenuItem(id: 0, title: 'Home', icon: Icons.home),
+      MenuItem(id: 1, title: 'Profile', icon: Icons.person),
+      MenuItem(id: 2, title: 'Settings', icon: Icons.settings),
+    ],
+  );
 
   @override
   Widget build(BuildContext context) {
     return DrawerScaffold(
+      // App Bar handles the menu button automatically
       appBar: AppBar(
-          title: Text("Drawer - Scale"),
-          actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})]),
+        title: Text("Drawer Behavior"),
+      ),
+      
+      // Define the drawer(s)
       drawers: [
         SideDrawer(
-          percentage: 0.6,
+          percentage: 0.6, // Scale the main view down to 60%
           menu: menu,
           direction: Direction.left,
           animation: true,
@@ -141,278 +95,231 @@ class _DrawerScaleState extends State<DrawerScale> {
           },
         )
       ],
+      
+      // Build the main screen content based on selection
       builder: (context, id) => IndexedStack(
-        index: id,
-        children: menu.items
-            .map((e) => Center(
-                  child: Text("Page~${e.title}"),
-                ))
-            .toList(),
+        index: selectedMenuItemId,
+        children: [
+          Center(child: Text("Home Page")),
+          Center(child: Text("Profile Page")),
+          Center(child: Text("Settings Page")),
+        ],
       ),
     );
   }
 }
 
-
-```
-## Migration (Null-safety Release)
---- <!-- no toc -->
-### mainDrawer (DrawerScaffold) -> defaultDirection (DrawerScaffold)
-```dart
-new DrawerScaffold(
-  mainDrawer: Direction.right,
-  ...
-);
-```
-**to**
-```dart
-new DrawerScaffold(
-  defaultDirection: Direction.right,
-  ...
-);
-```
---- <!-- no toc -->
-
-## Migration
---- <!-- no toc -->
-### contentView (Screen) -> builder (ScreenBuilder)
-```dart
-contentView: Screen(
-  contentBuilder: (context) => Center(child: _widget),
-  color: Colors.white,
-),
-```
-**to**
-```dart
-builder: (context, id) => Center(child: _widget),
-```
---- <!-- no toc -->
-### menuView (MenuView) -> drawers (List\<SideDrawer>)
-```dart
-menuView: new MenuView(
-    menu: menu,
-    headerView: headerView(context),
-    animation: false,
-    mainAxisAlignment: MainAxisAlignment.start,
-    color: Theme.of(context).primaryColor,
-    selectedItemId: selectedMenuItemId,
-    onMenuItemSelected: (String itemId) {
-      selectedMenuItemId = itemId;
-      if (itemId == 'restaurant') {
-        setState(() => _widget = Text("1"));
-      } else {
-        setState(() => _widget = Text("default"));
-      }
-    },
-  ),
-```
-**to**
-```dart
-drawers: [
-  SideDrawer(
-    menu: menu,
-    direction: Direction.left, // Drawer position, left or right
-    animation: true,
-    color: Theme.of(context).primaryColor,
-    selectedItemId: selectedMenuItemId,
-    onMenuItemSelected: (itemId) {
-      setState(() {
-        selectedMenuItemId = itemId;
-      });
-    },
-  )
-],
 ```
 
+## 🎨 Customization
 
+You can fine-tune the look and feel using parameters in `DrawerScaffold` and `SideDrawer`.
 
----
-### percentage (DrawerScaffold) -> drawers (List\<SideDrawer>))
+### DrawerScaffold Options
+
+| Parameter | Description | 
+ | ----- | ----- | 
+| `drawers` | A list of `SideDrawer` widgets (e.g., left and right). | 
+| `builder` | Builder for the main content area. Use this to react to state changes. | 
+| `defaultDirection` | The default direction (left/right) controlled by the toggle button. | 
+| `cornerRadius` | Radius of the main content's corners when the drawer is open. | 
+| `contentShadow` | Shadow definition for the main content panel. | 
+| `enableGestures` | Boolean to enable/disable drag gestures. | 
+| `onSlide` | Callback triggered while the drawer is sliding. | 
+| `controller` | `DrawerScaffoldController` for programmatic control (open/close). | 
+
+### SideDrawer Options
+
+| Parameter | Description | 
+ | ----- | ----- | 
+| `percentage` | How much the main content scales down (e.g., 0.8) when open. | 
+| `degree` | The rotation degree for the **3D effect** (between 15 and 45). | 
+| `slide` | If `true`, the main content slides horizontally with the drawer. | 
+| `peekMenu` | If `true`, a small part of the drawer remains visible when closed. | 
+| `peekSize` | The width of the drawer when `peekMenu` is active. | 
+| `direction` | `Direction.left` or `Direction.right`. | 
+| `headerView` | Widget to display at the top of the drawer. | 
+| `footerView` | Widget to display at the bottom of the drawer. | 
+| `itemBuilder` | Custom builder for menu items if you don't want the default look. | 
+| `color` | Background color of the drawer. | 
+| `background` | Background `DecorationImage` for the drawer. | 
+
+## 🔄 Migration Guide
+
+If you are upgrading from older versions, please note the following breaking changes:
+
+### v2.0 to v3.0 (Null-safety & API Cleanup)
+
+1. **DrawerScaffold:**
+
+   * `mainDrawer` property is now **`defaultDirection`**.
+
+   * `percentage` property moved inside `SideDrawer`.
+
+   * `contentView` is now **`builder`**.
+
+2. **SideDrawer:**
+
+   * `menuView` is now replaced by the `drawers` list containing `SideDrawer`.
+
+**Example:**
+
 ```dart
+// OLD
 DrawerScaffold(
+  mainDrawer: Direction.left,
+  contentView: Screen(...),
   percentage: 0.6,
-  ...
-);
-```
-**to**
-```dart
+  menuView: MenuView(...),
+)
+
+// NEW
 DrawerScaffold(
+  defaultDirection: Direction.left,
+  builder: (context, id) => ...,
   drawers: [
     SideDrawer(
       percentage: 0.6,
       ...
     )
-  ]  
-  ...
-);
-```
----
- 
+  ],
+)
 
-## Preview
+```
+
+## 📱 Previews
 
 ### Scale Effect
 
-<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-1.png?raw=true" width="400px"/>
+<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-1.png?raw=true" width="200px"/>
 
 ```dart
-new DrawerScaffold(
+DrawerScaffold(
   drawers: [
     SideDrawer(
       percentage: 0.6,
-      ...
+      // ...
     )
-  ]
-  ...
+  ],
+  // ...
 );
+
 ```
----
 
 ### Right Drawer
 
-<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview_ios_scale_right.png?raw=true" width="400px"/>
+<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview_ios_scale_right.png?raw=true" width="200px"/>
 
 ```dart
-new DrawerScaffold(
+DrawerScaffold(
   drawers: [
     SideDrawer(
-      direction:Direction.right
-      ...
+      direction: Direction.right,
+      // ...
     )
-  ]
-  ...
+  ],
+  // ...
 );
+
 ```
----
 
 ### 3D Effect
 
-<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview_ios_3d.png?raw=true" width="400px"/>
+<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview_ios_3d.png?raw=true" width="200px"/>
 
 ```dart
-new DrawerScaffold(
+DrawerScaffold(
   drawers: [
     SideDrawer(
       degree: 45,
-      ...
+      // ...
     )
-  ]
-  ...
+  ],
+  // ...
 );
+
 ```
----
 
 ### Drawer with Header
 
-<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-2.png?raw=true" width="400px"/>
-
+<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-2.png?raw=true" width="200px"/>
 ```dart
-new DrawerScaffold(
+DrawerScaffold(
   headerView: headerView(context),
-  ...
+  // ...
 );
+
 ```
----
 
 ### Drawer with Footer
 
-<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-4.png?raw=true" width="400px"/>
+<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-4.png?raw=true" width="200px"/>
 
 ```dart
-new DrawerScaffold(
+DrawerScaffold(
   footerView: footerView(context),
-  ...
+  // ...
 );
+
 ```
----
 
 ### Drawer with Header and Custom Builder
 
-<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-5.png?raw=true" width="400px"/>
+<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-5.png?raw=true" width="200px"/>
 
 ```dart
-new DrawerScaffold(
+DrawerScaffold(
   headerView: headerView(context),
   drawers: [
-      SideDrawer(
-        itemBuilder:
-            (BuildContext context, MenuItem menuItem, bool isSelected) {
-          return Container(
-            color: isSelected
-                ? Theme.of(context).colorScheme.secondary.withOpacity(0.7)
-                : Colors.transparent,
-            padding: EdgeInsets.fromLTRB(24, 16, 24, 16),
-            child: Text(
-              menuItem.title,
-              style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                  color: isSelected ? Colors.black87 : Colors.white70),
-            ),
-          );
-        }
-      )
+    SideDrawer(
+      itemBuilder: (BuildContext context, MenuItem menuItem, bool isSelected) {
+        return Container(
+          color: isSelected ? Theme.of(context).colorScheme.secondary.withOpacity(0.7) : Colors.transparent,
+          padding: EdgeInsets.fromLTRB(24, 16, 24, 16),
+          child: Text(
+            menuItem.title,
+            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+              color: isSelected ? Colors.black87 : Colors.white70),
+          ),
+        );
+      }
+    )
   ],
-  ...
+  // ...
 );
+
 ```
----
 
 ### Peek Drawer
 
-<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-6.png?raw=true" width="400px"/>
+<img src="https://github.com/shiburagi/Drawer-Behavior-Flutter/blob/preview/preview-ios-6.png?raw=true" width="200px"/>
 
 ```dart
-new DrawerScaffold(
+DrawerScaffold(
   headerView: headerView(context),
   drawers: [
-      SideDrawer(
-        peekMenu: true,
-        percentage: 1,
-        menu: menuWithIcon,
-        direction: Direction.left,
-      )
+    SideDrawer(
+      peekMenu: true,
+      percentage: 1,
+      menu: menuWithIcon,
+      direction: Direction.left,
+    )
   ],
-  ...
+  // ...
 );
+
 ```
 
----
-## ⚙️ Customization Options
+## 🤝 Contributing
 
-You can fine-tune the behavior and appearance of your drawers using various parameters available for both `DrawerScaffold` and `SideDrawer`.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-### `DrawerScaffold` Parameters:
+## 📄 License
 
-* **`drawers`**: A list of `SideDrawer` widgets, allowing you to define multiple drawers (e.g., left and right).
-* **`appBar`**: Provides a custom `AppBar` for your main content.
-* **`body` / `builder`**: Defines the main content area of your application. You should use either `body` for static content or `builder` if your content needs to react to drawer states (e.g., selected menu item).
-* **`contentShadow`**: Controls the shadow cast by the main content panel when a drawer is open.
-* **`cornerRadius`**: Sets the corner radius for the main content panel, giving it rounded edges.
-* **`controller`**: An optional `DrawerScaffoldController` for programmatic control over opening, closing, and toggling drawers.
-* **`enableGestures`**: A boolean flag to enable or disable horizontal drag gestures for opening/closing drawers.
-* **`defaultDirection`**: Specifies the initial drawer direction (e.g., `Direction.left`) that will be primarily controlled by `toggle()`.
-* **`onSlide`, `onOpened`, `onClosed`**: Callbacks that fire when the drawer slides, fully opens, or fully closes, respectively.
-* **`backgroundColor`**: The background color of the scaffold that sits behind your main content and drawers.
+This project is licensed under the MIT License - see the [LICENSE](https://www.google.com/search?q=LICENSE) file for details.
 
-### `SideDrawer` Parameters:
+*Based on the original work by [shiburagi](https://github.com/shiburagi).*
 
-* **`menu`**: If you're building a menu-driven drawer, pass a `Menu` object containing your `MenuItem`s.
-* **`child`**: Alternatively, you can provide a single, fully custom `Widget` to be the content of the drawer.
-* **`itemBuilder`**: For highly customized or dynamically generated lists of items within the drawer, you can provide a `SideDrawerItemBuilder`.
-* **`direction`**: Determines whether the drawer slides from `Direction.left` or `Direction.right`.
-* **`drawerWidth`**: Sets the fixed width of the drawer in pixels.
-* **`peekSize`**: When `peekMenu` is enabled, this defines the visible width of the drawer when it's in its "peek" state.
-* **`percentage`**: If `slide` is true, this controls how much the main content scales down (e.g., `0.8` for 80% size) when the drawer opens.
-* **`degree`**: If a rotation animation is desired, this sets the degree of 3D rotation for the main content (clamped between 15 and 45 degrees).
-* **`slide`**: A boolean that, when true, makes the main content slide horizontally along with the drawer.
-* **`animation`**: Enables or disables subtle animation effects on individual menu items as the drawer opens.
-* **`peekMenu`**: If true, the drawer will remain partially visible (at `peekSize`) even when "closed."
-* **`hideOnItemPressed`**: When true, the drawer automatically closes after a menu item is tapped.
-* **`headerView`, `footerView`**: Custom widgets that can be placed at the top and bottom of the drawer content, respectively.
-* **`color`, `background`**: Control the background `Color` or `DecorationImage` of the drawer itself.
-* **`selectorColor`**: Sets the color of the visual indicator that highlights the currently selected menu item.
-* **`duration`, `curve`**: Define the `Duration` and `Curve` for the drawer's opening and closing animations.
-
----
 
 ## Contributors
 
